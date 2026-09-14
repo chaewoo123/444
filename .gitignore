@@ -1,0 +1,7 @@
+# 배포에 필요한 파일만 올림 (지도 앱 + 서버 함수 + 설정). 원본 데이터·스크립트·예전 지도는 이 PC에만 보관
+/*
+!/.gitignore
+!/README.md
+!/index.html
+!/vercel.json
+!/api/

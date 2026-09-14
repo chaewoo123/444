@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>도시구조 이론 지도</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.2/proj4.min.js"></script>
+<style>
+  html, body { height: 100%; margin: 0; font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif; }
+  #map { position: absolute; inset: 0; }
+  body.loading #map { cursor: progress; }
+  .panel { background: #fff; padding: 10px 12px; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font-size: 13px; line-height: 1.5; max-width: 320px; max-height: calc(100vh - 140px); overflow-y: auto; box-sizing: border-box; }
+  .panel summary { cursor: pointer; font-weight: 700; font-size: 14px; }
+  .panel label { display: block; cursor: pointer; }
+  .panel hr { border: none; border-top: 1px solid #ddd; margin: 6px 0; }
+  .panel p { margin: 6px 0; }
+  .panel input[type=text], .panel select { font: inherit; padding: 4px 6px; border: 1px solid #bbb; border-radius: 6px; background: #fff; min-width: 0; box-sizing: border-box; }
+  .panel select:disabled { color: #999; }
+  .row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .row > * { flex: 1 1 110px; }
+  .row > .btn { flex: 0 0 auto; }
+  .btn { font: inherit; padding: 4px 10px; border: 1px solid #1c3d6e; background: #1c3d6e; color: #fff; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+  .btn.ghost { background: #fff; color: #1c3d6e; }
+  .btn.on { background: #e76f51; border-color: #e76f51; color: #fff; }
+  .nav { display: flex; flex-wrap: wrap; gap: 4px; background: #fff; padding: 4px; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); max-width: calc(100vw - 260px); }
+  .nav button { font: inherit; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: 6px; border: none; background: none; color: #1c3d6e; cursor: pointer; white-space: nowrap; }
+  .nav button:hover { background: #e8eef7; }
+  .nav button.on { background: #1c3d6e; color: #fff; }
+  .results { margin-top: 6px; max-height: 200px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
+  .results button { display: block; width: 100%; text-align: left; font: inherit; padding: 5px 8px; border: none; border-bottom: 1px solid #eee; background: #fff; cursor: pointer; }
+  .results button:hover { background: #e8eef7; }
+  .results small { color: #666; display: block; line-height: 1.3; }
+  .status { font-size: 12px; color: #555; margin-top: 6px; min-height: 1em; }
+  .status.err { color: #c1121f; }
+  .legend i, .zones i { display: inline-block; width: 14px; height: 12px; margin-right: 6px; vertical-align: middle; border-radius: 2px; }
+  .zones div { margin: 4px 0; }
+  .zones small { display: block; margin-left: 20px; color: #555; line-height: 1.35; }
+  .sum-wrap { overflow-x: auto; }
+  table.sum { border-collapse: collapse; font-size: 12px; margin-top: 4px; width: 100%; }
+  table.sum th, table.sum td { padding: 3px 4px; text-align: right; border-bottom: 1px solid #eee; white-space: nowrap; }
+  table.sum th:first-child, table.sum td:first-child { text-align: left; white-space: normal; min-width: 90px; }
+  .note { color: #666; font-size: 11px; line-height: 1.4; }
+  input[type=range] { width: 100%; }
+  .grid-label, .zone-label { border: none; box-shadow: none; }
+  .grid-label { background: none; color: #333; font-size: 10px; font-weight: 600; }
+  .zone-label { background: rgba(255,255,255,.88); color: #222; font-size: 11px; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+  .grid-label::before, .zone-label::before { display: none; }
+  .pin { width: 12px; height: 12px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.45), 0 1px 4px rgba(0,0,0,.45); cursor: grab; }
+  @media (max-width: 600px) {
+    .panel { max-width: calc(100vw - 170px); font-size: 12px; padding: 8px; }
+    .leaflet-bottom .panel { max-width: calc(100vw - 32px); }
+    .nav { max-width: calc(100vw - 160px); }
+    .nav button { font-size: 12px; padding: 3px 6px; }
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+const API = "/api/sgis";
+const YEARS = ["2024", "2023", "2022", "2021", "2020"];
+
+// ---------- 좌표 변환: SGIS UTM-K (EPSG:5179) <-> 위경도 ----------
+proj4.defs("EPSG:5179", "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs");
+const toLngLat = ([x, y]) => proj4("EPSG:5179", "WGS84", [x, y]);
+const toLatLng = ([x, y]) => { const [lng, lat] = toLngLat([x, y]); return [lat, lng]; };
+const toXY = ([lat, lng]) => proj4("WGS84", "EPSG:5179", [lng, lat]);
+
+const fmt = (v, d = 0) => Number.isFinite(v) ? v.toLocaleString("ko-KR", { maximumFractionDigits: d }) : "-";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const shortName = n => n.replace(/^[①-⑩]\s*/, "");
+
+async function api(params) {
+  const res = await fetch(`${API}?${new URLSearchParams(params)}`);
+  let body;
+  try { body = await res.json(); } catch { throw new Error(`서버 응답을 읽지 못했어요 (${res.status})`); }
+  if (!res.ok) throw new Error(body.error || `요청 실패 (${res.status})`);
+  return body;
+}
+
+const METRICS = {
+  pop:       { label: "총인구", unit: "명", d: 0 },
+  density:   { label: "인구밀도", unit: "명/㎢", d: 0 },
+  household: { label: "가구 수", unit: "가구", d: 0 },
+  house:     { label: "주택 수", unit: "호", d: 0 },
+  age:       { label: "평균 연령", unit: "세", d: 1 },
+  aged:      { label: "노령화지수", unit: "", d: 1 },
+};
+
+// ---------- 이론 정의 ----------
+const THEORY_INFO = {
+  burgess: { title: "버제스의 동심원 이론", year: 1925,
+    summary: "도시는 중심업무지구(CBD)에서 바깥쪽으로 동심원을 그리며 성장하고, 중심에서 멀어질수록 주거 환경이 쾌적해지고 소득 수준이 높아진다고 봅니다. 시카고를 모델로 했고, 바깥 지대가 안쪽 지대로 밀려드는 '침입과 천이'로 도시가 확장된다고 설명합니다." },
+  hoyt: { title: "호이트의 선형 이론", year: 1939,
+    summary: "도시는 교통로를 따라 부채꼴(선형) 모양으로 성장한다고 봅니다. 같은 성격의 토지이용이 방사형 교통축을 따라 바깥으로 뻗어 나가며, 고소득층 주거지는 쾌적한 방향으로, 저소득층 주거지는 공업·철도 지역 옆으로 형성된다고 설명합니다." },
+  harris: { title: "해리스와 울만의 다핵심 이론", year: 1945,
+    summary: "도시가 커지면 하나의 중심이 아니라 기능이 서로 다른 여러 개의 핵심(도심, 공업, 대학, 교통 등)을 중심으로 토지이용이 나뉜다고 봅니다. 비슷한 기능끼리는 모이고, 서로 방해가 되는 기능은 떨어져 자리 잡는다고 설명합니다." },
+};
+// 반경은 지역 크기(R)에 대한 비율
+const BURGESS = [
+  { name: "① 중심업무지구(CBD)", f: 0.14, color: "#d62828", desc: "상업·업무 기능이 모인 도심" },
+  { name: "② 점이지대",          f: 0.30, color: "#f77f00", desc: "상업·경공업이 주거지로 침입하는 전이 지역" },
+  { name: "③ 노동자 주거지대",    f: 0.50, color: "#e9c46a", desc: "직장과 가까운 곳에 사는 근로자 주거지" },
+  { name: "④ 중산층 주거지대",    f: 0.74, color: "#2a9d8f", desc: "환경이 쾌적한 중산층 주거지" },
+  { name: "⑤ 통근자 지대",        f: 1.00, color: "#6a4c93", desc: "도심으로 통근하는 교외 고소득층 주거지" },
+];
+const HOYT_CBD = { name: "① 중심업무지구(CBD)", f: 0.14, color: "#d62828", desc: "상업·업무 기능이 모인 도심" };
+// 방향 0°(북쪽) 기준 배치: 경공업 축 양옆에 저소득층, 그 바깥에 중산층, 반대편에 고소득층. 실제 방향은 rot만큼 회전
+const HOYT = [
+  { name: "② 경공업·도매 지구", color: "#7f5539", ranges: [[330, 30]], desc: "철도·하천·간선도로 같은 교통축을 따라 발달" },
+  { name: "③ 저소득층 주거지", color: "#f4a261", ranges: [[30, 75], [285, 330]], desc: "공업 지구 양옆에 붙은 주거지" },
+  { name: "④ 중산층 주거지", color: "#2a9d8f", ranges: [[75, 140], [220, 285]], desc: "저소득층과 고소득층 주거지 사이" },
+  { name: "⑤ 고소득층 주거지", color: "#6a4c93", ranges: [[140, 220]], desc: "공업과 반대편, 쾌적한 방향(녹지·고지대)으로 확장" },
+];
+const NUCLEUS_TYPES = {
+  cbd:   { name: "중심업무지구(CBD)", color: "#d62828", f: 0.15, desc: "상업·업무 기능이 모인 도심" },
+  sub:   { name: "부도심(상업)",      color: "#e76f51", f: 0.10, desc: "도심 밖에 형성된 상업 중심" },
+  edu:   { name: "교육·학원가",       color: "#6a4c93", f: 0.09, desc: "학교·학원이 모인 곳" },
+  univ:  { name: "대학가",            color: "#2a9d8f", f: 0.11, desc: "대학과 주변 상권·원룸촌" },
+  ind:   { name: "경공업·물류",       color: "#7f5539", f: 0.09, desc: "철도역·물류기지·소규모 공장" },
+  heavy: { name: "중공업·공단",       color: "#495057", f: 0.14, desc: "대규모 공장·산업단지" },
+  med:   { name: "연구·의료",         color: "#e9a800", f: 0.10, desc: "대형 병원·연구기관" },
+  green: { name: "특수시설·녹지",     color: "#2d6a4f", f: 0.13, desc: "군부대·공원·산지 등" },
+  res:   { name: "고급 주거지",       color: "#9d4edd", f: 0.10, desc: "쾌적한 환경의 고소득층 주거지" },
+};
+
+// 노원구(SGIS 코드 11110)는 실제 지명을 참고해 미리 배치
+const NOWON_STN = [37.6564, 127.0635];
+const PRESETS = {
+  "11110": {
+    burgess: { center: NOWON_STN, R: 5000, cbdDesc: "상업·업무 기능이 모인 도심 (노원역·구청 일대)" },
+    hoyt: { center: NOWON_STN, R: 4800, cbdDesc: "노원역 상권·구청 일대", zones: [
+      { name: "② 경공업·도매 지구", color: "#7f5539", ranges: [[180, 240]], desc: "1호선·경춘선·광운대역 물류기지로 이어지는 교통·물류축 (월계동 방향)" },
+      { name: "③ 저소득층 주거지", color: "#f4a261", ranges: [[240, 330], [40, 95]], desc: "철도·중랑천변과 불암산 자락 구릉지 노후 주거지 방향" },
+      { name: "④ 중산층 주거지", color: "#2a9d8f", ranges: [[330, 40], [150, 180]], desc: "4·7호선 동일로 축을 따라 들어선 대단지 아파트 (상계·하계·공릉)" },
+      { name: "⑤ 고소득층 주거지", color: "#6a4c93", ranges: [[95, 150]], desc: "불암산 녹지·중계동 학원가 방향의 선호 주거지" },
+    ] },
+    harris: { nuclei: [
+      { type: "cbd",   lat: 37.6558, lng: 127.0610, r: 800, dir: "left",   desc: "노원역·노원구청 일대 상업·행정 중심" },
+      { type: "edu",   lat: 37.6492, lng: 127.0768, r: 600, dir: "right",  name: "교육 부도심", desc: "중계동 은행사거리 학원가" },
+      { type: "univ",  lat: 37.6258, lng: 127.0546, r: 750, dir: "left",   desc: "광운대·인덕대 일대" },
+      { type: "ind",   lat: 37.6237, lng: 127.0618, r: 450, dir: "bottom", name: "교통·물류(경공업)", desc: "광운대역·물류기지, 1호선·경춘선 철도" },
+      { type: "med",   lat: 37.6288, lng: 127.0865, r: 700, dir: "top",    desc: "원자력병원·서울여대 일대" },
+      { type: "green", lat: 37.6268, lng: 127.0990, r: 800, dir: "right",  desc: "태릉·육군사관학교 일대 (중랑구 경계)" },
+    ] },
+  },
+};
+
+// ---------- 상태 ----------
+const state = {
+  adm: "11110", year: YEARS[0], theory: "none", metric: "pop",
+  data: null, T: {},
+  show: { areas: true, theory: true, grid: true, gridLabels: false },
+};
+let addMode = false;
+
+// ---------- 지도 ----------
+const map = L.map("map", { zoomControl: false }).setView([36.4, 127.8], 7);
+L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
+  maxZoom: 19, attribution: "Tiles &copy; Esri | 자료: SGIS(국가데이터처)"
+}).addTo(map);
+
+const COLORS = ["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"];
+let breaksNow = [];
+const colorFor = (val, b) => { if (!Number.isFinite(val)) return "#d0d0d0"; let i = 0; while (i < b.length && val > b[i]) i++; return COLORS[i]; };
+
+const areaLayer = L.geoJSON(null, {
+  style: f => ({
+    color: "#1c3d6e", weight: state.data?.level === "emd" ? 1 : 1.5,
+    fillOpacity: state.theory === "none" ? 0.65 : 0.5,
+    fillColor: colorFor(state.data?.stats[f.properties.code]?.[state.metric], breaksNow),
+  }),
+  onEachFeature: (f, layer) => {
+    layer.on("click", e => { if (!addMode) L.popup().setLatLng(e.latlng).setContent(areaPopup(f)).openOn(map); });
+    layer.on("mouseover", () => layer.setStyle({ weight: 3 }));
+    layer.on("mouseout", () => areaLayer.resetStyle(layer));
+  },
+}).addTo(map);
+const gridLayer = L.geoJSON(null, { style: { color: "#d9480f", weight: 1, fillOpacity: 0, dashArray: "3 3" }, interactive: false });
+let gridLabels = L.layerGroup();
+const theoryLayer = L.layerGroup().addTo(map);
+const pinLayer = L.layerGroup().addTo(map);
+
+// ---------- 이론 계산 ----------
+const theoryParams = () => state.theory === "none" ? null : state.T[state.theory];
+const burgessZones = t => BURGESS.map((z, i) => ({ ...z, r: z.f * t.R * t.scale, desc: i === 0 && t.cbdDesc ? t.cbdDesc : z.desc }));
+const hoytCbd = t => ({ ...HOYT_CBD, r: HOYT_CBD.f * t.R * t.scale, desc: t.cbdDesc || HOYT_CBD.desc });
+const hoytZones = t => (t.zones || HOYT).map(z => ({ ...z, ranges: z.ranges.map(([a, b]) => [(a + t.rot) % 360, (b + t.rot) % 360]) }));
+const nucleusView = (n, t) => {
+  const ty = NUCLEUS_TYPES[n.type] || NUCLEUS_TYPES.sub;
+  return { ...n, name: n.name || ty.name, desc: n.desc || ty.desc, color: ty.color, r: (n.r || ty.f * t.R) * t.scale };
+};
+function zoneList() {
+  const t = theoryParams();
+  if (!t) return [];
+  if (state.theory === "burgess") return burgessZones(t);
+  if (state.theory === "hoyt") return [hoytCbd(t), ...hoytZones(t)];
+  return t.nuclei.map(n => nucleusView(n, t));
+}
+// 동(또는 집계구) 중심점이 어느 구역에 속하는지
+function assign(xy) {
+  const t = theoryParams();
+  if (!t) return null;
+  if (state.theory === "harris") {
+    let idx = -1, dist = Infinity;
+    t.nuclei.forEach((n, i) => { const [nx, ny] = toXY([n.lat, n.lng]); const d = Math.hypot(xy[0] - nx, xy[1] - ny); if (d < dist) { dist = d; idx = i; } });
+    return idx < 0 ? null : { idx, dist };
+  }
+  const [cx, cy] = toXY(t.center);
+  const dx = xy[0] - cx, dy = xy[1] - cy, dist = Math.hypot(dx, dy);
+  if (state.theory === "burgess") {
+    const zs = burgessZones(t);
+    const idx = zs.findIndex(z => dist <= z.r);
+    return { idx: idx < 0 ? zs.length - 1 : idx, dist };
+  }
+  if (dist <= hoytCbd(t).r) return { idx: 0, dist };
+  const b = (Math.atan2(dx, dy) * 180 / Math.PI + 360) % 360;
+  const idx = hoytZones(t).findIndex(z => z.ranges.some(([a, c]) => a <= c ? (b >= a && b < c) : (b >= a || b < c)));
+  return { idx: idx + 1, dist };
+}
+function extentR(center) {
+  const [cx, cy] = toXY(center);
+  const far = state.data.verts.reduce((m, [x, y]) => Math.max(m, Math.hypot(x - cx, y - cy)), 0);
+  return Math.max(800, far * 0.95);
+}
+function defaultTheory(k) {
+  const d = state.data, preset = PRESETS[d.adm_cd]?.[k];
+  if (k === "harris") {
+    return { R: extentR(d.autoCenter), scale: 1, preset: !!preset,
+      nuclei: preset ? preset.nuclei.map(n => ({ ...n })) : [{ type: "cbd", lat: d.autoCenter[0], lng: d.autoCenter[1] }] };
+  }
+  const center = preset?.center || d.autoCenter;
+  return { center: [...center], R: preset?.R || extentR(center), scale: 1, rot: preset ? 0 : 225,
+    zones: preset?.zones, cbdDesc: preset?.cbdDesc, preset: !!preset };
+}
+
+// ---------- 이론 그리기 ----------
+const arc = ([cx, cy], r, from = 0, to = 360, step = 3) => {
+  const pts = [];
+  for (let a = from; a < to; a += step) pts.push(toLatLng([cx + r * Math.sin(a * Math.PI / 180), cy + r * Math.cos(a * Math.PI / 180)]));
+  pts.push(toLatLng([cx + r * Math.sin(to * Math.PI / 180), cy + r * Math.cos(to * Math.PI / 180)]));
+  return pts;
+};
+const at = ([cx, cy], r, bearing) => toLatLng([cx + r * Math.sin(bearing * Math.PI / 180), cy + r * Math.cos(bearing * Math.PI / 180)]);
+const poly = (rings, color, opacity) => L.polygon(rings, { color, weight: 2.5, fillColor: color, fillOpacity: opacity, interactive: false }).addTo(theoryLayer);
+const zoneLabel = (latlng, text, direction = "center", offset = [0, 0]) =>
+  theoryLayer.addLayer(L.tooltip({ permanent: true, direction, offset, className: "zone-label" }).setLatLng(latlng).setContent(esc(text)));
+function pin(latlng, color, title, onMove) {
+  const m = L.marker(latlng, { draggable: true, title, autoPan: true,
+    icon: L.divIcon({ className: "", html: `<div class="pin" style="background:${color}"></div>`, iconSize: [18, 18], iconAnchor: [9, 9] }) });
+  m.on("dragend", () => { const p = m.getLatLng(); onMove([p.lat, p.lng]); });
+  pinLayer.addLayer(m);
+  return m;
+}
+
+function drawTheory() {
+  theoryLayer.clearLayers(); pinLayer.clearLayers();
+  const t = theoryParams();
+  if (!t || !state.data) return;
+  const zs = zoneList();
+  if (state.theory === "burgess") {
+    const c = toXY(t.center);
+    zs.forEach((z, i) => {
+      const inner = i ? zs[i - 1].r : 0;
+      poly(inner ? [arc(c, z.r), arc(c, inner)] : [arc(c, z.r)], z.color, i === 0 ? 0.2 : 0.12);
+      if (i === 0) zoneLabel(t.center, shortName(z.name), "top", [0, -10]);
+      else zoneLabel(at(c, i === zs.length - 1 ? inner + (z.r - inner) * 0.45 : (inner + z.r) / 2, 165), shortName(z.name));
+    });
+    pin(t.center, "#d62828", "도심(CBD) - 끌어서 옮기기", ll => { t.center = ll; edited(); });
+  }
+  if (state.theory === "hoyt") {
+    const c = toXY(t.center), R = t.R * t.scale;
+    zs.slice(1).forEach(z => z.ranges.forEach(([a, b]) => {
+      const to = b > a ? b : b + 360;
+      poly([t.center, ...arc(c, R, a, to, 2)], z.color, 0.16);
+      zoneLabel(at(c, R * 0.65, (a + to) / 2), shortName(z.name));
+    }));
+    poly([arc(c, zs[0].r)], zs[0].color, 0.3);
+    zoneLabel(t.center, "CBD", "top", [0, -10]);
+    pin(t.center, "#d62828", "도심(CBD) - 끌어서 옮기기", ll => { t.center = ll; edited(); });
+  }
+  if (state.theory === "harris") {
+    zs.forEach((v, i) => {
+      const n = t.nuclei[i], [nx, ny] = toXY([n.lat, n.lng]);
+      poly([arc([nx, ny], v.r)], v.color, 0.25);
+      const dir = v.dir || "top";
+      const edge = { left: [-v.r, 0], right: [v.r, 0], top: [0, v.r], bottom: [0, -v.r] }[dir] || [0, 0];
+      zoneLabel(toLatLng([nx + edge[0], ny + edge[1]]), v.name, dir);
+      const m = pin([n.lat, n.lng], v.color, `${v.name} - 끌어서 옮기기`, ll => { n.lat = ll[0]; n.lng = ll[1]; t.nucleiEdited = true; edited(); });
+      m.bindPopup(`<b>${esc(v.name)}</b><br>${esc(v.desc)}<br><button class="btn ghost" data-del="${i}" style="margin-top:6px">이 핵심 삭제</button>`);
+    });
+  }
+}
+map.on("popupopen", e => {
+  const b = e.popup.getElement()?.querySelector("[data-del]");
+  const t = state.T.harris;
+  if (b && t) b.onclick = () => { t.nuclei.splice(Number(b.dataset.del), 1); t.nucleiEdited = true; map.closePopup(); edited(); };
+});
+map.on("click", e => {
+  const t = state.T.harris;
+  if (!addMode || state.theory !== "harris" || !t) return;
+  const type = document.querySelector("#ntype")?.value || "sub";
+  t.nuclei.push({ type, lat: e.latlng.lat, lng: e.latlng.lng });
+  t.nucleiEdited = true;
+  setAddMode(false);
+  edited();
+});
+function edited() {
+  const t = theoryParams();
+  if (t) t.edited = true;
+  drawTheory(); updateInfo(); writeHash();
+}
+
+// ---------- 팝업 · 비교표 ----------
+function areaPopup(f) {
+  const d = state.data, s = d.stats[f.properties.code] || {};
+  const a = assign([f.properties.x, f.properties.y]);
+  let zoneLine = "";
+  if (a) {
+    const z = zoneList()[a.idx];
+    if (z) zoneLine = state.theory === "harris"
+      ? `<br><span style="color:${z.color}">■</span> 가장 가까운 핵심: <b>${esc(z.name)}</b> (${fmt(a.dist / 1000, 1)}km)`
+      : `<br><span style="color:${z.color}">■</span> 이론 구역: <b>${esc(z.name)}</b> (도심에서 ${fmt(a.dist / 1000, 1)}km)`;
+  }
+  return `<b>${esc(s.name && d.level === "sgg" ? s.name : f.properties.name)}</b>${zoneLine}<hr style="border:none;border-top:1px solid #ddd;margin:4px 0">
+    총인구: ${fmt(s.pop)}명 · 인구밀도: ${fmt(s.density)}명/㎢<br>
+    평균 연령: ${fmt(s.age, 1)}세 · 노령화지수: ${fmt(s.aged, 1)}<br>
+    가구 수: ${fmt(s.household)} · 평균 가구원: ${fmt(s.members, 1)}명<br>
+    주택 수: ${fmt(s.house)}`;
+}
+function zoneRows() {
+  const zs = zoneList(), groups = zs.map(() => []);
+  state.data.areas.features.forEach(f => {
+    const a = assign([f.properties.x, f.properties.y]);
+    if (a && groups[a.idx]) groups[a.idx].push(state.data.stats[f.properties.code] || {});
+  });
+  return zs.map((z, i) => {
+    const g = groups[i];
+    const withPop = g.filter(s => Number.isFinite(s.pop));
+    const pop = withPop.reduce((p, s) => p + s.pop, 0);
+    const areaKm2 = g.filter(s => Number.isFinite(s.pop) && s.density > 0).reduce((p, s) => p + s.pop / s.density, 0);
+    const agePop = g.filter(s => Number.isFinite(s.age) && Number.isFinite(s.pop));
+    const age = agePop.length ? agePop.reduce((p, s) => p + s.age * s.pop, 0) / agePop.reduce((p, s) => p + s.pop, 0) : NaN;
+    const agedList = g.map(s => s.aged).filter(Number.isFinite);
+    const aged = agedList.length ? agedList.reduce((p, v) => p + v, 0) / agedList.length : NaN;
+    return `<tr><td><i style="display:inline-block;width:10px;height:10px;background:${z.color};border-radius:2px;margin-right:4px"></i>${esc(shortName(z.name))}</td>
+      <td>${g.length}</td><td>${withPop.length ? fmt(pop) : "-"}</td><td>${areaKm2 > 0 ? fmt(pop / areaKm2) : "-"}</td><td>${fmt(age, 1)}</td><td>${fmt(aged, 0)}</td></tr>`;
+  }).join("");
+}
+
+// ---------- 컨트롤 ----------
+const nav = L.control({ position: "topleft" });
+nav.onAdd = () => {
+  const div = L.DomUtil.create("div", "nav");
+  div.innerHTML = [["none", "기본 지도"], ["burgess", "동심원 이론"], ["hoyt", "선형 이론"], ["harris", "다핵심 이론"]]
+    .map(([k, label]) => `<button data-theory="${k}">${label}</button>`).join("");
+  div.querySelectorAll("button").forEach(b => b.onclick = () => setTheory(b.dataset.theory));
+  L.DomEvent.disableClickPropagation(div);
+  return div;
+};
+nav.addTo(map);
+
+const regionCtrl = L.control({ position: "topleft" });
+let regionDiv;
+regionCtrl.onAdd = () => {
+  regionDiv = L.DomUtil.create("div", "panel");
+  regionDiv.innerHTML = `<details open><summary>🔍 <span class="region-name">지역 선택</span></summary>
+    <div class="row"><input id="q" type="text" placeholder="예: 충남 천안시 안서동, 노원구" aria-label="지역 검색"><button id="qgo" class="btn">검색</button></div>
+    <div class="results" hidden></div>
+    <div class="row"><select id="sido" aria-label="시·도"><option value="">시·도</option></select><select id="sgg" aria-label="시·군·구" disabled><option value="">시·군·구</option></select></div>
+    <div class="row"><select id="emd" aria-label="읍·면·동" disabled><option value="">읍·면·동 전체</option></select><select id="year" aria-label="연도">${YEARS.map(y => `<option value="${y}">${y}년</option>`).join("")}</select></div>
+    <div class="status"></div>
+    <p class="note">시·군·구를 고르면 읍면동 단위로, 읍·면·동까지 고르면 더 작은 집계구 단위로 보여줘요.</p></details>`;
+  L.DomEvent.disableClickPropagation(regionDiv);
+  L.DomEvent.disableScrollPropagation(regionDiv);
+  if (innerWidth < 600) regionDiv.querySelector("details").open = false;
+  return regionDiv;
+};
+regionCtrl.addTo(map);
+L.control.zoom({ position: "topleft" }).addTo(map);
+
+const statsCtrl = L.control({ position: "topright" });
+let statsDiv;
+statsCtrl.onAdd = () => {
+  statsDiv = L.DomUtil.create("div", "panel");
+  L.DomEvent.disableClickPropagation(statsDiv);
+  L.DomEvent.disableScrollPropagation(statsDiv);
+  return statsDiv;
+};
+statsCtrl.addTo(map);
+
+const infoCtrl = L.control({ position: "bottomleft" });
+let infoDiv;
+infoCtrl.onAdd = () => {
+  infoDiv = L.DomUtil.create("div", "panel");
+  infoDiv.hidden = true;
+  L.DomEvent.disableClickPropagation(infoDiv);
+  L.DomEvent.disableScrollPropagation(infoDiv);
+  return infoDiv;
+};
+infoCtrl.addTo(map);
+
+const $ = sel => regionDiv.querySelector(sel);
+function setStatus(msg, isErr = false) {
+  const el = $(".status");
+  el.textContent = msg || "";
+  el.classList.toggle("err", isErr);
+}
+
+function buildStats() {
+  const d = state.data;
+  const wasOpen = statsDiv.querySelector("details")?.open;
+  const open = wasOpen ?? innerWidth >= 600;
+  statsDiv.innerHTML = `<details ${open ? "open" : ""}><summary>${d ? esc(d.unitName) + "별 통계" : "통계"}</summary>
+    ${Object.entries(METRICS).map(([k, m]) => `<label><input type="radio" name="m" value="${k}" ${k === state.metric ? "checked" : ""}> ${m.label}</label>`).join("")}
+    <hr>
+    <label><input type="checkbox" data-show="areas" ${state.show.areas ? "checked" : ""}> ${d ? esc(d.unitName) : "지역"} 통계 색칠</label>
+    ${state.theory !== "none" ? `<label><input type="checkbox" data-show="theory" ${state.show.theory ? "checked" : ""}> 이론 모형 구역</label>` : ""}
+    <label><input type="checkbox" data-show="grid" ${state.show.grid ? "checked" : ""}> ${d ? d.gridLevel : ""} 격자 (${d ? d.grid.features.length : 0}개)</label>
+    <label><input type="checkbox" data-show="gridLabels" ${state.show.gridLabels ? "checked" : ""}> 격자 번호</label>
+    <hr><div class="legend"></div></details>`;
+  statsDiv.querySelectorAll("input[name=m]").forEach(r => r.onchange = () => { state.metric = r.value; restyle(); });
+  statsDiv.querySelectorAll("[data-show]").forEach(c => c.onchange = () => { state.show[c.dataset.show] = c.checked; syncLayers(); });
+}
+
+function restyle() {
+  if (!state.data) return;
+  const v = Object.values(state.data.stats).map(s => s[state.metric]).filter(Number.isFinite).sort((a, b) => a - b);
+  breaksNow = v.length ? [0.2, 0.4, 0.6, 0.8].map(q => v[Math.floor(q * (v.length - 1))]) : [];
+  areaLayer.setStyle(areaLayer.options.style);
+  const m = METRICS[state.metric], el = statsDiv.querySelector(".legend");
+  if (!el) return;
+  if (!v.length) { el.innerHTML = `<b>${m.label}</b><br><span class="note">이 지역은 자료가 없어요.</span>`; return; }
+  const edges = [v[0], ...breaksNow];
+  el.innerHTML = `<b>${m.label}</b>${m.unit ? ` (${m.unit})` : ""}<br>` + COLORS.map((c, i) =>
+    `<i style="background:${c}"></i>${i < 4 ? `${fmt(edges[i], m.d)} ~ ${fmt(breaksNow[i], m.d)}` : `${fmt(breaksNow[3], m.d)} 초과`}`).join("<br>")
+    + `<br><i style="background:#d0d0d0"></i>자료 없음`;
+}
+
+function syncLayers() {
+  const want = (layer, on) => on ? (map.hasLayer(layer) || layer.addTo(map)) : map.removeLayer(layer);
+  want(areaLayer, state.show.areas);
+  want(theoryLayer, state.show.theory && state.theory !== "none");
+  want(pinLayer, state.show.theory && state.theory !== "none");
+  want(gridLayer, state.show.grid);
+  want(gridLabels, state.show.gridLabels);
+}
+
+function buildInfo() {
+  if (state.theory === "none" || !state.data) { infoDiv.hidden = true; return; }
+  const k = state.theory, info = THEORY_INFO[k], t = theoryParams();
+  const wasOpen = infoDiv.hidden ? undefined : infoDiv.querySelector("details")?.open;
+  const open = wasOpen ?? innerWidth >= 1200;
+  const scaleCtl = `<label>구역 크기 <b class="scale-v">${Math.round(t.scale * 100)}%</b><input type="range" id="tscale" min="50" max="150" step="5" value="${Math.round(t.scale * 100)}"></label>`;
+  let controls = "";
+  if (k === "burgess") controls = `<p class="note">빨간 핀(도심)을 끌어서 옮기면 동심원이 따라 움직여요.</p>${scaleCtl}`;
+  if (k === "hoyt") controls = `<p class="note">빨간 핀(도심)을 끌어서 옮기고, 경공업 축이 철도·하천 방향을 향하도록 돌려보세요.</p>
+    <label>방향 회전 <b class="rot-v">${t.rot}°</b><input type="range" id="trot" min="0" max="355" step="5" value="${t.rot}"></label>${scaleCtl}`;
+  if (k === "harris") controls = `<div class="row"><select id="ntype" aria-label="핵심 종류">${Object.entries(NUCLEUS_TYPES).map(([key, v]) => `<option value="${key}">${v.name}</option>`).join("")}</select>
+    <button id="nadd" class="btn">지도 클릭해서 추가</button></div>
+    <p class="note">핀을 끌어서 옮기고, 핀을 누르면 삭제할 수 있어요.</p>${scaleCtl}`;
+  infoDiv.innerHTML = `<details ${open ? "open" : ""}><summary>📘 ${info.title} (${info.year})</summary>
+    <p>${info.summary}</p>
+    <div class="zones"></div>
+    <hr><b>구역 조정</b>${t.preset ? ` <span class="note">(노원구는 실제 지명을 참고해 미리 배치했어요)</span>` : ""}
+    ${controls}
+    <div class="row"><button id="treset" class="btn ghost">처음 배치로 되돌리기</button></div>
+    <hr><b>구역별 비교</b> <span class="note">(${esc(state.data.unitName)} 중심점 기준${k === "harris" ? ", 가장 가까운 핵심" : ""})</span>
+    <div class="sum-wrap"></div>
+    <p class="note">이론을 이 지역에 단순 대입한 교육용 모형이에요. 구역 이름은 이론상의 성격이며 실제 소득이나 토지이용을 나타내지 않아요. 표의 실제 통계와 비교해 이론이 얼마나 맞는지 살펴보세요.</p>
+    </details>`;
+  infoDiv.hidden = false;
+
+  const scale = infoDiv.querySelector("#tscale");
+  scale.oninput = () => { t.scale = scale.value / 100; infoDiv.querySelector(".scale-v").textContent = `${scale.value}%`; drawTheory(); updateInfo(); };
+  scale.onchange = () => edited();
+  const rot = infoDiv.querySelector("#trot");
+  if (rot) {
+    rot.oninput = () => { t.rot = Number(rot.value); infoDiv.querySelector(".rot-v").textContent = `${rot.value}°`; drawTheory(); updateInfo(); };
+    rot.onchange = () => edited();
+  }
+  const add = infoDiv.querySelector("#nadd");
+  if (add) add.onclick = () => setAddMode(!addMode);
+  infoDiv.querySelector("#treset").onclick = () => {
+    state.T[k] = defaultTheory(k);
+    setAddMode(false);
+    buildInfo(); drawTheory(); writeHash();
+  };
+  updateInfo();
+}
+function updateInfo() {
+  if (state.theory === "none" || !state.data || infoDiv.hidden) return;
+  const zs = zoneList();
+  infoDiv.querySelector(".zones").innerHTML = zs.length
+    ? zs.map(z => `<div><i style="background:${z.color}"></i><b>${esc(z.name)}</b><small>${esc(z.desc)}</small></div>`).join("")
+    : `<p class="note">아래에서 핵심 종류를 고르고 지도를 클릭해 추가해 보세요.</p>`;
+  infoDiv.querySelector(".sum-wrap").innerHTML = zs.length
+    ? `<table class="sum"><tr><th>구역</th><th>수</th><th>인구</th><th>인구밀도</th><th>평균연령</th><th>노령화</th></tr>${zoneRows()}</table>`
+    : "";
+}
+function setAddMode(on) {
+  addMode = on;
+  const b = infoDiv.querySelector("#nadd");
+  if (b) { b.classList.toggle("on", on); b.textContent = on ? "지도를 클릭하세요 (취소)" : "지도 클릭해서 추가"; }
+  map.getContainer().style.cursor = on ? "crosshair" : "";
+}
+
+// ---------- 화면 갱신 ----------
+function setTheory(k) {
+  state.theory = k;
+  state.show.grid = k === "none";
+  setAddMode(false);
+  renderTheory();
+  writeHash();
+}
+function renderTheory() {
+  nav.getContainer().querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.theory === state.theory));
+  if (!state.data) return;
+  buildStats(); restyle(); syncLayers(); drawTheory(); buildInfo();
+}
+function renderRegion() {
+  const d = state.data;
+  areaLayer.clearLayers(); areaLayer.addData(d.areas);
+  gridLayer.clearLayers(); gridLayer.addData(d.grid);
+  if (map.hasLayer(gridLabels)) map.removeLayer(gridLabels);
+  gridLabels = L.layerGroup(d.grid.features.map(f => {
+    const c = f.geometry.coordinates[0];
+    return L.tooltip({ permanent: true, direction: "center", className: "grid-label" })
+      .setLatLng([(c[0][1] + c[2][1]) / 2, (c[0][0] + c[2][0]) / 2]).setContent(esc(f.properties.id));
+  }));
+  regionDiv.querySelector(".region-name").textContent = `${d.name} (${d.year})`;
+  document.title = `${d.name} 도시구조 지도`;
+  renderTheory();
+  map.invalidateSize();
+  const b = areaLayer.getBounds();
+  if (b.isValid()) map.fitBounds(b, { padding: [20, 20] });
+}
+
+// SGIS 좌표를 지도 좌표로 바꾸고 이론 계산용 값 준비
+function prepare(raw) {
+  const verts = [];
+  const conv = c => typeof c[0] === "number" ? (verts.push(c), toLngLat(c)) : c.map(conv);
+  raw.areas.features.forEach(f => { f.geometry.coordinates = conv(f.geometry.coordinates); });
+  const gconv = c => typeof c[0] === "number" ? toLngLat(c) : c.map(gconv);
+  raw.grid.features.forEach(f => { f.geometry.coordinates = gconv(f.geometry.coordinates); });
+  const step = Math.max(1, Math.floor(verts.length / 4000));
+  raw.verts = verts.filter((_, i) => i % step === 0);
+  // 도심 자동 위치: 인구밀도가 가장 높은 곳 (없으면 지역 중앙)
+  let best = null;
+  raw.areas.features.forEach(f => {
+    const s = raw.stats[f.properties.code];
+    if (s && Number.isFinite(s.density) && (!best || s.density > best.density)) best = { density: s.density, xy: [f.properties.x, f.properties.y] };
+  });
+  const mid = raw.verts.reduce((m, [x, y]) => [m[0] + x / raw.verts.length, m[1] + y / raw.verts.length], [0, 0]);
+  raw.autoCenter = toLatLng(best ? best.xy : mid);
+  return raw;
+}
+
+// ---------- 지역 선택 ----------
+async function fillSelect(sel, cd, placeholder) {
+  sel.innerHTML = `<option value="">${placeholder}</option>`;
+  sel.disabled = true;
+  const { items } = await api({ op: "stage", cd });
+  sel.innerHTML = `<option value="">${placeholder}</option>` + items.map(i => `<option value="${i.cd}">${esc(i.name)}</option>`).join("");
+  sel.disabled = false;
+  sel.dataset.cd = cd;
+}
+async function syncSelects(adm) {
+  const sido = $("#sido"), sgg = $("#sgg"), emd = $("#emd");
+  if (sido.dataset.cd === undefined) await fillSelect(sido, "", "시·도");
+  sido.value = adm.slice(0, 2);
+  if (sgg.dataset.cd !== adm.slice(0, 2)) await fillSelect(sgg, adm.slice(0, 2), "시·군·구");
+  sgg.value = adm.slice(0, 5);
+  if (emd.dataset.cd !== adm.slice(0, 5)) await fillSelect(emd, adm.slice(0, 5), "읍·면·동 전체");
+  emd.value = adm.length === 8 ? adm : "";
+  $("#year").value = state.year;
+}
+
+let loadSeq = 0;
+async function loadRegion(adm, opts = {}) {
+  const seq = ++loadSeq;
+  setStatus("지도 자료를 불러오는 중… (처음 여는 지역은 몇 초 걸릴 수 있어요)");
+  document.body.classList.add("loading");
+  syncSelects(adm).catch(() => {});
+  try {
+    const raw = await api({ op: "region", adm_cd: adm, year: opts.year || state.year });
+    if (seq !== loadSeq) return;
+    state.adm = adm;
+    state.year = raw.year;
+    state.data = prepare(raw);
+    state.T = {};
+    ["burgess", "hoyt", "harris"].forEach(k => { state.T[k] = defaultTheory(k); });
+    if (opts.params) applyParams(opts.params);
+    setAddMode(false);
+    renderRegion();
+    writeHash();
+    setStatus([opts.note, raw.notes.length ? `일부 자료 없음: ${raw.notes.join(", ")}` : ""].filter(Boolean).join(" · "));
+  } catch (e) {
+    if (seq === loadSeq) setStatus(e.message, true);
+  } finally {
+    if (seq === loadSeq) document.body.classList.remove("loading");
+  }
+}
+
+async function doSearch() {
+  const q = $("#q").value.trim(), box = $(".results");
+  if (!q) return;
+  setStatus("검색 중…");
+  box.hidden = true;
+  try {
+    const { results, hint } = await api({ op: "search", q });
+    if (!results.length) { setStatus(hint, true); return; }
+    if (results.length === 1) { loadRegion(results[0].adm_cd, { note: results[0].note }); return; }
+    box.innerHTML = results.map((r, i) => `<button data-i="${i}">${esc(r.label)}<small>${r.level === "sgg" ? "시·군·구" : "읍·면·동"}${r.note ? " · " + esc(r.note) : ""}</small></button>`).join("");
+    box.querySelectorAll("button").forEach(b => b.onclick = () => { const r = results[b.dataset.i]; box.hidden = true; loadRegion(r.adm_cd, { note: r.note }); });
+    box.hidden = false;
+    setStatus(`${results.length}곳을 찾았어요. 하나를 골라주세요.`);
+  } catch (e) {
+    setStatus(e.message, true);
+  }
+}
+
+// ---------- 주소창(#)에 상태 저장: 링크를 공유하면 같은 화면이 열림 ----------
+function writeHash() {
+  const p = new URLSearchParams({ adm: state.adm, year: state.year, theory: state.theory });
+  const t = theoryParams();
+  if (t?.edited) {
+    if (t.center && state.theory !== "harris") p.set("c", t.center.map(v => v.toFixed(5)).join(","));
+    if (t.scale !== 1) p.set("s", String(t.scale));
+    if (state.theory === "hoyt") p.set("r", String(t.rot));
+    if (state.theory === "harris" && t.nucleiEdited) p.set("n", t.nuclei.map(n => [n.type, n.lat.toFixed(5), n.lng.toFixed(5)].join("~")).join("|"));
+  }
+  history.replaceState(null, "", "#" + p.toString());
+}
+function applyParams(p) {
+  const t = state.T[p.get("theory")];
+  if (!t) return;
+  const c = (p.get("c") || "").split(",").map(Number);
+  if (t.center && c.length === 2 && c.every(Number.isFinite)) { t.center = c; t.edited = true; }
+  const s = Number(p.get("s"));
+  if (p.has("s") && s >= 0.5 && s <= 1.5) { t.scale = s; t.edited = true; }
+  const r = Number(p.get("r"));
+  if (p.has("r") && Number.isFinite(r)) { t.rot = ((Math.round(r) % 360) + 360) % 360; t.edited = true; }
+  if (p.get("theory") === "harris" && p.get("n")) {
+    const ns = p.get("n").split("|").map(x => x.split("~"))
+      .filter(([ty, la, ln]) => NUCLEUS_TYPES[ty] && Number.isFinite(+la) && Number.isFinite(+ln))
+      .map(([type, la, ln]) => ({ type, lat: +la, lng: +ln }));
+    if (ns.length) { t.nuclei = ns; t.nucleiEdited = true; t.edited = true; }
+  }
+}
+
+// ---------- 시작 ----------
+$("#qgo").onclick = doSearch;
+$("#q").onkeydown = e => { if (e.key === "Enter") doSearch(); };
+$("#sido").onchange = async e => {
+  const cd = e.target.value, sgg = $("#sgg"), emd = $("#emd");
+  emd.innerHTML = `<option value="">읍·면·동 전체</option>`; emd.disabled = true; delete emd.dataset.cd;
+  if (!cd) { sgg.innerHTML = `<option value="">시·군·구</option>`; sgg.disabled = true; delete sgg.dataset.cd; return; }
+  try { await fillSelect(sgg, cd, "시·군·구"); setStatus("시·군·구를 골라주세요."); } catch (err) { setStatus(err.message, true); }
+};
+$("#sgg").onchange = async e => {
+  const cd = e.target.value;
+  if (!cd) return;
+  loadRegion(cd);
+};
+$("#emd").onchange = e => loadRegion(e.target.value || $("#sgg").value);
+$("#year").onchange = e => { state.year = e.target.value; loadRegion(state.adm, { year: e.target.value }); };
+
+(() => {
+  const p = new URLSearchParams(location.hash.slice(1));
+  const adm = /^(\d{5}|\d{8})$/.test(p.get("adm") || "") ? p.get("adm") : "11110";
+  state.year = YEARS.includes(p.get("year")) ? p.get("year") : YEARS[0];
+  state.theory = ["none", "burgess", "hoyt", "harris"].includes(p.get("theory")) ? p.get("theory") : "none";
+  state.show.grid = state.theory === "none";
+  nav.getContainer().querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.theory === state.theory));
+  buildStats();
+  loadRegion(adm, { year: state.year, params: p });
+})();
+</script>
+</body>
+</html>
