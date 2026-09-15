@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>권역 건축밀도 · 가용공간 대시보드</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --paper:#f4f3f0; --surface:#ffffff; --ink:#0a0a0a; --sub:#75726b;
+    --line:rgba(10,10,10,.11); --line-soft:rgba(10,10,10,.06); --fill:#edebe6;
+    --clay:#a63d2f; --ochre:#d9a441;
+    font-family:"Pretendard", -apple-system, "Segoe UI", "Malgun Gothic", Roboto, sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; color:var(--ink); background:var(--paper); -webkit-font-smoothing:antialiased; }
+
+  header{
+    padding:30px 32px 26px; background:var(--paper); border-bottom:1px solid var(--line);
+    display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;
+  }
+  header h1{ font-size:30px; margin:0; font-weight:500; letter-spacing:-.035em; line-height:1.05; }
+  header p{ margin:10px 0 0; font-size:13px; color:var(--sub); max-width:64ch; line-height:1.5; }
+  header .eyebrow-top{ font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--sub); display:block; margin-bottom:12px; }
+  header .src{ font-size:11.5px; color:var(--sub); border:1px solid var(--line); border-radius:999px; padding:7px 14px; white-space:nowrap; }
+
+  .layout{ display:grid; grid-template-columns:304px 1fr; gap:24px; padding:24px 32px 8px; align-items:start; max-width:1460px; margin:0 auto; }
+  .layout > *{ min-width:0; } /* grid items default to min-width:auto — the nowrap table would otherwise blow the column out */
+  @media (max-width:900px){ .layout{ grid-template-columns:1fr; padding:20px; } }
+  .panel{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:22px; }
+
+  .controls{ position:sticky; top:24px; display:flex; flex-direction:column; gap:16px; }
+  .field label{ display:block; font-size:10px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--sub); margin-bottom:8px; }
+  .field input[type=text], .field input[type=number]{
+    width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:12px; font-size:14px;
+    background:var(--paper); color:var(--ink); font-family:inherit; letter-spacing:-.01em; transition:border-color .15s, background .15s;
+  }
+  .field input::placeholder{ color:#a8a49b; }
+  .field input:focus{ outline:none; border-color:var(--ink); background:var(--surface); }
+  .hint{ font-size:11.5px; color:var(--sub); margin-top:7px; line-height:1.55; }
+
+  button.primary{
+    background:var(--ink); color:#fff; border:none; border-radius:999px;
+    padding:14px 22px; font-size:14px; font-weight:500; letter-spacing:-.01em; cursor:pointer; width:100%;
+    font-family:inherit; transition:opacity .15s;
+  }
+  button.primary:hover:not(:disabled){ opacity:.82; }
+  button.primary:disabled{ background:var(--fill); color:#a8a49b; cursor:default; }
+  button.secondary{
+    background:transparent; color:var(--ink); border:1px solid var(--line); border-radius:999px;
+    padding:9px 16px; font-size:12.5px; font-weight:500; cursor:pointer; font-family:inherit; transition:.15s;
+  }
+  button.secondary:hover{ border-color:var(--ink); }
+
+  .candidates{ display:flex; flex-direction:column; gap:7px; max-height:180px; overflow:auto; }
+  .cand{ text-align:left; background:var(--paper); border:1px solid var(--line); color:var(--ink); border-radius:12px; padding:11px 13px; font-size:12.5px; line-height:1.45; cursor:pointer; transition:.15s; font-family:inherit; }
+  .cand:hover{ border-color:var(--ink); background:var(--surface); }
+  .status{ font-size:12.3px; padding:11px 13px; border-radius:12px; background:var(--fill); color:var(--ink); line-height:1.5; }
+  .status.err{ background:#f6ebe8; color:var(--clay); }
+  .status.ok{ background:var(--fill); color:var(--ink); }
+  .disclaimer{ font-size:11.3px; color:var(--sub); background:var(--paper); border:1px solid var(--line); padding:14px; border-radius:14px; line-height:1.65; }
+  .disclaimer b{ color:var(--ink); font-weight:600; }
+  .file-warning{ font-size:11.5px; color:var(--clay); background:#f6ebe8; border:1px solid rgba(166,61,47,.25); padding:14px; border-radius:14px; line-height:1.7; }
+  .file-warning b{ font-weight:600; }
+  .file-warning code{ font-size:10.5px; background:rgba(166,61,47,.1); padding:1px 5px; border-radius:4px; }
+
+  .overlay-toolbar{ display:flex; gap:7px; flex-wrap:wrap; margin-bottom:16px; }
+  .chip{ background:transparent; border:1px solid var(--line); color:var(--sub); font-size:12px; font-weight:500; padding:9px 15px; border-radius:999px; cursor:pointer; transition:.15s; font-family:inherit; }
+  .chip:hover{ border-color:var(--ink); color:var(--ink); }
+  .chip.active{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  #map{ height:460px; border-radius:14px; border:1px solid var(--line); }
+  .map-legend{ display:flex; align-items:center; gap:9px; margin-top:14px; font-size:11px; color:var(--sub); letter-spacing:.02em; }
+  .legend-scale{ display:inline-block; width:96px; height:6px; border-radius:999px; background:linear-gradient(90deg, rgb(122,132,140), rgb(166,61,47)); }
+
+  .section-head{ margin:56px 0 18px; padding-top:22px; border-top:1px solid var(--line); }
+  .section-head .eyebrow{ display:block; font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--sub); margin-bottom:12px; }
+  .section-head h2{ margin:0; font-size:26px; font-weight:500; color:var(--ink); letter-spacing:-.035em; line-height:1.1; }
+  .section-head p{ margin:10px 0 0; font-size:12.8px; color:var(--sub); line-height:1.6; max-width:78ch; }
+
+  .subhead{ font-size:15px; font-weight:500; letter-spacing:-.02em; color:var(--ink); margin:0 0 18px; padding-bottom:14px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .subhead .badge{ margin-left:auto; font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--sub); border:1px solid var(--line); padding:4px 11px; border-radius:999px; }
+
+  .stats-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:12px; }
+  .stat{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px 18px; }
+  .stat .label{ font-size:10px; color:var(--sub); font-weight:600; text-transform:uppercase; letter-spacing:.14em; }
+  .stat .value{ font-size:26px; font-weight:500; margin-top:10px; color:var(--ink); letter-spacing:-.035em; line-height:1.1; }
+  .stat .sub{ font-size:11px; color:var(--sub); margin-top:6px; line-height:1.45; }
+
+  .split-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:18px; align-items:stretch; }
+  .split-grid > *{ min-width:0; }
+  @media (max-width:1150px){ .split-grid{ grid-template-columns:1fr; } }
+
+  .bar-wrap{ margin-top:14px; }
+  .bar-track{ height:30px; border-radius:999px; background:var(--fill); overflow:hidden; display:flex; }
+  .bar-used{ background:var(--ink); display:flex; align-items:center; justify-content:flex-end; color:#fff; font-size:11px; font-weight:500; padding-right:10px; min-width:0; }
+  .bar-free{ display:flex; align-items:center; justify-content:flex-start; color:var(--sub); font-size:11px; font-weight:500; padding-left:10px; }
+  .legend-row{ display:flex; gap:18px; font-size:11.5px; color:var(--sub); margin-top:11px; flex-wrap:wrap; }
+  .legend-dot{ display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+  .kv{ display:flex; justify-content:space-between; gap:16px; font-size:13px; padding:11px 0; border-bottom:1px solid var(--line-soft); }
+  .kv:last-child{ border-bottom:none; }
+  .kv .k{ color:var(--sub); }
+  .kv .v{ font-weight:500; letter-spacing:-.02em; text-align:right; }
+
+  table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  th,td{ text-align:left; padding:12px 14px; border-bottom:1px solid var(--line-soft); white-space:nowrap; }
+  td{ letter-spacing:-.01em; }
+  th{ background:var(--surface); position:sticky; top:0; font-size:10px; color:var(--sub); font-weight:600; text-transform:uppercase; letter-spacing:.12em; border-bottom:1px solid var(--line); }
+  tbody tr:hover td{ background:var(--paper); }
+  .table-scroll{ max-height:380px; overflow:auto; border:1px solid var(--line); border-radius:14px; margin-top:14px; }
+  .toolbar{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+  .empty{ padding:56px 10px; text-align:center; color:var(--sub); font-size:13px; }
+
+  .donut-wrap-2{ display:flex; align-items:center; gap:28px; flex-wrap:wrap; justify-content:center; height:100%; }
+  .donut-center-wrap{ position:relative; width:200px; height:200px; flex:none; }
+  .donut-center-label{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .donut-center-label span{ font-size:28px; font-weight:500; color:var(--ink); letter-spacing:-.04em; }
+  .donut-center-label small{ font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:.14em; margin-top:4px; }
+  .donut-legend-2{ flex:1; min-width:200px; }
+  .legend-item{ display:grid; grid-template-columns:10px 1fr auto auto; align-items:center; gap:11px; font-size:12.5px; padding:10px 0; border-bottom:1px solid var(--line-soft); }
+  .legend-item:last-child{ border-bottom:none; }
+  .legend-label{ font-weight:400; }
+  .legend-pct{ font-weight:500; color:var(--ink); letter-spacing:-.02em; }
+  .legend-count{ color:var(--sub); font-size:11px; }
+
+  .insight-card{ background:var(--ink); color:#f4f3f0; border-radius:18px; padding:26px; }
+  .insight-tag{ display:block; font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:rgba(244,243,240,.5); margin-bottom:14px; }
+  .insight-headline{ font-size:17px; font-weight:500; line-height:1.4; letter-spacing:-.025em; color:#fff; }
+  .insight-list{ list-style:none; counter-reset:insight; padding:0; margin:22px 0 0; display:flex; flex-direction:column; gap:0; }
+  .insight-list li{ counter-increment:insight; position:relative; padding:14px 0 14px 34px; font-size:12.3px; line-height:1.65; color:rgba(244,243,240,.72); border-top:1px solid rgba(244,243,240,.12); }
+  .insight-list li::before{ content:counter(insight); position:absolute; left:0; top:14px; width:20px; height:20px; border-radius:50%; border:1px solid rgba(244,243,240,.3); color:rgba(244,243,240,.9); font-size:10px; font-weight:500; display:flex; align-items:center; justify-content:center; }
+  .insight-list b{ color:#fff; font-weight:500; }
+
+  .ring-row{ display:grid; grid-template-columns:100px 1fr 62px; align-items:center; gap:14px; margin-bottom:14px; font-size:12px; }
+  .ring-label{ color:var(--sub); }
+  .ring-bar-track{ height:14px; background:var(--fill); border-radius:999px; overflow:hidden; }
+  .ring-bar-fill{ height:100%; background:var(--ink); border-radius:999px; }
+  .ring-value{ text-align:right; font-weight:500; color:var(--ink); letter-spacing:-.02em; }
+
+  .nuclei-grid{ display:grid; gap:2px; aspect-ratio:1/1; max-width:290px; margin:0 auto; }
+  .nuclei-cell{ border-radius:2px; position:relative; }
+  .nuclei-cell.is-nucleus{ box-shadow:inset 0 0 0 1.5px var(--ink); }
+  .nuclei-cell.is-nucleus::after{ content:'★'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--ink); }
+  .nuclei-caption{ text-align:center; font-size:11px; color:var(--sub); margin-top:14px; letter-spacing:.02em; }
+
+  footer{ text-align:center; color:var(--sub); font-size:11px; padding:40px 24px; border-top:1px solid var(--line); margin-top:56px; letter-spacing:.02em; }
+  a.link{ color:var(--ink); }
+  .leaflet-control-layers, .leaflet-bar{ border:1px solid var(--line) !important; border-radius:12px !important; box-shadow:none !important; overflow:hidden; }
+  .leaflet-control-layers{ font-family:inherit !important; font-size:12.3px; }
+  .leaflet-control-layers-expanded{ padding:12px 16px 12px 12px !important; }
+  .leaflet-control-layers label{ font-weight:400; color:var(--ink); margin-bottom:4px; }
+  .leaflet-bar a{ color:var(--ink) !important; }
+  .leaflet-control-attribution{ font-size:10px !important; font-family:inherit !important; }
+  /* ---- splash ---- */
+  .splash{ position:fixed; inset:0; z-index:9999; background:var(--paper); display:flex; align-items:center; justify-content:center; transition:opacity .6s ease, visibility .6s ease; animation:splashFailsafe .01s 8s forwards; }
+  .splash.done{ opacity:0; visibility:hidden; pointer-events:none; }
+  @keyframes splashFailsafe{ to{ opacity:0; visibility:hidden; pointer-events:none; } }
+  .splash-inner{ display:flex; flex-direction:column; align-items:center; text-align:center; padding:24px; }
+  .rings-mark{ position:relative; width:120px; height:120px; margin-bottom:34px; }
+  .rings-mark .r{ position:absolute; inset:0; border:1px solid var(--ink); border-radius:50%; opacity:0; animation:ringPulse 2.4s cubic-bezier(.2,.6,.3,1) infinite; }
+  .rings-mark .r2{ animation-delay:.8s; } .rings-mark .r3{ animation-delay:1.6s; }
+  .rings-mark .dot{ position:absolute; left:50%; top:50%; width:10px; height:10px; margin:-5px 0 0 -5px; border-radius:50%; background:var(--ink); }
+  @keyframes ringPulse{ 0%{ transform:scale(.12); opacity:0; } 20%{ opacity:.9; } 100%{ transform:scale(1); opacity:0; } }
+  .splash-eyebrow{ font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--sub); }
+  .splash-title{ font-size:30px; font-weight:500; letter-spacing:-.035em; margin-top:12px; line-height:1.1; }
+  .splash-bar{ width:220px; height:2px; background:var(--fill); border-radius:999px; overflow:hidden; margin-top:30px; }
+  .splash-bar span{ display:block; height:100%; width:0; background:var(--ink); transition:width .45s ease; }
+  .splash-status{ font-size:11.5px; color:var(--sub); margin-top:12px; min-height:1.5em; }
+  @media (prefers-reduced-motion: reduce){
+    .rings-mark .r{ animation:none; opacity:.35; }
+    .rings-mark .r1{ transform:scale(.35); } .rings-mark .r2{ transform:scale(.68); }
+  }
+
+  /* ---- query overlay ---- */
+  .map-wrap{ position:relative; }
+  .query-overlay{ position:absolute; inset:0; z-index:1000; border-radius:14px; background:rgba(244,243,240,.88); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; }
+  .query-overlay[hidden]{ display:none; }
+  .query-overlay .rings-mark{ width:72px; height:72px; margin-bottom:20px; }
+  .qo-inner{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; padding:16px; }
+  .qo-title{ font-size:17px; font-weight:500; letter-spacing:-.02em; }
+  .qo-meta{ font-size:12px; color:var(--sub); margin-bottom:10px; }
+
+  /* ---- center definition ---- */
+  .center-marker span{ display:block; width:18px; height:18px; border-radius:50%; background:var(--ink); border:3px solid #fff; box-shadow:0 0 0 1px var(--ink); cursor:grab; }
+  #map.picking, #map.picking .leaflet-interactive{ cursor:crosshair !important; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .field select{ width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:12px; font-size:14px; background:var(--paper); color:var(--ink); font-family:inherit; }
+  .preset-row{ display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+  .preset-row .chip{ padding:7px 12px; font-size:11.5px; }
+  .method-note{ font-size:11px; color:var(--sub); margin-top:8px; line-height:1.5; }
+  .method-note b{ color:var(--ink); font-weight:500; }
+  .warn-note{ font-size:11.3px; color:var(--clay); margin-top:8px; line-height:1.5; }
+
+  /* ---- deliverables ---- */
+  .deliv-nav{ display:flex; gap:7px; flex-wrap:wrap; margin-top:28px; }
+  .deliv-nav a{ text-decoration:none; }
+  .section-head .tag{ display:inline-block; margin-left:10px; font-size:10px; font-weight:600; letter-spacing:.08em; color:#fff; background:var(--ink); padding:3px 9px; border-radius:999px; vertical-align:1px; }
+  .source-caption{ font-size:11px; color:var(--sub); margin-top:14px; }
+  .group-divider{ margin:80px 0 0; display:flex; align-items:center; gap:14px; font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--sub); }
+  .group-divider::before, .group-divider::after{ content:''; flex:1; height:1px; background:var(--line); }
+
+  .center-def{ display:flex; flex-wrap:wrap; gap:8px 22px; font-size:12px; color:var(--sub); margin-bottom:16px; }
+  .center-def b{ color:var(--ink); font-weight:500; }
+  .dens-table-wrap{ overflow:auto; border:1px solid var(--line); border-radius:14px; }
+  /* 단위(km², ㎡)가 대문자로 바뀌지 않도록 한국어 표 머리글·배지는 대문자 변환을 끈다 */
+  .dens-table th, .prio-table th, .mini-bars h4, #ring-badge, #comp-badge{ text-transform:none; letter-spacing:.04em; }
+  .dens-table th.num, .dens-table td.num{ text-align:right; }
+  .dens-table th.hl{ color:var(--ink); }
+  .dens-table td.hl{ font-weight:600; color:var(--ink); }
+  .dens-table tr.total td{ background:var(--paper); font-weight:500; border-top:1px solid var(--line); }
+  .mini-bars{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:22px; margin-top:24px; }
+  @media (max-width:760px){ .mini-bars{ grid-template-columns:1fr; } }
+  .mini-bars h4{ margin:0 0 12px; font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); }
+  .mb-row{ display:grid; grid-template-columns:72px 1fr 66px; gap:10px; align-items:center; font-size:11.5px; margin-bottom:10px; }
+  .mb-label{ color:var(--sub); }
+  .mb-track{ height:10px; background:var(--fill); border-radius:999px; overflow:hidden; }
+  .mb-fill{ height:100%; background:var(--ink); border-radius:999px; }
+  .mb-val{ text-align:right; font-weight:500; letter-spacing:-.02em; }
+
+  .matrix-wrap svg{ width:100%; height:auto; display:block; }
+  .prio-table td{ vertical-align:middle; }
+  .prio-table select{ padding:6px 8px; border:1px solid var(--line); border-radius:8px; background:var(--paper); font-family:inherit; font-size:12.5px; color:var(--ink); }
+  .prio-table td.reason-cell{ white-space:normal; min-width:260px; }
+  .prio-table input.txt{ width:100%; padding:7px 9px; border:1px solid transparent; border-radius:8px; background:transparent; font-family:inherit; font-size:12px; color:var(--ink); }
+  .prio-table input.txt:hover, .prio-table input.txt:focus{ border-color:var(--line); background:var(--paper); outline:none; }
+  .prio-table input.name{ font-size:12.5px; font-weight:500; min-width:240px; }
+  .q-badge{ display:inline-block; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:500; border:1px solid var(--line); }
+  .q-badge.q1{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .q-badge.q2{ background:var(--fill); color:var(--ink); }
+  .q-badge.q3{ color:var(--ink); }
+  .q-badge.q4{ color:var(--sub); border-style:dashed; }
+  .icon-btn{ border:none; background:transparent; color:var(--sub); font-size:15px; cursor:pointer; padding:2px 7px; border-radius:6px; font-family:inherit; }
+  .icon-btn:hover{ color:var(--clay); background:#f6ebe8; }
+  .add-row{ display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; align-items:center; }
+  .add-row input{ flex:1; min-width:200px; padding:10px 14px; border:1px solid var(--line); border-radius:999px; background:var(--paper); font-family:inherit; font-size:13px; }
+  .add-row input:focus{ outline:none; border-color:var(--ink); }
+
+  .export-actions{ display:flex; flex-direction:column; gap:10px; }
+  .export-actions .row{ display:flex; gap:7px; flex-wrap:wrap; }
+  .steps{ margin:18px 0 0; padding:0; list-style:none; counter-reset:step; }
+  .steps li{ counter-increment:step; position:relative; padding:11px 0 11px 30px; font-size:12.3px; line-height:1.6; color:var(--sub); border-top:1px solid var(--line-soft); }
+  .steps li::before{ content:counter(step); position:absolute; left:0; top:12px; width:19px; height:19px; border-radius:50%; border:1px solid var(--line); font-size:10px; color:var(--ink); display:flex; align-items:center; justify-content:center; }
+  .steps code{ font-size:11px; background:var(--fill); padding:1px 6px; border-radius:4px; color:var(--ink); word-break:break-all; }
+
+  @media (max-width:900px){ .controls{ position:static; top:auto; } }
+</style>
+</head>
+<body>
+
+<div class="splash" id="splash" role="status" aria-live="polite">
+  <div class="splash-inner">
+    <div class="rings-mark" aria-hidden="true"><span class="r r1"></span><span class="r r2"></span><span class="r r3"></span><span class="dot"></span></div>
+    <div class="splash-eyebrow">Urban Density Analysis</div>
+    <div class="splash-title">권역 건축밀도 · 가용공간</div>
+    <div class="splash-bar"><span id="splash-bar"></span></div>
+    <div class="splash-status" id="splash-status">불러오는 중</div>
+  </div>
+</div>
+
+<header>
+  <div>
+    <span class="eyebrow-top">Urban Density Analysis</span>
+    <h1>권역 건축밀도 · 가용공간 대시보드</h1>
+    <p>Overpass API(OpenStreetMap) 실시간 조회 — 용도 구성, 링(권역)별 밀도, 스마트공원 요소 우선순위, 도시공간구조 이론 분석 및 추가 개발 가능 용적 추정</p>
+  </div>
+  <div class="src">© OpenStreetMap contributors</div>
+</header>
+
+<div class="layout">
+  <aside class="panel controls">
+    <div class="file-warning" id="file-warning" style="display:none;">
+      <b>지금 HTML 파일을 직접 열어 보고 있습니다.</b>
+      이렇게 열면 브라우저가 <code>Origin: null</code>을 보내고, Overpass 서버가 이를 거부해 “Failed to fetch”가 발생합니다. (지도·장소 검색은 되는데 분석만 실패하는 이유입니다.)
+      같은 폴더의 <b>「대시보드 실행.bat」</b>을 더블클릭하면 <code>http://localhost</code>로 열려 정상 동작합니다.
+    </div>
+    <div class="field">
+      <label>1. 대상지 검색</label>
+      <input type="text" id="place-input" placeholder="예: 종로3가역, 을지로3가, 서울시청">
+      <div class="hint">Nominatim(OSM) 지오코딩으로 좌표를 찾습니다. 후보를 선택하면 중심이 정의됩니다.</div>
+    </div>
+    <button class="primary" id="btn-search" type="button">장소 검색</button>
+    <div id="candidates" class="candidates"></div>
+
+    <div class="field">
+      <label>2. 대상지 중심 정의</label>
+      <input type="text" id="site-name" placeholder="대상지 이름 (예: 종로3가역 일대)">
+      <div class="row2" style="margin-top:8px;">
+        <input type="number" id="center-lat" placeholder="위도" step="0.000001" aria-label="중심 위도">
+        <input type="number" id="center-lon" placeholder="경도" step="0.000001" aria-label="중심 경도">
+      </div>
+      <div class="preset-row">
+        <button class="chip" id="btn-pick" type="button">⌖ 지도에서 중심 지정</button>
+      </div>
+      <div class="method-note" id="method-note">정의 방법: <b>미정</b> — 검색 · 좌표 입력 · 지도 클릭 · 중심 마커 드래그로 정의할 수 있습니다.</div>
+    </div>
+
+    <div class="field">
+      <label>3. 분석 범위</label>
+      <div class="row2">
+        <input type="number" id="radius-input" value="3000" min="100" max="5000" step="100" aria-label="분석 반경(m)">
+        <select id="ring-interval" aria-label="링 간격">
+          <option value="250">링 250m</option>
+          <option value="500">링 500m</option>
+          <option value="1000" selected>링 1km</option>
+        </select>
+      </div>
+      <div class="preset-row">
+        <button class="chip" type="button" data-radius="500" data-interval="250">500m</button>
+        <button class="chip" type="button" data-radius="1000" data-interval="250">1km</button>
+        <button class="chip" type="button" data-radius="3000" data-interval="1000">과제 기준 · 3km / 1km 링</button>
+      </div>
+      <div class="hint">반경(m) · 링 간격. 링 간격은 조회 후에 바꿔도 다시 조회하지 않고 즉시 재집계됩니다.</div>
+      <div class="warn-note" id="radius-warn" hidden>반경 2km 이상은 건물이 수만 동이라 조회에 수십 초~수 분이 걸릴 수 있습니다. 조회 중 취소할 수 있습니다.</div>
+    </div>
+    <button class="primary" id="btn-fetch" type="button" disabled>밀도 분석 실행</button>
+    <div id="status" class="status" style="display:none;"></div>
+
+    <hr style="border:none; border-top:1px solid var(--line); margin:4px 0;">
+
+    <div class="field">
+      <label>4. 목표 용적률 (FAR, %)</label>
+      <input type="number" id="target-far" value="200" min="10" max="1500" step="10">
+      <div class="hint">해당 권역에 적용하고 싶은 목표 용적률(연면적 ÷ 대지면적 × 100).</div>
+    </div>
+    <div class="field">
+      <label>5. 목표 건폐율 (BCR, %)</label>
+      <input type="number" id="target-bcr" value="60" min="5" max="90" step="5">
+      <div class="hint">한 층 바닥면적의 상한 비율(건축면적 ÷ 대지면적 × 100).</div>
+    </div>
+    <div class="field">
+      <label>층수 정보 없는 건물의 기본 층수</label>
+      <input type="number" id="default-levels" value="1" min="1" max="20" step="1">
+      <div class="hint">OSM에 building:levels 태그가 없는 건물에 적용할 가정 층수입니다. 값을 바꾸면 아래 지표가 즉시 재계산됩니다.</div>
+    </div>
+
+    <div class="disclaimer">
+      ※ 본 도구는 OSM 건물 태그 기반 <b>추정치</b>이며, 실제 인허가 용적률·건폐율(지자체 조례, 용도지역 등)과 다를 수 있습니다. 도시공간구조 이론 분석 또한 단순 기하학적 근사이므로 계획 검토용 참고자료로만 사용하세요.
+    </div>
+  </aside>
+
+  <main>
+    <div class="panel">
+      <div class="overlay-toolbar">
+        <button class="chip" id="toggle-ring" type="button">◎ 동심원 표시 (버제스)</button>
+        <button class="chip" id="toggle-sector" type="button">◈ 섹터 경계 (호이트)</button>
+        <button class="chip" id="toggle-grid" type="button">▦ 밀도 격자</button>
+        <button class="chip" id="toggle-nuclei" type="button">✦ 핵심지점 (다핵심)</button>
+      </div>
+      <div class="map-wrap">
+        <div id="map"></div>
+        <div class="query-overlay" id="query-overlay" hidden>
+          <div class="qo-inner">
+            <div class="rings-mark" aria-hidden="true"><span class="r r1"></span><span class="r r2"></span><span class="r r3"></span><span class="dot"></span></div>
+            <div class="qo-title">Overpass 조회 중</div>
+            <div class="qo-meta" id="qo-meta">0초 경과</div>
+            <button class="secondary" id="qo-cancel" type="button">취소</button>
+          </div>
+        </div>
+      </div>
+      <div class="map-legend">건물 색상 <span class="legend-scale"></span> 저층 → 고층</div>
+    </div>
+
+    <div id="results" style="display:none;">
+
+      <nav class="deliv-nav" aria-label="섹션 바로가기">
+        <a class="chip" href="#sec-comp">① 용도 구성·기재율</a>
+        <a class="chip" href="#sec-ring">② 링별 밀도표</a>
+        <a class="chip" href="#sec-park">③ 스마트공원 우선순위</a>
+        <a class="chip" href="#sec-export">④ 산출물 · 조회일·출처</a>
+        <a class="chip" href="#sec-deep">심화 분석</a>
+      </nav>
+
+      <div class="section-head" id="sec-comp"><span class="eyebrow">SECTION 1 <span class="tag">과제 ①</span></span><h2>건물 용도 구성 · 기재율</h2><p>OSM building 태그를 6개 대분류로 재분류한 결과입니다. 미분류 비율(=태그 미기재)을 먼저 확인하세요.</p></div>
+      <div class="panel">
+        <div class="subhead">용도 구성비 <span class="badge" id="comp-badge"></span></div>
+        <div class="split-grid">
+          <div class="donut-wrap-2">
+            <div class="donut-center-wrap">
+              <div id="comp-donut"></div>
+              <div class="donut-center-label"><span id="comp-total"></span><small>전체 건물</small></div>
+            </div>
+            <div class="donut-legend-2" id="comp-legend"></div>
+          </div>
+          <div class="insight-card" id="comp-insight"></div>
+        </div>
+      </div>
+
+      <div class="source-caption" id="comp-source"></div>
+
+      <div class="section-head" id="sec-ring"><span class="eyebrow">SECTION 2 <span class="tag">과제 ②</span></span><h2>링(권역)별 밀도표</h2><p>대상지 중심에서 일정 간격의 링으로 권역을 나눠 집계합니다. 바깥 링일수록 면적이 커지므로 건물 <b>개수</b>가 아니라 링 면적으로 나눈 <b>밀도</b>로 비교합니다.</p></div>
+      <div class="panel">
+        <div class="subhead">링별 밀도 집계 <span class="badge" id="ring-badge"></span></div>
+        <div class="center-def" id="center-def"></div>
+        <div class="dens-table-wrap">
+          <table class="dens-table">
+            <thead><tr>
+              <th>링</th><th>거리</th><th class="num">링 면적(km²)</th><th class="num">건물 수(동)</th>
+              <th class="num hl">건물 밀도(동/km²)</th><th class="num hl">건폐율(%)</th><th class="num hl">용적률(%)</th>
+              <th class="num">평균 층수</th><th class="num">층수 기재율(%)</th><th class="num">밀도 지수(1링=100)</th>
+            </tr></thead>
+            <tbody id="ring-table-body"></tbody>
+          </table>
+        </div>
+        <div class="mini-bars" id="ring-mini-bars"></div>
+        <div class="split-grid" style="margin-top:22px;">
+          <div class="insight-card" id="ring-density-insight"></div>
+          <div class="panel" style="background:var(--paper);">
+            <div class="subhead">환산 방법</div>
+            <div class="kv"><span class="k">링 면적</span><span class="v">π × (R외² − R내²)</span></div>
+            <div class="kv"><span class="k">건물 밀도</span><span class="v">건물 수 ÷ 링 면적(km²)</span></div>
+            <div class="kv"><span class="k">건폐율</span><span class="v">건축면적 합 ÷ 링 면적 × 100</span></div>
+            <div class="kv"><span class="k">용적률</span><span class="v">연면적 합 ÷ 링 면적 × 100</span></div>
+            <div class="kv"><span class="k">링 배정 기준</span><span class="v">건물 중심점과 대상지 중심 사이 거리</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="source-caption" id="ring-source"></div>
+
+      <div class="section-head" id="sec-park"><span class="eyebrow">SECTION 3 <span class="tag">과제 ③</span></span><h2>스마트공원 요소 우선순위</h2><p>요소별 <b>효과</b>와 <b>난이도</b>를 1~5점으로 평가해 두 축 매트릭스로 우선순위를 정합니다. 기본 점수는 예시값이니 팀 논의로 수정하세요 — 수정 내용은 이 브라우저에 자동 저장됩니다.</p></div>
+      <div class="panel">
+        <div class="split-grid">
+          <div class="matrix-wrap" id="park-matrix"></div>
+          <div class="insight-card" id="park-insight"></div>
+        </div>
+        <div class="toolbar" style="margin-top:24px;">
+          <div class="hint" style="margin:0;">점수 기준: 4~5점 = 높음, 1~3점 = 낮음 · 우선순위 점수 = 효과 × (6 − 난이도)</div>
+          <button class="secondary" id="park-reset" type="button">기본값으로 초기화</button>
+        </div>
+        <div class="table-scroll" style="max-height:none;">
+          <table class="prio-table">
+            <thead><tr><th>순위</th><th>#</th><th>요소</th><th>효과</th><th>난이도</th><th class="num">점수</th><th>구분</th><th>근거</th><th></th></tr></thead>
+            <tbody id="park-table-body"></tbody>
+          </table>
+        </div>
+        <div class="add-row">
+          <input type="text" id="park-new-name" placeholder="요소 추가 (예: 스마트 음수대)">
+          <button class="secondary" id="park-add" type="button">+ 추가</button>
+        </div>
+      </div>
+      <div class="source-caption" id="park-source"></div>
+
+      <div class="section-head" id="sec-export"><span class="eyebrow">SECTION 4 <span class="tag">과제 ④</span></span><h2>산출물 저장 · 조회일과 출처</h2><p>세 산출물(①②③)을 조회일·출처·대상지 정의와 함께 한 번에 내보냅니다. 받은 파일을 팀 저장소에 그대로 올리세요.</p></div>
+      <div class="split-grid">
+        <div class="panel">
+          <div class="subhead">조회 정보</div>
+          <div id="prov-list"></div>
+        </div>
+        <div class="panel">
+          <div class="subhead">내보내기</div>
+          <div class="export-actions">
+            <button class="primary" id="btn-zip" type="button">산출물 패키지(ZIP) 내려받기</button>
+            <div class="row">
+              <button class="secondary" data-export="comp" type="button">① CSV</button>
+              <button class="secondary" data-export="ring" type="button">② CSV</button>
+              <button class="secondary" data-export="park" type="button">③ CSV</button>
+              <button class="secondary" data-export="readme" type="button">README.md</button>
+            </div>
+          </div>
+          <ol class="steps">
+            <li>파일명: <code id="zip-name"></code></li>
+            <li>압축을 풀어 팀 저장소의 <code id="repo-path"></code> 폴더에 올립니다.</li>
+            <li><code>README.md</code>에 조회일시·출처·중심 정의·쿼리 원문이 기록되고, 각 CSV에도 조회일시·출처 열이 들어갑니다.</li>
+            <li>GitHub 커밋 메시지 예: <code id="commit-msg"></code></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="group-divider" id="sec-deep">심화 분석</div>
+
+      <div class="section-head"><span class="eyebrow">SECTION 5</span><h2>권역 밀도 지표</h2><p id="area-label"></p></div>
+      <div class="stats-grid" id="stats-grid"></div>
+
+      <div class="section-head"><span class="eyebrow">SECTION 6</span><h2>개발 가용공간(잔여 용적) 추정</h2><p>목표 용적률·건폐율 대비 이 권역에 더 지을 수 있는 공간을 추정합니다.</p></div>
+      <div class="split-grid">
+        <div class="panel">
+          <div class="kv"><span class="k">대지(권역) 면적</span><span class="v" id="c-site"></span></div>
+          <div class="kv"><span class="k">현재 총 연면적(추정)</span><span class="v" id="c-cur-floor"></span></div>
+          <div class="kv"><span class="k">목표 용적률 기준 허용 연면적</span><span class="v" id="c-allow-floor"></span></div>
+          <div class="kv"><span class="k">잔여 개발가능 연면적</span><span class="v" id="c-remain-floor" style="color:var(--good);"></span></div>
+          <div class="bar-wrap">
+            <div class="bar-track">
+              <div class="bar-used" id="bar-used" style="width:0%;">0%</div>
+              <div class="bar-free" id="bar-free" style="width:0%;">0%</div>
+            </div>
+            <div class="legend-row">
+              <span><span class="legend-dot" style="background:var(--accent);"></span>현재 사용 용적</span>
+              <span><span class="legend-dot" style="background:#dff2e5;"></span>잔여 개발가능 용적</span>
+            </div>
+          </div>
+          <hr style="border:none; border-top:1px solid var(--line); margin:14px 0;">
+          <div class="kv"><span class="k">현재 총 건폐(바닥)면적</span><span class="v" id="c-cur-foot"></span></div>
+          <div class="kv"><span class="k">목표 건폐율 기준 허용 건폐면적</span><span class="v" id="c-allow-foot"></span></div>
+          <div class="kv"><span class="k">추가 신축 가능 바닥면적(1개층 기준)</span><span class="v" id="c-remain-foot" style="color:var(--good);"></span></div>
+          <div class="kv"><span class="k">환산: 이론상 추가 가능 총 층수</span><span class="v" id="c-extra-floors" style="color:var(--accent);"></span></div>
+        </div>
+        <div class="panel">
+          <div class="subhead" style="margin-top:0;">현재 용적 사용 현황</div>
+          <div class="donut-wrap-2">
+            <div class="donut-center-wrap" style="width:120px; height:120px;">
+              <div id="donut" style="width:120px;height:120px;border-radius:50%;"></div>
+            </div>
+            <div class="donut-legend-2" id="donut-legend"></div>
+          </div>
+          <div class="hint" style="margin-top:14px; color:var(--sub);">
+            도넛 차트는 목표 용적률(허용 연면적) 대비 현재 추정 연면적의 비중을 보여줍니다. 100%를 넘으면 이미 목표 용적률을 초과한 상태입니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head"><span class="eyebrow">SECTION 7</span><h2>도시공간구조 이론 분석</h2><p>버제스 동심원 · 호이트 섹터 · 해리스-울만 다핵심 이론을 실제 건물 데이터로 검증합니다. 위 지도 상단 칩을 눌러 오버레이를 켤 수 있습니다.</p></div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="subhead">① 버제스 동심원 이론 <span class="badge">Concentric Zone Model</span></div>
+        <div class="split-grid">
+          <div id="ring-chart"></div>
+          <div class="insight-card" id="ring-insight"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="subhead">② 호이트 선형(섹터) 이론 <span class="badge">Sector Model</span></div>
+        <div class="split-grid">
+          <div id="sector-chart" style="text-align:center;"></div>
+          <div class="insight-card" id="sector-insight"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="subhead">③ 해리스-울만 다핵심 이론 <span class="badge">Multiple Nuclei Model</span></div>
+        <div class="split-grid">
+          <div>
+            <div id="nuclei-chart" style="text-align:center;"></div>
+            <div class="nuclei-caption" id="nuclei-caption"></div>
+          </div>
+          <div class="insight-card" id="nuclei-insight"></div>
+        </div>
+      </div>
+
+      <div class="section-head"><span class="eyebrow">SECTION 8</span><h2>건물별 상세</h2><p id="table-badge"></p></div>
+      <div class="panel">
+        <div class="toolbar">
+          <div class="hint" style="color:var(--sub);">연면적(추정) 기준 내림차순, 상위 300개까지 표시</div>
+          <div style="display:flex; gap:8px;">
+            <button class="secondary" id="btn-csv" type="button">CSV 내보내기</button>
+            <button class="secondary" id="btn-geojson" type="button">GeoJSON 내보내기</button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>OSM ID</th><th>용도</th><th>분류</th><th>주소/이름</th>
+                <th>층수</th><th>건폐면적(㎡)</th><th>연면적 추정(㎡)</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="placeholder" class="panel empty">왼쪽에서 장소를 검색하고 반경을 설정한 뒤 <b>"이 위치 밀도 분석 실행"</b>을 눌러주세요.</div>
+  </main>
+</div>
+
+<footer>Overpass API · Nominatim · © OpenStreetMap contributors (ODbL) · 공용 서버이므로 반복 조회는 자제해 주세요</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  const OVERPASS_ENDPOINTS = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://lz4.overpass-api.de/api/interpreter'
+  ];
+  const SECTOR_LABELS = ['N','NE','E','SE','S','SW','W','NW'];
+  const COMP_ORDER = ['미분류','상업·업무','주거','공공·교육','종교·문화','공업'];
+  const COMP_COLORS = {'미분류':'#d9a441','상업·업무':'#2b3440','주거':'#5b7c99','공공·교육':'#9bb7c4','종교·문화':'#a6705b','공업':'#7d786f'};
+  const SOURCE_LABEL = 'Overpass API(OpenStreetMap)';
+
+  let map, circleLayer, centerMarker, canvasRenderer, buildingsLayerGroup, ringLayerGroup, sectorLayerGroup, gridLayerGroup, nucleiLayerGroup;
+  let center = null;      // {lat, lon}
+  let radius = 3000;      // radius of the loaded data — analysis always uses this
+  let viewRadius = 3000;  // radius currently typed in the input / drawn on the map
+  let buildings = [];      // computed building records
+  let siteAreaM2 = 0;
+  let centerMethod = null;
+  let provenance = null;   // snapshot of the last successful query (조회일·출처)
+  let activeQuery = null;  // { cancelled, controller } while an Overpass request runs
+  let mapNeedsRender = false;
+  let lastRings = [], lastComp = [];
+  const overlayState = { ring:false, sector:false, grid:false, nuclei:false };
+
+  function $(id){ return document.getElementById(id); }
+
+  function initMap(){
+    map = L.map('map', { preferCanvas:true }).setView([37.5665,126.9780], 12);
+
+    // OSM 공식 타일 서버(tile.openstreetmap.org)는 타일 사용 정책상 로컬 file:// 페이지를 403("Access blocked")으로 차단한다.
+    // CARTO 무키 타일은 워터마크가 찍히고, Esri 도로/회색 지도는 한국 커버리지가 없어 아래 제공처를 사용한다.
+    const osmAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    const baseLayers = {
+      '표준 지도': L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', { maxZoom:19, attribution:osmAttr + ' · Tiles: OSM Deutschland' }),
+      '지도 (FR)': L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', { maxZoom:19, subdomains:'abc', attribution:osmAttr + ' · Tiles: OSM France' }),
+      '위성 영상': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom:19, attribution:'Tiles &copy; Esri, Maxar, Earthstar Geographics' }),
+      '지형도': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom:17, subdomains:'abc', attribution:osmAttr + ' · SRTM · Style: &copy; OpenTopoMap (CC-BY-SA)' })
+    };
+    baseLayers['표준 지도'].addTo(map);
+    baseLayers['표준 지도'].once('load', () => splashStep(92, '지도 준비 완료'));
+    L.control.layers(baseLayers, null, { position:'topright' }).addTo(map);
+    canvasRenderer = L.canvas({ padding:0.5 });
+    map.on('click', onMapClick);
+
+    buildingsLayerGroup = L.layerGroup().addTo(map);
+    ringLayerGroup = L.layerGroup();
+    sectorLayerGroup = L.layerGroup();
+    gridLayerGroup = L.layerGroup();
+    nucleiLayerGroup = L.layerGroup();
+  }
+
+  function bindOverlayToggle(id, key, layerGroup){
+    $(id).addEventListener('click', () => {
+      overlayState[key] = !overlayState[key];
+      $(id).classList.toggle('active', overlayState[key]);
+      if (overlayState[key]) map.addLayer(layerGroup); else map.removeLayer(layerGroup);
+    });
+  }
+
+  function setStatus(msg, type){
+    const el = $('status');
+    el.style.display = 'block';
+    el.textContent = msg;
+    el.className = 'status' + (type ? (' '+type) : '');
+  }
+
+  function fmtNum(n, digits){
+    if (n === null || n === undefined || isNaN(n)) return '—';
+    return n.toLocaleString('ko-KR', { maximumFractionDigits: digits===undefined?0:digits });
+  }
+  function fmtArea(m2){ return fmtNum(m2,0) + ' ㎡ (' + fmtNum(m2/3.3058,1) + '평)'; }
+
+  // ---- Geocoding ----
+  async function geocode(query){
+    const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&accept-language=ko&limit=5&q=' + encodeURIComponent(query);
+    const res = await fetch(url, { headers: { 'Accept':'application/json' } });
+    if (!res.ok) throw new Error('지오코딩 요청 실패 (HTTP ' + res.status + ')');
+    return res.json();
+  }
+
+  $('btn-search').addEventListener('click', async () => {
+    const q = $('place-input').value.trim();
+    if (!q){ setStatus('검색어를 입력하세요.', 'err'); return; }
+    setStatus('장소 검색 중...', null);
+    $('candidates').innerHTML = '';
+    try {
+      const results = await geocode(q);
+      if (!results.length){ setStatus('검색 결과가 없습니다. 다른 검색어를 시도해보세요.', 'err'); return; }
+      setStatus(results.length + '개 후보를 찾았습니다. 선택해주세요.', 'ok');
+      const box = $('candidates');
+      results.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = 'cand';
+        btn.type = 'button';
+        btn.textContent = r.display_name;
+        btn.addEventListener('click', () => selectCandidate(r));
+        box.appendChild(btn);
+      });
+    } catch(e){
+      setStatus('오류: ' + e.message, 'err');
+    }
+  });
+
+  const METHOD_LABELS = {
+    geocode: '지오코딩(Nominatim) 결과 좌표',
+    manual: '좌표 직접 입력',
+    click: '지도 클릭으로 지정',
+    drag: '중심 마커 드래그로 조정'
+  };
+
+  function fmtDist(m){
+    if (m === 0) return '0';
+    return m >= 1000 ? (fmtNum(m/1000, 2) + 'km') : (fmtNum(m, 0) + 'm');
+  }
+
+  function selectCandidate(r){
+    $('candidates').innerHTML = '';
+    $('site-name').value = r.name || String(r.display_name).split(',')[0].trim();
+    setStatus('선택됨: ' + r.display_name, 'ok');
+    setCenter(parseFloat(r.lat), parseFloat(r.lon), 'geocode', true);
+  }
+
+  function setCenter(lat, lon, method, fit){
+    if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return;
+    const moved = !center || Math.abs(center.lat - lat) > 1e-7 || Math.abs(center.lon - lon) > 1e-7;
+    center = { lat, lon };
+    centerMethod = method;
+    $('center-lat').value = lat.toFixed(6);
+    $('center-lon').value = lon.toFixed(6);
+    $('method-note').innerHTML = '정의 방법: <b>' + METHOD_LABELS[method] + '</b> · WGS84 좌표';
+    viewRadius = readRadius();
+    drawCircle(fit);
+    $('btn-fetch').disabled = false;
+    if (moved && provenance) setStatus('중심이 바뀌었습니다. 결과를 갱신하려면 다시 분석을 실행하세요.', null);
+  }
+
+  function readRadius(){
+    const v = Math.max(100, Math.min(5000, parseFloat($('radius-input').value) || 3000));
+    $('radius-input').value = v;
+    $('radius-warn').hidden = v < 2000;
+    return v;
+  }
+  function ringInterval(){ return parseFloat($('ring-interval').value) || 1000; }
+
+  $('radius-input').addEventListener('change', () => {
+    viewRadius = readRadius();
+    if (center) drawCircle(true);
+    if (provenance && viewRadius !== provenance.radius) setStatus('반경이 바뀌었습니다. 결과를 갱신하려면 다시 분석을 실행하세요.', null);
+  });
+  $('ring-interval').addEventListener('change', () => { if (buildings.length) computeAndRender(); });
+  document.querySelectorAll('[data-radius]').forEach(btn => btn.addEventListener('click', () => {
+    $('radius-input').value = btn.dataset.radius;
+    $('ring-interval').value = btn.dataset.interval;
+    $('radius-input').dispatchEvent(new Event('change'));
+    $('ring-interval').dispatchEvent(new Event('change'));
+  }));
+
+  ['center-lat','center-lon'].forEach(id => $(id).addEventListener('change', () => {
+    setCenter(parseFloat($('center-lat').value), parseFloat($('center-lon').value), 'manual', true);
+  }));
+
+  $('btn-pick').addEventListener('click', () => {
+    const on = !$('map').classList.contains('picking');
+    $('map').classList.toggle('picking', on);
+    $('btn-pick').classList.toggle('active', on);
+    if (on) setStatus('지도에서 대상지 중심으로 삼을 지점을 클릭하세요.', null);
+  });
+
+  function onMapClick(e){
+    if (!$('map').classList.contains('picking')) return;
+    $('map').classList.remove('picking');
+    $('btn-pick').classList.remove('active');
+    map.closePopup();
+    setCenter(e.latlng.lat, e.latlng.lng, 'click', false);
+    setStatus('중심을 지정했습니다. 필요하면 검은 마커를 드래그해 조정하세요.', 'ok');
+  }
+
+  function drawCircle(fit){
+    if (circleLayer) map.removeLayer(circleLayer);
+    circleLayer = L.circle([center.lat, center.lon], {
+      radius: viewRadius, color:'#0a0a0a', weight:1.5, fillOpacity:0.04, interactive:false
+    }).addTo(map);
+    if (!centerMarker){
+      centerMarker = L.marker([center.lat, center.lon], {
+        draggable:true, keyboard:false, zIndexOffset:1000,
+        icon: L.divIcon({ className:'center-marker', html:'<span></span>', iconSize:[18,18], iconAnchor:[9,9] })
+      }).addTo(map).bindTooltip('대상지 중심 · 드래그로 조정', { direction:'top', offset:[0,-10] });
+      centerMarker.on('drag', ev => circleLayer.setLatLng(ev.target.getLatLng()));
+      centerMarker.on('dragend', ev => { const p = ev.target.getLatLng(); setCenter(p.lat, p.lng, 'drag', false); });
+    } else {
+      centerMarker.setLatLng([center.lat, center.lon]);
+    }
+    if (fit) map.fitBounds(circleLayer.getBounds(), { padding:[20,20] });
+  }
+
+  // ---- Geometry helpers (equirectangular projection around center) ----
+  function project(lat, lon){
+    const R = 6371000;
+    const x = (lon - center.lon) * Math.PI/180 * R * Math.cos(center.lat*Math.PI/180);
+    const y = (lat - center.lat) * Math.PI/180 * R;
+    return [x,y];
+  }
+  function unproject(x, y){
+    const R = 6371000;
+    const lat = center.lat + (y/R) * (180/Math.PI);
+    const lon = center.lon + (x/(R*Math.cos(center.lat*Math.PI/180))) * (180/Math.PI);
+    return [lat, lon];
+  }
+  function ringArea(geomArr){
+    if (!geomArr || geomArr.length < 3) return 0;
+    const pts = geomArr.map(p => project(p.lat, p.lon));
+    let a = 0;
+    for (let i=0;i<pts.length;i++){
+      const [x1,y1] = pts[i];
+      const [x2,y2] = pts[(i+1)%pts.length];
+      a += x1*y2 - x2*y1;
+    }
+    return Math.abs(a/2);
+  }
+  function computeCentroid(latlngs){
+    let ring = Array.isArray(latlngs[0][0]) ? latlngs[0] : latlngs;
+    const first = ring[0], last = ring[ring.length-1];
+    if (ring.length > 3 && first[0] === last[0] && first[1] === last[1]) ring = ring.slice(0, -1); // closed ring repeats its first vertex
+    let sx=0, sy=0, n=0;
+    ring.forEach(([lat,lon]) => { sx+=lat; sy+=lon; n++; });
+    return n ? [sx/n, sy/n] : [center.lat, center.lon];
+  }
+
+  function parseLevels(tags){
+    if (!tags) return null;
+    let v = tags['building:levels'] ?? tags['building:levels:aboveground'];
+    if (v !== undefined){
+      const n = parseFloat(v);
+      if (!isNaN(n) && n > 0) return n;
+    }
+    const h = tags['height'] ?? tags['building:height'];
+    if (h !== undefined){
+      const n = parseFloat(h);
+      if (!isNaN(n) && n > 0) return Math.max(1, Math.round(n/3));
+    }
+    return null;
+  }
+
+  function labelOf(tags){
+    if (!tags) return '';
+    if (tags.name) return tags.name;
+    const num = tags['addr:housenumber'];
+    const street = tags['addr:street'];
+    if (street) return street + (num ? ' ' + num : '');
+    return '';
+  }
+
+  function classifyUse(useTag){
+    const v = (useTag || '').toLowerCase();
+    const residential = ['house','apartments','residential','detached','semidetached_house','terrace','dormitory','bungalow','cabin','static_caravan','farm','houseboat'];
+    const commercial = ['commercial','retail','office','supermarket','kiosk','hotel','warehouse'];
+    const publicEdu = ['school','university','college','kindergarten','hospital','government','public','civic','fire_station','train_station','transportation'];
+    const religionCulture = ['church','cathedral','chapel','mosque','temple','synagogue','shrine','museum','community_centre','monastery'];
+    const industrial = ['industrial','factory','manufacture','hangar','digester'];
+    if (residential.includes(v)) return '주거';
+    if (commercial.includes(v)) return '상업·업무';
+    if (publicEdu.includes(v)) return '공공·교육';
+    if (religionCulture.includes(v)) return '종교·문화';
+    if (industrial.includes(v)) return '공업';
+    return '미분류';
+  }
+
+  // ---- Overpass fetch with fallback endpoints (each attempt capped so one slow mirror can't stall the rest) ----
+  // file:// · data: 로 열린 페이지는 Origin 이 'null' 이라 Overpass 가 요청을 거부한다.
+  const IS_FILE_ORIGIN = location.protocol === 'file:' || location.origin === 'null' || !location.origin;
+
+  async function fetchOverpass(query, token, timeoutMs, onProgress){
+    let lastErr;
+    for (const ep of OVERPASS_ENDPOINTS){
+      if (token.cancelled) break;
+      const controller = new AbortController();
+      token.controller = controller;
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        if (onProgress) onProgress(ep);
+        const res = await fetch(ep, { method:'POST', body: 'data=' + encodeURIComponent(query), signal: controller.signal });
+        const text = await res.text();
+        if (!res.ok){
+          // Overpass 는 과부하 시 504/429 와 함께 HTML 오류 페이지를 돌려준다
+          throw new Error(res.status === 429 ? '요청 한도 초과(429)' : (res.status === 504 ? '서버 혼잡(504)' : 'HTTP ' + res.status));
+        }
+        let data;
+        try { data = JSON.parse(text); }
+        catch(_){ throw new Error('서버가 JSON 대신 오류 페이지를 반환했습니다'); }
+        // 시간 초과 시 Overpass 는 일부 결과와 함께 remark 를 준다 — 불완전한 결과는 쓰지 않는다
+        if (data.remark && /error|timed out/i.test(data.remark)) throw new Error('Overpass 응답 오류: ' + data.remark);
+        return { data, endpoint: ep };
+      } catch(e){
+        if (token.cancelled) throw new Error('사용자 취소');
+        if (e.name === 'AbortError') lastErr = new Error('응답 지연(' + Math.round(timeoutMs/1000) + '초 초과)');
+        else if (e.name === 'TypeError') lastErr = new Error(IS_FILE_ORIGIN ? 'file:// 차단' : '네트워크 연결 실패');
+        else lastErr = e;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    if (token.cancelled) throw new Error('사용자 취소');
+    throw lastErr || new Error('Overpass 서버에 연결할 수 없습니다.');
+  }
+
+  $('btn-fetch').addEventListener('click', runAnalysis);
+  ['target-far','target-bcr'].forEach(id => {
+    $(id).addEventListener('change', () => { if (buildings.length) computeAndRender(); });
+  });
+  $('default-levels').addEventListener('change', () => { if (buildings.length){ mapNeedsRender = true; computeAndRender(); } });
+  $('qo-cancel').addEventListener('click', () => {
+    if (!activeQuery) return;
+    activeQuery.cancelled = true;
+    if (activeQuery.controller) activeQuery.controller.abort();
+  });
+
+  async function runAnalysis(){
+    if (!center || activeQuery) return;
+    const queryRadius = viewRadius = readRadius();
+    const siteName = $('site-name').value.trim() || '대상지';
+    const qTimeout = queryRadius > 2000 ? 180 : (queryRadius > 1000 ? 90 : 45);
+    const query = '[out:json][timeout:' + qTimeout + '];(' +
+      'way["building"](around:' + queryRadius + ',' + center.lat + ',' + center.lon + ');' +
+      'relation["building"]["type"="multipolygon"](around:' + queryRadius + ',' + center.lat + ',' + center.lon + ');' +
+      ');out geom qt;';
+
+    const token = activeQuery = { cancelled:false, controller:null };
+    const started = Date.now();
+    let host = '';
+    const tick = () => { $('qo-meta').textContent = Math.floor((Date.now()-started)/1000) + '초 경과 · ' + host + ' · 반경 ' + fmtDist(queryRadius); };
+    const ticker = setInterval(tick, 1000);
+    $('btn-fetch').disabled = true;
+    $('query-overlay').hidden = false;
+    tick();
+
+    try {
+      const { data, endpoint } = await fetchOverpass(query, token, qTimeout*1000 + 15000, ep => {
+        host = new URL(ep).hostname;
+        tick();
+        setStatus('Overpass API 조회 중… (' + host + ')', null);
+      });
+      $('qo-meta').textContent = '응답 처리 중… (' + fmtNum((data.elements || []).length) + '개 요소)';
+      await new Promise(r => setTimeout(r, 30)); // let the overlay text paint before heavy parsing
+      radius = queryRadius;
+      processElements(data.elements || []);
+      provenance = {
+        queriedAt: new Date(),
+        endpoint,
+        osmBase: (data.osm3s && data.osm3s.timestamp_osm_base) || null,
+        query,
+        siteName,
+        center: { lat: center.lat, lon: center.lon },
+        centerMethod,
+        radius: queryRadius,
+        elementCount: (data.elements || []).length,
+        seconds: Math.round((Date.now()-started)/100)/10
+      };
+      setStatus('완료: 건물 ' + fmtNum(buildings.length) + '동 · ' + provenance.seconds + '초', 'ok');
+      $('results').style.display = 'block';
+      $('placeholder').style.display = 'none';
+      mapNeedsRender = true;
+      computeAndRender();
+    } catch(e){
+      if (e.message === '사용자 취소') setStatus('조회를 취소했습니다.', null);
+      else if (IS_FILE_ORIGIN && e.message === 'file:// 차단') setStatus('Overpass 서버가 파일로 직접 연 페이지의 요청을 거부했습니다. 같은 폴더의 「대시보드 실행.bat」으로 열어주세요.', 'err');
+      else setStatus('Overpass 조회 실패: ' + e.message + ' — 공용 서버가 혼잡할 수 있으니 반경을 줄이거나 잠시 후 다시 시도해주세요.', 'err');
+    } finally {
+      clearInterval(ticker);
+      activeQuery = null;
+      $('query-overlay').hidden = true;
+      $('btn-fetch').disabled = false;
+    }
+  }
+
+  function processElements(elements){
+    buildings = [];
+    siteAreaM2 = Math.PI * radius * radius;
+
+    elements.forEach(el => {
+      let area = 0;
+      let latlngs = [];
+
+      if (el.type === 'way' && el.geometry){
+        area = ringArea(el.geometry);
+        latlngs = el.geometry.map(p => [p.lat, p.lon]);
+      } else if (el.type === 'relation' && el.members){
+        let outer = 0, inner = 0;
+        el.members.forEach(m => {
+          if (!m.geometry) return;
+          const a = ringArea(m.geometry);
+          if (m.role === 'inner') inner += a; else outer += a;
+          if (m.role !== 'inner') latlngs.push(m.geometry.map(p => [p.lat, p.lon]));
+        });
+        area = Math.max(0, outer - inner);
+      } else {
+        return;
+      }
+      if (area <= 0) return;
+
+      const levels = parseLevels(el.tags);
+      buildings.push({
+        id: el.id,
+        type: el.type,
+        use: (el.tags && el.tags.building) || 'yes',
+        label: labelOf(el.tags),
+        area: area,
+        levels: levels,
+        latlngs: latlngs,
+        tags: el.tags || {}
+      });
+    });
+  }
+
+  function colorForLevels(l){
+    const t = Math.max(0, Math.min(1, (l-1)/14));
+    const c1 = [122,132,140], c2 = [166,61,47];
+    const r = Math.round(c1[0] + t*(c2[0]-c1[0]));
+    const g = Math.round(c1[1] + t*(c2[1]-c1[1]));
+    const b = Math.round(c1[2] + t*(c2[2]-c1[2]));
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+
+  // ---- Urban structure theory computations ----
+  function computeRings(){
+    const step = ringInterval();
+    const n = Math.max(1, Math.ceil(radius / step - 1e-9));
+    const rings = Array.from({length:n}, (_,i) => ({
+      idx:i, rMin:i*step, rMax:Math.min(radius, (i+1)*step), footprint:0, floor:0, count:0, known:0
+    }));
+    buildings.forEach(b => {
+      const r = rings[Math.min(n-1, Math.floor(b.dist / step))];
+      r.footprint += b.area; r.floor += b.floorArea; r.count++;
+      if (!b.estimated) r.known++;
+    });
+    rings.forEach(r => {
+      const a = Math.PI * (r.rMax*r.rMax - r.rMin*r.rMin);
+      r.area = a;
+      r.areaKm2 = a / 1e6;
+      r.density = r.areaKm2 > 0 ? r.count / r.areaKm2 : 0;
+      r.bcr = a>0 ? r.footprint/a*100 : 0;
+      r.far = a>0 ? r.floor/a*100 : 0;
+      r.avgLevels = r.footprint > 0 ? r.floor / r.footprint : 0;
+      r.knownPct = r.count ? r.known / r.count * 100 : 0;
+      r.label = (r.idx+1) + '링';
+      r.range = fmtDist(r.rMin) + '–' + fmtDist(r.rMax);
+    });
+    const base = rings[0].density;
+    rings.forEach(r => { r.index = base > 0 ? r.density / base * 100 : null; });
+    return rings;
+  }
+
+  function computeSectors(){
+    const sectors = SECTOR_LABELS.map((label,i) => ({ label, idx:i, footprint:0, floor:0, count:0 }));
+    buildings.forEach(b => {
+      const idx = Math.floor((((b.bearing+22.5)%360)+360)%360 / 45);
+      sectors[idx].footprint += b.area;
+      sectors[idx].floor += b.floorArea;
+      sectors[idx].count++;
+    });
+    const sectorArea = siteAreaM2/8;
+    sectors.forEach(s => {
+      s.area = sectorArea;
+      s.bcr = sectorArea>0 ? s.footprint/sectorArea*100 : 0;
+      s.far = sectorArea>0 ? s.floor/sectorArea*100 : 0;
+    });
+    return sectors;
+  }
+
+  function computeNuclei(){
+    const cellSize = Math.max(40, Math.min(200, radius/6));
+    const cells = new Map();
+    buildings.forEach(b => {
+      const [x,y] = project(b.centroid[0], b.centroid[1]);
+      const i = Math.floor(x/cellSize), j = Math.floor(y/cellSize);
+      const key = i+','+j;
+      if (!cells.has(key)) cells.set(key, { i, j, floor:0, footprint:0, count:0 });
+      const c = cells.get(key);
+      c.floor += b.floorArea; c.footprint += b.area; c.count++;
+    });
+    const cellArea = cellSize*cellSize;
+    const list = Array.from(cells.values()).map(c => ({ ...c, far: c.floor/cellArea*100 }));
+    const byKey = new Map(list.map(c => [c.i+','+c.j, c]));
+    const values = list.map(c => c.far);
+    const mean = values.length ? values.reduce((a,b)=>a+b,0)/values.length : 0;
+    const std = values.length ? Math.sqrt(values.reduce((a,b)=>a+(b-mean)*(b-mean),0)/values.length) : 0;
+    const threshold = Math.max(mean*1.3, mean+std, 1);
+    const nuclei = list.filter(c => {
+      if (c.far < threshold || c.far <= 0) return false;
+      const neighbors = [[1,0],[-1,0],[0,1],[0,-1]].map(([di,dj]) => byKey.get((c.i+di)+','+(c.j+dj)));
+      return neighbors.every(n => !n || n.far <= c.far);
+    }).sort((a,b) => b.far-a.far).slice(0,8);
+    return { cells:list, cellSize, nuclei, mean, std };
+  }
+
+  // ---- Chart builders (inline SVG) ----
+  function polarPoint(cx,cy,R,angleDeg){
+    const rad = angleDeg*Math.PI/180;
+    return [cx + R*Math.sin(rad), cy - R*Math.cos(rad)];
+  }
+
+  function buildDonutSVG(slices){
+    const size=200, stroke=30, R=(size-stroke)/2, C=2*Math.PI*R, cx=size/2, cy=size/2;
+    let acc=0;
+    const arcs = slices.map(s => {
+      const f0=acc, fs=s.pct/100;
+      acc += fs;
+      const dash = fs*C, gap = C-dash;
+      const offset = -(f0*C);
+      return '<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="'+s.color+'" stroke-width="'+stroke+'" stroke-dasharray="'+dash+' '+gap+'" stroke-dashoffset="'+offset+'" transform="rotate(-90 '+cx+' '+cy+')"/>';
+    }).join('');
+    return '<svg viewBox="0 0 '+size+' '+size+'" width="200" height="200"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="#edebe6" stroke-width="'+stroke+'"/>'+arcs+'</svg>';
+  }
+
+  function buildRadarSVG(sectors){
+    const size=280, cx=size/2, cy=size/2, R=size/2-42;
+    const maxVal = Math.max(10, ...sectors.map(s=>s.far)) * 1.15;
+    let grid='', axes='', labels='';
+    [0.25,0.5,0.75,1].forEach(f => {
+      const pts = sectors.map((_,i) => polarPoint(cx,cy,R*f,i*45).join(',')).join(' ');
+      grid += '<polygon points="'+pts+'" fill="none" stroke="rgba(10,10,10,.12)" stroke-width="1"/>';
+    });
+    sectors.forEach((s,i) => {
+      const [x,y] = polarPoint(cx,cy,R,i*45);
+      axes += '<line x1="'+cx+'" y1="'+cy+'" x2="'+x+'" y2="'+y+'" stroke="rgba(10,10,10,.12)" stroke-width="1"/>';
+      const [lx,ly] = polarPoint(cx,cy,R+20,i*45);
+      labels += '<text x="'+lx+'" y="'+ly+'" font-size="11" font-weight="500" letter-spacing="1" fill="#75726b" text-anchor="middle" dominant-baseline="middle">'+s.label+'</text>';
+    });
+    const dataPts = sectors.map((s,i) => polarPoint(cx,cy,R*Math.min(1,s.far/maxVal),i*45).join(',')).join(' ');
+    const dots = sectors.map((s,i) => { const [x,y]=polarPoint(cx,cy,R*Math.min(1,s.far/maxVal),i*45); return '<circle cx="'+x+'" cy="'+y+'" r="3.5" fill="#0a0a0a"/>'; }).join('');
+    return '<svg viewBox="0 0 '+size+' '+size+'" width="100%" height="270" style="max-width:300px;">'+grid+axes+
+      '<polygon points="'+dataPts+'" fill="rgba(10,10,10,0.1)" stroke="#0a0a0a" stroke-width="1.5"/>'+dots+labels+'</svg>';
+  }
+
+  // ---- Insight text builders ----
+  function renderCompositionInsight(slices, total){
+    const unclas = slices.find(s => s.label==='미분류') || { count:0, pct:0 };
+    const classified = total - unclas.count;
+    const topClassified = slices.filter(s => s.label!=='미분류').sort((a,b) => b.count-a.count)[0];
+    $('comp-insight').innerHTML =
+      '<div class="insight-tag">INSIGHT</div>'+
+      '<div class="insight-headline">모집단은 반경 '+radius+'m 안 건물 '+fmtNum(total)+'동 전체 → 미분류를 제외하고 보면 표본이 다른 결과를 보일 수 있음</div>'+
+      '<ol class="insight-list">'+
+      '<li>Overpass API(OSM) 반경 '+radius+'m 조회 결과, 전체 '+fmtNum(total)+'동 중 <b>미분류가 '+fmtNum(unclas.pct,1)+'%('+fmtNum(unclas.count)+'동)</b>로 태그 정보가 불충분해 용도를 구분할 수 없음</li>'+
+      '<li>분류된 '+fmtNum(classified)+'동 기준으로는 <b>'+(topClassified ? topClassified.label+' '+fmtNum(topClassified.pct,1)+'%' : '데이터 부족')+'</b>가 가장 큰 비중 → OSM은 자원봉사 매핑 데이터라 지역별 태깅 커버리지 편차가 있어 실제 구성과 다를 수 있음</li>'+
+      '<li><b>보완방안</b>: 건축물대장·도시계획현황과 교차검증 후 활용 권장. 미분류 비율(현재 '+fmtNum(unclas.pct,0)+'%)이 높을수록 구성비 해석에 유의</li>'+
+      '</ol>';
+  }
+
+  function renderRingInsight(rings){
+    const first = rings[0], last = rings[rings.length-1];
+    if (rings.length < 2){
+      $('ring-insight').innerHTML = '<div class="insight-tag">INSIGHT</div><div class="insight-headline">링이 1개뿐이라 거리에 따른 변화를 비교할 수 없음 — 반경을 링 간격보다 크게 설정하세요</div>';
+      return;
+    }
+    const decreasing = rings.every((r,i) => i===0 || r.far <= rings[i-1].far + 1e-9);
+    $('ring-insight').innerHTML =
+      '<div class="insight-tag">INSIGHT</div>'+
+      '<div class="insight-headline">'+(decreasing
+        ? '중심에서 외곽으로 갈수록 용적률이 감소 → 버제스 동심원 패턴에 부합'
+        : '거리에 따라 밀도가 단조 감소하지 않음 → 단순 동심원 구조로 보기 어려움')+'</div>'+
+      '<ol class="insight-list">'+
+      '<li>중심('+first.range+') 용적률 <b>'+fmtNum(first.far,1)+'%</b> vs 외곽('+last.range+') <b>'+fmtNum(last.far,1)+'%</b></li>'+
+      '<li>버제스 이론은 도심(CBD)에서 멀어질수록 지가·밀도가 낮아지는 동심원형 확장을 가정함 — 실제로는 교통축·재개발 여부에 따라 편차가 큼</li>'+
+      '<li>본 분석은 '+fmtDist(ringInterval())+' 간격 원형 링 '+rings.length+'개 기준이며, 실제 행정구역·용도지역 경계와는 다를 수 있음</li>'+
+      '</ol>';
+  }
+
+  function renderSectorInsight(sectors){
+    const max = sectors.reduce((a,b) => b.far>a.far?b:a, sectors[0]);
+    const min = sectors.reduce((a,b) => b.far<a.far?b:a, sectors[0]);
+    $('sector-insight').innerHTML =
+      '<div class="insight-tag">INSIGHT</div>'+
+      '<div class="insight-headline">'+max.label+' 방향 섹터의 용적률이 '+fmtNum(max.far,1)+'%로 가장 높음 → 특정 방향으로 고밀도가 뻗어나가는 호이트의 선형(섹터) 패턴 가능성</div>'+
+      '<ol class="insight-list">'+
+      '<li>최고밀도 섹터: <b>'+max.label+' ('+fmtNum(max.far,1)+'%)</b> · 최저밀도 섹터: <b>'+min.label+' ('+fmtNum(min.far,1)+'%)</b></li>'+
+      '<li>호이트 이론은 도심에서 특정 교통축·지형을 따라 고밀도·고지가 지역이 쐐기 모양으로 확장된다고 봄</li>'+
+      '<li>8방위(45° 단위) 단순 구분이므로, 실제 도로망·지형 축과는 정확히 일치하지 않을 수 있음</li>'+
+      '</ol>';
+  }
+
+  function renderNucleiInsight(result){
+    const n = result.nuclei.length;
+    const headline = n>=2 ? (n+'개의 밀도 핵(중심)이 발견되어 다핵심 구조 특성을 보임')
+      : (n===1 ? '뚜렷한 밀도 핵이 1개로, 단일 중심(단핵) 구조에 가까움' : '뚜렷한 밀도 핵이 발견되지 않음 (밀도 분포가 고른 편)');
+    $('nuclei-insight').innerHTML =
+      '<div class="insight-tag">INSIGHT</div>'+
+      '<div class="insight-headline">'+headline+'</div>'+
+      '<ol class="insight-list">'+
+      '<li>격자 셀 크기 <b>'+fmtNum(result.cellSize,0)+'m</b> 기준, 주변 셀보다 밀도가 높은 국지적 고밀도 지점을 탐지한 결과</li>'+
+      '<li>해리스·울만 이론은 도심(CBD) 외에도 교통 결절점·대학·산업단지 등 여러 핵을 중심으로 도시가 성장한다고 봄</li>'+
+      '<li>이 탐지는 단순 격자·인접 비교 휴리스틱이며, 실제 핵심지 여부는 현장 용도·접근성 확인이 필요함</li>'+
+      '</ol>';
+  }
+
+  // ---- Section renderers ----
+  function renderComposition(){
+    const agg = {}; COMP_ORDER.forEach(c => agg[c]={count:0,footprint:0,floor:0});
+    buildings.forEach(b => { agg[b.category].count++; agg[b.category].footprint+=b.area; agg[b.category].floor+=b.floorArea; });
+    const total = buildings.length || 1;
+    const slices = COMP_ORDER.map(c => ({ label:c, color:COMP_COLORS[c], ...agg[c], pct: agg[c].count/total*100 })).filter(s => s.count>0);
+
+    $('comp-donut').innerHTML = buildDonutSVG(slices);
+    $('comp-total').textContent = fmtNum(buildings.length);
+    $('comp-legend').innerHTML = slices.map(s =>
+      '<div class="legend-item"><span class="legend-dot" style="background:'+s.color+'"></span>'+
+      '<span class="legend-label">'+s.label+'</span>'+
+      '<span class="legend-pct">'+fmtNum(s.pct,1)+'%</span>'+
+      '<span class="legend-count">'+fmtNum(s.count)+'동</span></div>'
+    ).join('');
+    const unclas = slices.find(s => s.label==='미분류');
+    $('comp-badge').textContent = unclas ? ('미분류 '+fmtNum(unclas.pct,0)+'%') : '미분류 0%';
+
+    renderCompositionInsight(slices, buildings.length);
+    return slices;
+  }
+
+  function renderRingChart(rings){
+    const maxFar = Math.max(1, ...rings.map(r=>r.far));
+    $('ring-chart').innerHTML = rings.map(r => {
+      const pct = Math.min(100, r.far/maxFar*100);
+      return '<div class="ring-row">'+
+        '<div class="ring-label">'+r.range+'</div>'+
+        '<div class="ring-bar-track"><div class="ring-bar-fill" style="width:'+pct+'%"></div></div>'+
+        '<div class="ring-value">'+fmtNum(r.far,1)+'%</div></div>';
+    }).join('');
+  }
+
+  function renderSectorChart(sectors){
+    $('sector-chart').innerHTML = buildRadarSVG(sectors);
+  }
+
+  function renderNucleiGrid(result){
+    const cells = result.cells;
+    if (!cells.length){ $('nuclei-chart').innerHTML = '<div class="empty">데이터 없음</div>'; return; }
+    const is = cells.map(c=>c.i), js = cells.map(c=>c.j);
+    const iMin=Math.min(...is), iMax=Math.max(...is), jMin=Math.min(...js), jMax=Math.max(...js);
+    const cols = iMax-iMin+1, rows = jMax-jMin+1;
+    const byKey = new Map(cells.map(c => [c.i+','+c.j, c]));
+    const maxFar = Math.max(1, ...cells.map(c=>c.far));
+    let html = '<div class="nuclei-grid" style="grid-template-columns:repeat('+cols+',1fr); grid-template-rows:repeat('+rows+',1fr);">';
+    for (let j=jMax; j>=jMin; j--){
+      for (let i=iMin; i<=iMax; i++){
+        const c = byKey.get(i+','+j);
+        const far = c ? c.far : 0;
+        const t = Math.min(1, far/maxFar);
+        const isNucleus = result.nuclei.some(n => n.i===i && n.j===j);
+        html += '<div class="nuclei-cell'+(isNucleus?' is-nucleus':'')+'" style="background:rgba(10,10,10,'+(far>0?(0.06+t*0.5):0.03)+');" title="FAR '+far.toFixed(0)+'%"></div>';
+      }
+    }
+    html += '</div>';
+    $('nuclei-chart').innerHTML = html;
+    $('nuclei-caption').textContent = '★ = 탐지된 밀도 핵('+result.nuclei.length+'개) · 셀 '+fmtNum(result.cellSize,0)+'m';
+  }
+
+  // ---- Map overlays ----
+  function renderRingOverlay(rings){
+    ringLayerGroup.clearLayers();
+    rings.forEach(r => {
+      L.circle([center.lat, center.lon], { radius:r.rMax, color:'#0a0a0a', weight:1.2, dashArray:'5,5', opacity:0.75, fillOpacity:0 }).addTo(ringLayerGroup);
+    });
+  }
+  function renderSectorOverlay(sectors){
+    sectorLayerGroup.clearLayers();
+    for (let i=0;i<8;i++){
+      const angle = i*45 - 22.5;
+      const rad = angle*Math.PI/180;
+      const dx = radius*Math.sin(rad), dy = radius*Math.cos(rad);
+      const p = unproject(dx,dy);
+      L.polyline([[center.lat,center.lon], p], { color:'#a63d2f', weight:1.5, dashArray:'2,6', opacity:0.9 }).addTo(sectorLayerGroup);
+    }
+    const maxSector = sectors.reduce((a,b) => b.far>a.far?b:a, sectors[0]);
+    const pts = [[center.lat,center.lon]];
+    for (let a=maxSector.idx*45-22.5; a<=maxSector.idx*45+22.5+0.001; a+=5){
+      const rad=a*Math.PI/180;
+      pts.push(unproject(radius*Math.sin(rad), radius*Math.cos(rad)));
+    }
+    L.polygon(pts, { color:'#a63d2f', weight:1.5, opacity:0.9, fillOpacity:0.16 }).addTo(sectorLayerGroup);
+  }
+  function renderGridOverlay(result){
+    gridLayerGroup.clearLayers();
+    nucleiLayerGroup.clearLayers();
+    const maxFar = Math.max(1, ...result.cells.map(c=>c.far));
+    result.cells.forEach(c => {
+      if (c.far<=0) return;
+      const x0=c.i*result.cellSize, y0=c.j*result.cellSize;
+      const x1=x0+result.cellSize, y1=y0+result.cellSize;
+      const p0 = unproject(x0,y0), p1 = unproject(x1,y1);
+      const t = Math.min(1, c.far/maxFar);
+      L.rectangle([p0,p1], { color:'transparent', fillColor:'#0a0a0a', fillOpacity:0.06+t*0.32, weight:0 }).addTo(gridLayerGroup);
+    });
+    result.nuclei.forEach((n,idx) => {
+      const cx=(n.i+0.5)*result.cellSize, cy=(n.j+0.5)*result.cellSize;
+      const p = unproject(cx,cy);
+      L.circleMarker(p, { radius:8, color:'#fff', weight:2, fillColor:'#0a0a0a', fillOpacity:1 })
+        .bindTooltip('핵 '+(idx+1)+' · FAR '+fmtNum(n.far,0)+'%')
+        .addTo(nucleiLayerGroup);
+    });
+  }
+
+  function computeAndRender(){
+    const defaultLevels = Math.max(1, parseFloat($('default-levels').value) || 1);
+    const targetFar = Math.max(0, parseFloat($('target-far').value) || 0);
+    const targetBcr = Math.max(0, parseFloat($('target-bcr').value) || 0);
+
+    let totalFootprint = 0, totalFloor = 0, knownCount = 0;
+    buildings.forEach(b => {
+      totalFootprint += b.area;
+      const lv = b.levels !== null ? b.levels : defaultLevels;
+      b.floorArea = b.area * lv;
+      b.levelsUsed = lv;
+      b.estimated = b.levels === null;
+      totalFloor += b.floorArea;
+      if (b.levels !== null) knownCount++;
+
+      const c = computeCentroid(b.latlngs);
+      b.centroid = c;
+      const [x,y] = project(c[0], c[1]);
+      b.dist = Math.sqrt(x*x+y*y);
+      let brng = Math.atan2(x,y)*180/Math.PI; if (brng<0) brng+=360;
+      b.bearing = brng;
+      b.category = classifyUse(b.use);
+    });
+
+    const bcr = siteAreaM2 > 0 ? (totalFootprint/siteAreaM2*100) : 0;
+    const far = siteAreaM2 > 0 ? (totalFloor/siteAreaM2*100) : 0;
+    const avgLevels = buildings.length ? (totalFloor/Math.max(totalFootprint,1)) : 0;
+    const knownRatio = buildings.length ? (knownCount/buildings.length*100) : 0;
+
+    $('area-label').textContent = '반경 ' + radius + 'm · 대지면적 ' + fmtArea(siteAreaM2);
+
+    const stats = [
+      { label:'건물 수', value: fmtNum(buildings.length), sub:'권역 내 OSM 건물 폴리곤' },
+      { label:'건폐율 (BCR)', value: fmtNum(bcr,1)+'%', sub:'건폐면적 ÷ 대지면적' },
+      { label:'용적률 (FAR, 추정)', value: fmtNum(far,1)+'%', sub:'추정 연면적 ÷ 대지면적' },
+      { label:'평균 층수(면적가중)', value: fmtNum(avgLevels,1)+'층', sub:'건폐면적으로 가중평균' },
+      { label:'층수 데이터 확보율', value: fmtNum(knownRatio,0)+'%', sub: knownCount+' / '+buildings.length+'개 건물' },
+      { label:'총 건폐(바닥)면적', value: fmtArea(totalFootprint), sub:'모든 건물 바닥면적 합' },
+      { label:'총 연면적(추정)', value: fmtArea(totalFloor), sub:'바닥면적 × 층수 합' }
+    ];
+    $('stats-grid').innerHTML = stats.map(s =>
+      '<div class="stat"><div class="label">'+s.label+'</div><div class="value">'+s.value+'</div><div class="sub">'+s.sub+'</div></div>'
+    ).join('');
+
+    const allowFloor = siteAreaM2 * targetFar/100;
+    const remainFloor = Math.max(0, allowFloor - totalFloor);
+    const allowFoot = siteAreaM2 * targetBcr/100;
+    const remainFoot = Math.max(0, allowFoot - totalFootprint);
+    const extraFloors = remainFoot > 0 ? (remainFloor/remainFoot) : null;
+
+    $('c-site').textContent = fmtArea(siteAreaM2);
+    $('c-cur-floor').textContent = fmtArea(totalFloor);
+    $('c-allow-floor').textContent = fmtArea(allowFloor);
+    $('c-remain-floor').textContent = fmtArea(remainFloor);
+    $('c-cur-foot').textContent = fmtArea(totalFootprint);
+    $('c-allow-foot').textContent = fmtArea(allowFoot);
+    $('c-remain-foot').textContent = fmtArea(remainFoot);
+    $('c-extra-floors').textContent = extraFloors===null ? '건폐 여유 없음' : (fmtNum(extraFloors,1)+'층 상당');
+
+    const usedPct = allowFloor > 0 ? Math.min(100, totalFloor/allowFloor*100) : 100;
+    const freePct = Math.max(0, 100-usedPct);
+    $('bar-used').style.width = usedPct + '%';
+    $('bar-used').textContent = fmtNum(usedPct,0)+'%';
+    $('bar-free').style.width = freePct + '%';
+    $('bar-free').textContent = freePct>8 ? (fmtNum(freePct,0)+'%') : '';
+
+    const donutPct = allowFloor > 0 ? Math.min(100, totalFloor/allowFloor*100) : 100;
+    const overshoot = totalFloor > allowFloor;
+    const donutColor = overshoot ? '#a63d2f' : '#0a0a0a';
+    $('donut').style.background = 'conic-gradient(' + donutColor + ' 0% ' + donutPct + '%, #edebe6 ' + donutPct + '% 100%)';
+    $('donut-legend').innerHTML =
+      '<div style="padding:6px 0;"><span class="legend-dot" style="background:'+donutColor+';"></span>현재 연면적 '+fmtNum(donutPct,0)+'% 사용'+(overshoot?' (목표 초과)':'')+'</div>' +
+      '<div style="padding:6px 0;"><span class="legend-dot" style="background:#edebe6;"></span>잔여 '+fmtNum(Math.max(0,100-donutPct),0)+'%</div>';
+
+    lastComp = renderComposition();
+
+    const rings = computeRings();
+    lastRings = rings;
+    renderRingDensity(rings);
+    renderPark();
+    renderProvenance();
+    renderRingChart(rings);
+    renderRingInsight(rings);
+    renderRingOverlay(rings);
+
+    const sectors = computeSectors();
+    renderSectorChart(sectors);
+    renderSectorInsight(sectors);
+    renderSectorOverlay(sectors);
+
+    const nucleiResult = computeNuclei();
+    renderNucleiGrid(nucleiResult);
+    renderNucleiInsight(nucleiResult);
+    renderGridOverlay(nucleiResult);
+
+    if (mapNeedsRender){ renderMap(); mapNeedsRender = false; }
+    renderTable();
+  }
+
+  // ---- 공통 포맷 ----
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function dateDot(d){ return d.getFullYear()+'.'+pad2(d.getMonth()+1)+'.'+pad2(d.getDate()); }
+  function dateTime(d){
+    const off = -d.getTimezoneOffset(), sign = off >= 0 ? '+' : '-';
+    return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+' '+pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds())+
+      ' (UTC'+sign+pad2(Math.floor(Math.abs(off)/60))+':'+pad2(Math.abs(off)%60)+')';
+  }
+  function sourceCaption(){
+    if (!provenance) return '';
+    return '출처: ' + SOURCE_LABEL + ' · ' + provenance.siteName + ' 반경 ' + fmtDist(provenance.radius) + ' · 조회 ' + dateDot(provenance.queriedAt);
+  }
+
+  // ---- 과제 ② 링(권역)별 밀도표 ----
+  function renderRingDensity(rings){
+    const p = provenance;
+    $('ring-badge').textContent = '링 간격 ' + fmtDist(ringInterval()) + ' · ' + rings.length + '개';
+    $('center-def').innerHTML = p ?
+      '<span>대상지 <b>' + escapeHtml(p.siteName) + '</b></span>' +
+      '<span>중심 <b>' + p.center.lat.toFixed(6) + ', ' + p.center.lon.toFixed(6) + '</b></span>' +
+      '<span>정의 방법 <b>' + METHOD_LABELS[p.centerMethod] + '</b></span>' +
+      '<span>반경 <b>' + fmtDist(p.radius) + '</b></span>' : '';
+
+    let tc=0, tf=0, tfl=0, tk=0;
+    const rows = rings.map(r => {
+      tc += r.count; tf += r.footprint; tfl += r.floor; tk += r.known;
+      return '<tr><td>'+r.label+'</td><td>'+r.range+'</td>'+
+        '<td class="num">'+fmtNum(r.areaKm2,2)+'</td>'+
+        '<td class="num">'+fmtNum(r.count)+'</td>'+
+        '<td class="num hl">'+fmtNum(r.density,0)+'</td>'+
+        '<td class="num hl">'+fmtNum(r.bcr,1)+'</td>'+
+        '<td class="num hl">'+fmtNum(r.far,1)+'</td>'+
+        '<td class="num">'+fmtNum(r.avgLevels,1)+'</td>'+
+        '<td class="num">'+fmtNum(r.knownPct,0)+'</td>'+
+        '<td class="num">'+(r.index === null ? '—' : fmtNum(r.index,0))+'</td></tr>';
+    }).join('');
+    const totKm2 = siteAreaM2/1e6;
+    const total = '<tr class="total"><td>전체</td><td>0–'+fmtDist(radius)+'</td>'+
+      '<td class="num">'+fmtNum(totKm2,2)+'</td><td class="num">'+fmtNum(tc)+'</td>'+
+      '<td class="num hl">'+fmtNum(totKm2 > 0 ? tc/totKm2 : 0, 0)+'</td>'+
+      '<td class="num hl">'+fmtNum(siteAreaM2 > 0 ? tf/siteAreaM2*100 : 0, 1)+'</td>'+
+      '<td class="num hl">'+fmtNum(siteAreaM2 > 0 ? tfl/siteAreaM2*100 : 0, 1)+'</td>'+
+      '<td class="num">'+fmtNum(tf > 0 ? tfl/tf : 0, 1)+'</td>'+
+      '<td class="num">'+fmtNum(tc ? tk/tc*100 : 0, 0)+'</td><td class="num">—</td></tr>';
+    $('ring-table-body').innerHTML = rows + total;
+
+    const bars = [['건물 밀도 · 동/km²','density',0], ['건폐율 · %','bcr',1], ['용적률 · %','far',1]];
+    $('ring-mini-bars').innerHTML = bars.map(([title, key, dg]) => {
+      const max = Math.max(1e-9, ...rings.map(r => r[key]));
+      return '<div><h4>'+title+'</h4>' + rings.map(r =>
+        '<div class="mb-row"><span class="mb-label">'+r.label+'</span>'+
+        '<span class="mb-track"><span class="mb-fill" style="display:block;width:'+(r[key]/max*100)+'%"></span></span>'+
+        '<span class="mb-val">'+fmtNum(r[key],dg)+'</span></div>').join('') + '</div>';
+    }).join('');
+
+    renderRingDensityInsight(rings);
+    $('ring-source').textContent = sourceCaption();
+    $('comp-source').textContent = sourceCaption();
+  }
+
+  function renderRingDensityInsight(rings){
+    const el = $('ring-density-insight');
+    if (rings.length < 2){
+      el.innerHTML = '<div class="insight-tag">INSIGHT</div><div class="insight-headline">링이 1개뿐입니다 — 반경을 링 간격보다 크게 설정하면 링별 밀도를 비교할 수 있습니다</div>';
+      return;
+    }
+    const byCount = rings.reduce((a,b) => b.count > a.count ? b : a);
+    const byDens = rings.reduce((a,b) => b.density > a.density ? b : a);
+    const first = rings[0], last = rings[rings.length-1];
+    const ratio = last.density > 0 ? first.density / last.density : null;
+    const headline = byCount.idx !== byDens.idx
+      ? '개수는 '+byCount.label+'('+byCount.range+')이 가장 많지만, 면적 대비 밀도로 환산하면 '+byDens.label+'('+byDens.range+')이 가장 높음'
+      : byDens.label+'('+byDens.range+')이 개수와 밀도 모두 가장 높음';
+    el.innerHTML = '<div class="insight-tag">INSIGHT</div><div class="insight-headline">'+headline+'</div><ol class="insight-list">'+
+      '<li>링 면적이 '+first.label+' <b>'+fmtNum(first.areaKm2,2)+'km²</b> → '+last.label+' <b>'+fmtNum(last.areaKm2,2)+'km²</b>로 <b>'+fmtNum(last.areaKm2/first.areaKm2,1)+'배</b> 커지므로, 개수를 그대로 비교하면 바깥 링이 과대평가됨</li>'+
+      '<li>건물 밀도 '+first.label+' <b>'+fmtNum(first.density,0)+'동/km²</b> vs '+last.label+' <b>'+fmtNum(last.density,0)+'동/km²</b>'+(ratio ? ' (중심이 <b>'+fmtNum(ratio,1)+'배</b>)' : '')+' · 용적률 '+fmtNum(first.far,0)+'% vs '+fmtNum(last.far,0)+'%</li>'+
+      '<li>층수 기재율이 링마다 달라(최저 '+fmtNum(Math.min(...rings.map(r => r.knownPct)),0)+'%) 용적률은 기본 층수 가정의 영향을 받음 — 건물 밀도·건폐율이 더 안정적인 비교 지표</li>'+
+      '</ol>';
+  }
+
+  // ---- 과제 ③ 스마트공원 요소 우선순위 (효과 × 난이도) ----
+  const PARK_STORE_KEY = 'smartpark-priority-v1';
+  const PARK_DEFAULTS = [
+    { name:'스마트 조명(IoT 가로등)', effect:4, difficulty:2, reason:'야간 안전·에너지 절감, 기존 가로등 교체로 도입이 쉬움' },
+    { name:'비상벨·지능형 CCTV 연계', effect:5, difficulty:3, reason:'범죄 예방과 안심 이용, 관제센터 연계 협의 필요' },
+    { name:'환경 센서 + 정보 전광판', effect:4, difficulty:2, reason:'미세먼지·온습도 실시간 안내, 소형 장비로 설치 간단' },
+    { name:'스마트 쿨링포그', effect:4, difficulty:3, reason:'폭염 체감온도 저감, 급수·배관 공사 필요' },
+    { name:'유동인구 계수 센서·이용 분석', effect:4, difficulty:4, reason:'운영 개선 근거 확보, 개인정보·데이터 관리 체계 필요' },
+    { name:'통합 관리 플랫폼(디지털 트윈)', effect:5, difficulty:5, reason:'시설 전반 원격 관리, 시스템 구축·예산 부담 큼' },
+    { name:'빗물 저류·스마트 물관리(LID)', effect:4, difficulty:5, reason:'홍수·열섬 완화, 토목 공사와 장기 유지관리 필요' },
+    { name:'공공 와이파이', effect:3, difficulty:2, reason:'이용 편의 향상, 통신사 협력으로 설치 용이' },
+    { name:'스마트 그늘막', effect:3, difficulty:2, reason:'기상 연동 자동 개폐, 설치형 제품이 보급됨' },
+    { name:'스마트 관수(토양수분 센서)', effect:3, difficulty:3, reason:'관리 인력·용수 절감, 이용자 체감은 낮음' },
+    { name:'스마트 휴지통(적재량 알림)', effect:3, difficulty:2, reason:'수거 효율 개선, 단독 설치 가능' },
+    { name:'스마트 화장실(재실·비상 알림)', effect:3, difficulty:3, reason:'안전·위생 개선, 기존 건물 개보수 필요' },
+    { name:'태양광 스마트 벤치', effect:2, difficulty:2, reason:'충전 편의 제공, 효과는 제한적' },
+    { name:'디지털 사이니지·QR 안내', effect:2, difficulty:2, reason:'안내 정보 제공, 모바일로 대체 가능' },
+    { name:'스마트 운동기구', effect:2, difficulty:3, reason:'운동량 기록 제공, 이용률 편차가 큼' },
+    { name:'인터랙티브 스마트 놀이터', effect:3, difficulty:4, reason:'아동 이용 활성화, 안전 인증·고장 관리 부담' },
+    { name:'태양광 발전·ESS', effect:3, difficulty:4, reason:'에너지 자립 상징성, 부지·안전 기준 검토 필요' },
+    { name:'관리 로봇·드론 순찰', effect:2, difficulty:5, reason:'실증 단계, 규제·운영 비용 부담' }
+  ];
+  const QUADRANTS = {
+    q1:{ label:'우선 도입', desc:'효과 높음 · 난이도 낮음' },
+    q2:{ label:'전략 과제', desc:'효과 높음 · 난이도 높음' },
+    q3:{ label:'선택 도입', desc:'효과 낮음 · 난이도 낮음' },
+    q4:{ label:'보류', desc:'효과 낮음 · 난이도 높음' }
+  };
+  const Q_ORDER = { q1:0, q2:1, q3:2, q4:3 };
+
+  function normalizeParkItem(it){
+    if (!it || typeof it.name !== 'string' || !it.name.trim()) return null;
+    const c = v => Math.max(1, Math.min(5, Math.round(+v) || 3));
+    return { name: it.name.trim().slice(0, 60), effect: c(it.effect), difficulty: c(it.difficulty), reason: String(it.reason || '').slice(0, 200) };
+  }
+  function loadPark(){
+    try {
+      const saved = JSON.parse(localStorage.getItem(PARK_STORE_KEY));
+      if (Array.isArray(saved) && saved.length) return saved.map(normalizeParkItem).filter(Boolean);
+    } catch(_){}
+    return PARK_DEFAULTS.map(d => Object.assign({}, d));
+  }
+  function savePark(){ try { localStorage.setItem(PARK_STORE_KEY, JSON.stringify(parkItems)); } catch(_){} }
+
+  let parkItems = loadPark();
+
+  function quadrantOf(it){
+    const hiE = it.effect >= 4, hiD = it.difficulty >= 4;
+    return hiE ? (hiD ? 'q2' : 'q1') : (hiD ? 'q4' : 'q3');
+  }
+  function parkScore(it){ return it.effect * (6 - it.difficulty); }
+  function rankedPark(){
+    return parkItems.map((it, i) => ({ it, i, q: quadrantOf(it), score: parkScore(it) }))
+      .sort((a,b) => Q_ORDER[a.q] - Q_ORDER[b.q] || b.score - a.score || a.it.name.localeCompare(b.it.name, 'ko'));
+  }
+
+  function buildMatrixSVG(opts){
+    opts = opts || {};
+    const top = opts.title ? 58 : 0, bottom = opts.caption ? 30 : 0;
+    const pw = 400, ph = 340, m = { l:60, r:24, t:28 + top, b:54 };
+    const legendW = opts.legend ? 340 : 0;
+    const W = m.l + pw + m.r + legendW;
+    const H = Math.max(m.t + ph + m.b, m.t + parkItems.length * 17 + 20) + bottom;
+    const x = d => m.l + (d - 0.5) / 5 * pw;
+    const y = e => m.t + (5.5 - e) / 5 * ph;
+    const x0 = x(0.5), x1 = x(5.5), y0 = y(5.5), y1 = y(0.5), qx = x(3.5), qy = y(3.5);
+    let s = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" font-family="Pretendard, \'Malgun Gothic\', sans-serif">';
+    s += '<rect width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+    if (opts.title) s += '<text x="'+m.l+'" y="30" font-size="18" font-weight="600" fill="#0a0a0a">'+escapeHtml(opts.title)+'</text>'+
+      '<text x="'+m.l+'" y="50" font-size="11.5" fill="#75726b">효과·난이도 1~5점 · 4~5점 = 높음 · 점수 = 효과 × (6 − 난이도)</text>';
+    s += '<rect x="'+x0+'" y="'+y0+'" width="'+(qx-x0)+'" height="'+(qy-y0)+'" fill="#edebe6"/>';
+    s += '<rect x="'+x0+'" y="'+y0+'" width="'+pw+'" height="'+ph+'" fill="none" stroke="rgba(10,10,10,.18)"/>';
+    s += '<line x1="'+qx+'" y1="'+y0+'" x2="'+qx+'" y2="'+y1+'" stroke="rgba(10,10,10,.35)" stroke-dasharray="4 4"/>';
+    s += '<line x1="'+x0+'" y1="'+qy+'" x2="'+x1+'" y2="'+qy+'" stroke="rgba(10,10,10,.35)" stroke-dasharray="4 4"/>';
+    const corner = (cx, cy, anchor, q) => '<text x="'+cx+'" y="'+cy+'" text-anchor="'+anchor+'" font-size="11" font-weight="600" fill="'+(q === 'q4' ? '#75726b' : '#0a0a0a')+'">'+QUADRANTS[q].label+'</text>';
+    s += corner(x0+10, y0+18, 'start', 'q1') + corner(x1-10, y0+18, 'end', 'q2') + corner(x0+10, y1-10, 'start', 'q3') + corner(x1-10, y1-10, 'end', 'q4');
+    for (let v = 1; v <= 5; v++){
+      s += '<text x="'+x(v)+'" y="'+(y1+18)+'" text-anchor="middle" font-size="11" fill="#75726b">'+v+'</text>';
+      s += '<text x="'+(x0-12)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="11" fill="#75726b">'+v+'</text>';
+    }
+    s += '<text x="'+(x0+pw/2)+'" y="'+(y1+40)+'" text-anchor="middle" font-size="12" fill="#0a0a0a">난이도 →</text>';
+    s += '<text transform="translate('+(x0-40)+','+(y0+ph/2)+') rotate(-90)" text-anchor="middle" font-size="12" fill="#0a0a0a">효과 →</text>';
+
+    const groups = {};
+    parkItems.forEach((it, i) => { const k = it.effect + '|' + it.difficulty; (groups[k] = groups[k] || []).push(i); });
+    Object.keys(groups).forEach(k => {
+      const idxs = groups[k], n = idxs.length;
+      idxs.forEach((i, j) => {
+        const it = parkItems[i], q = quadrantOf(it);
+        const ang = (j / n) * Math.PI * 2 - Math.PI / 2, rr = n > 1 ? 15 : 0;
+        const cx = x(it.difficulty) + Math.cos(ang) * rr, cy = y(it.effect) + Math.sin(ang) * rr;
+        const fill = q === 'q1' ? '#0a0a0a' : (q === 'q3' ? '#edebe6' : '#ffffff');
+        const stroke = q === 'q4' ? '#75726b' : '#0a0a0a';
+        const txt = q === 'q1' ? '#ffffff' : (q === 'q4' ? '#75726b' : '#0a0a0a');
+        s += '<g><title>'+escapeHtml((i+1)+'. '+it.name+' (효과 '+it.effect+', 난이도 '+it.difficulty+')')+'</title>'+
+          '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="11" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.2"'+(q === 'q4' ? ' stroke-dasharray="2 2"' : '')+'/>'+
+          '<text x="'+cx.toFixed(1)+'" y="'+(cy+3.8).toFixed(1)+'" text-anchor="middle" font-size="10" font-weight="600" fill="'+txt+'">'+(i+1)+'</text></g>';
+      });
+    });
+
+    if (opts.legend){
+      const lx = m.l + pw + m.r + 10;
+      rankedPark().forEach((r, k) => {
+        s += '<text x="'+lx+'" y="'+(m.t + 4 + k*17)+'" font-size="11" fill="'+(r.q === 'q4' ? '#75726b' : '#0a0a0a')+'">'+(r.i+1)+'. '+escapeHtml(r.it.name)+' · '+QUADRANTS[r.q].label+'</text>';
+      });
+    }
+    if (opts.caption) s += '<text x="'+m.l+'" y="'+(H-12)+'" font-size="10.5" fill="#75726b">'+escapeHtml(opts.caption)+'</text>';
+    return s + '</svg>';
+  }
+
+  function renderPark(){
+    const ranked = rankedPark();
+    const opt = v => [1,2,3,4,5].map(n => '<option'+(n === v ? ' selected' : '')+'>'+n+'</option>').join('');
+    $('park-matrix').innerHTML = buildMatrixSVG();
+    $('park-table-body').innerHTML = ranked.map((r, rank) =>
+      '<tr data-i="'+r.i+'">'+
+      '<td>'+(rank+1)+'</td><td>'+(r.i+1)+'</td>'+
+      '<td><input class="txt name" data-field="name" value="'+escapeHtml(r.it.name)+'" aria-label="요소 이름"></td>'+
+      '<td><select data-field="effect" aria-label="효과">'+opt(r.it.effect)+'</select></td>'+
+      '<td><select data-field="difficulty" aria-label="난이도">'+opt(r.it.difficulty)+'</select></td>'+
+      '<td class="num">'+r.score+'</td>'+
+      '<td><span class="q-badge '+r.q+'">'+QUADRANTS[r.q].label+'</span></td>'+
+      '<td class="reason-cell"><input class="txt" data-field="reason" value="'+escapeHtml(r.it.reason || '')+'" placeholder="평가 근거" aria-label="평가 근거"></td>'+
+      '<td><button class="icon-btn" data-del="'+r.i+'" type="button" aria-label="삭제">×</button></td></tr>'
+    ).join('');
+    renderParkInsight(ranked);
+    $('park-source').textContent = '출처: 팀 평가(효과·난이도 1~5점, 기본값은 예시) · 맥락 데이터: ' +
+      (provenance ? sourceCaption().replace(/^출처: /, '') : '분석 전');
+  }
+
+  function renderParkInsight(ranked){
+    const names = q => ranked.filter(r => r.q === q).map(r => r.it.name);
+    const q1 = names('q1'), q2 = names('q2');
+    let ctx = '';
+    if (lastRings.length >= 2){
+      const first = lastRings[0], last = lastRings[lastRings.length-1];
+      const ratio = last.density > 0 ? first.density / last.density : null;
+      ctx = '<li>대상지 맥락: '+first.label+'('+first.range+') 건물 밀도 <b>'+fmtNum(first.density,0)+'동/km²</b>'+
+        (ratio ? ', 외곽 '+last.label+'의 <b>'+fmtNum(ratio,1)+'배</b>' : '')+' — 이용 압력이 높은 권역부터 안전·환경 요소를 배치하는 근거로 쓸 수 있음</li>';
+    }
+    $('park-insight').innerHTML = '<div class="insight-tag">INSIGHT</div>'+
+      '<div class="insight-headline">'+(q1.length
+        ? '우선 도입 '+q1.length+'개 — '+escapeHtml(q1.slice(0,3).join(', '))+(q1.length > 3 ? ' 외' : '')
+        : '효과가 높고 난이도가 낮은 요소가 아직 없음')+'</div>'+
+      '<ol class="insight-list">'+
+      '<li><b>전략 과제 '+q2.length+'개</b>'+(q2.length ? ': '+escapeHtml(q2.join(', ')) : '')+' — 효과는 크지만 예산·협의가 필요해 단계적으로 추진</li>'+
+      ctx+
+      '<li>기본 점수는 예시값입니다. 팀 논의 결과로 효과·난이도·근거를 고치면 매트릭스와 순위가 즉시 갱신됩니다</li>'+
+      '</ol>';
+  }
+
+  $('park-table-body').addEventListener('change', e => {
+    const tr = e.target.closest('tr[data-i]'), f = e.target.dataset.field;
+    if (!tr || !f) return;
+    const it = parkItems[+tr.dataset.i];
+    if (f === 'effect' || f === 'difficulty') it[f] = +e.target.value;
+    else if (f === 'name'){ const v = e.target.value.trim(); if (v) it.name = v.slice(0, 60); }
+    else it.reason = e.target.value.trim().slice(0, 200);
+    savePark(); renderPark();
+  });
+  $('park-table-body').addEventListener('click', e => {
+    const btn = e.target.closest('[data-del]');
+    if (!btn) return;
+    parkItems.splice(+btn.dataset.del, 1);
+    savePark(); renderPark();
+  });
+  function addParkItem(){
+    const v = $('park-new-name').value.trim();
+    if (!v) return;
+    parkItems.push({ name: v.slice(0, 60), effect:3, difficulty:3, reason:'' });
+    $('park-new-name').value = '';
+    savePark(); renderPark();
+  }
+  $('park-add').addEventListener('click', addParkItem);
+  $('park-new-name').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); addParkItem(); } });
+  $('park-reset').addEventListener('click', () => {
+    if (!confirm('스마트공원 요소를 기본 예시값으로 되돌릴까요? 수정한 내용은 사라집니다.')) return;
+    parkItems = PARK_DEFAULTS.map(d => Object.assign({}, d));
+    savePark(); renderPark();
+  });
+
+  // ---- 과제 ④ 조회 정보 ----
+  function exportBaseName(){
+    const p = provenance, d = p.queriedAt;
+    const ymd = d.getFullYear() + pad2(d.getMonth()+1) + pad2(d.getDate());
+    return '산출물_' + p.siteName.replace(/[\\/:*?"<>|\s]+/g, '_') + '_반경' + fmtDist(p.radius) + '_' + ymd;
+  }
+
+  function renderProvenance(){
+    const p = provenance;
+    if (!p) return;
+    const rows = [
+      ['조회일시', dateTime(p.queriedAt)],
+      ['데이터 출처', 'OpenStreetMap contributors · Overpass API'],
+      ['엔드포인트', p.endpoint],
+      ['OSM 데이터 기준 시각', p.osmBase || '—'],
+      ['대상지', p.siteName],
+      ['중심 좌표 (WGS84)', p.center.lat.toFixed(6) + ', ' + p.center.lon.toFixed(6)],
+      ['중심 정의 방법', METHOD_LABELS[p.centerMethod]],
+      ['분석 반경 / 링 간격', fmtDist(p.radius) + ' / ' + fmtDist(ringInterval())],
+      ['수집 건물', fmtNum(buildings.length) + '동 · 응답 ' + p.seconds + '초'],
+      ['라이선스', 'ODbL 1.0 — © OpenStreetMap contributors']
+    ];
+    $('prov-list').innerHTML = rows.map(([k,v]) => '<div class="kv"><span class="k">'+k+'</span><span class="v" style="word-break:break-all;">'+escapeHtml(v)+'</span></div>').join('');
+    const base = exportBaseName();
+    $('zip-name').textContent = base + '.zip';
+    $('repo-path').textContent = 'data/' + base + '/';
+    $('commit-msg').textContent = '산출물: ' + p.siteName + ' 반경 ' + fmtDist(p.radius) + ' (조회 ' + dateDot(p.queriedAt) + ', OSM/Overpass)';
+  }
+
+  function renderMap(){
+    buildingsLayerGroup.clearLayers();
+    buildings.forEach(b => {
+      const color = colorForLevels(b.levelsUsed);
+      const layer = L.polygon(b.latlngs, { color, weight:1, fillOpacity:0.55, renderer: canvasRenderer });
+      layer.bindPopup(
+        '<b>' + escapeHtml(b.label || ('건물 #' + b.id)) + '</b><br>' +
+        '용도: ' + escapeHtml(b.use) + ' (' + b.category + ')<br>' +
+        '층수: ' + b.levelsUsed + (b.estimated?' (추정)':'') + '<br>' +
+        '건폐면적: ' + fmtNum(b.area,1) + ' ㎡<br>' +
+        '연면적(추정): ' + fmtNum(b.floorArea,1) + ' ㎡'
+      );
+      buildingsLayerGroup.addLayer(layer);
+    });
+  }
+
+  function renderTable(){
+    const sorted = buildings.slice().sort((a,b) => b.floorArea - a.floorArea).slice(0,300);
+    $('table-badge').textContent = buildings.length + '개 중 상위 ' + sorted.length + '개 표시';
+    $('table-body').innerHTML = sorted.map((b,i) =>
+      '<tr>' +
+      '<td>'+(i+1)+'</td>' +
+      '<td>'+b.type+'/'+b.id+'</td>' +
+      '<td>'+escapeHtml(b.use)+'</td>' +
+      '<td>'+b.category+'</td>' +
+      '<td>'+escapeHtml(b.label||'—')+'</td>' +
+      '<td>'+b.levelsUsed + (b.estimated?' *':'')+'</td>' +
+      '<td>'+fmtNum(b.area,1)+'</td>' +
+      '<td>'+fmtNum(b.floorArea,1)+'</td>' +
+      '</tr>'
+    ).join('') || '<tr><td colspan="8" class="empty">데이터 없음</td></tr>';
+  }
+
+  // ---- 과제 ④ 산출물 내보내기 ----
+  function csvCell(v){
+    if (v === null || v === undefined) return '';
+    const s = String(v);
+    return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  function toCSV(header, rows){ return '﻿' + [header].concat(rows).map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n'; }
+  function rnd(v, d){ const f = Math.pow(10, d); return Math.round(v * f) / f; }
+  function mimeOf(name){
+    return name.endsWith('.csv') ? 'text/csv;charset=utf-8' : name.endsWith('.svg') ? 'image/svg+xml' :
+      name.endsWith('.json') ? 'application/json' : 'text/markdown;charset=utf-8';
+  }
+
+  function compCSV(){
+    const when = dateTime(provenance.queriedAt), src = sourceCaption(), total = buildings.length || 1;
+    return toCSV(['용도 분류','건물 수(동)','비율(%)','건축면적 합(㎡)','연면적 합(㎡)','조회일시','출처'],
+      lastComp.map(s => [s.label, s.count, rnd(s.count/total*100, 2), rnd(s.footprint, 1), rnd(s.floor, 1), when, src]));
+  }
+  function ringCSV(){
+    const when = dateTime(provenance.queriedAt), src = sourceCaption();
+    return toCSV(['링','내측 반경(m)','외측 반경(m)','링 면적(km²)','건물 수(동)','건물 밀도(동/km²)','건축면적 합(㎡)','건폐율(%)','연면적 합(㎡)','용적률(%)','평균 층수','층수 기재율(%)','밀도 지수(1링=100)','조회일시','출처'],
+      lastRings.map(r => [r.label, r.rMin, r.rMax, rnd(r.areaKm2, 4), r.count, rnd(r.density, 1), rnd(r.footprint, 1), rnd(r.bcr, 2),
+        rnd(r.floor, 1), rnd(r.far, 2), rnd(r.avgLevels, 2), rnd(r.knownPct, 1), r.index === null ? '' : rnd(r.index, 1), when, src]));
+  }
+  function parkCSV(){
+    const context = provenance ? dateTime(provenance.queriedAt) : '', written = dateTime(new Date());
+    return toCSV(['순위','번호','요소','효과(1-5)','난이도(1-5)','우선순위 점수','구분','근거','작성일시','맥락 데이터 조회일시','출처'],
+      rankedPark().map((r, k) => [k+1, r.i+1, r.it.name, r.it.effect, r.it.difficulty, r.score, QUADRANTS[r.q].label, r.it.reason, written, context,
+        '팀 평가(기본값은 예시) · 4~5점=높음 · 점수=효과×(6−난이도)']));
+  }
+
+  function readmeMD(){
+    const p = provenance, total = buildings.length;
+    const unclas = (lastComp.find(s => s.label === '미분류') || { count:0 }).count;
+    const known = buildings.filter(b => !b.estimated).length;
+    const pct = (a, b) => b ? (a/b*100).toFixed(1) + '%' : '—';
+    return [
+      '# ' + p.siteName + ' 반경 ' + fmtDist(p.radius) + ' — 과제 산출물', '',
+      '| 항목 | 내용 |', '|---|---|',
+      '| 조회일시 | ' + dateTime(p.queriedAt) + ' |',
+      '| 데이터 출처 | OpenStreetMap contributors · Overpass API (' + p.endpoint + ') |',
+      '| OSM 데이터 기준 시각 | ' + (p.osmBase || '—') + ' |',
+      '| 라이선스 | ODbL 1.0 — © OpenStreetMap contributors |',
+      '| 지오코딩 | Nominatim (OpenStreetMap) |', '',
+      '## 대상지 중심 정의', '',
+      '- 대상지: ' + p.siteName,
+      '- 중심 좌표(WGS84): ' + p.center.lat.toFixed(6) + ', ' + p.center.lon.toFixed(6),
+      '- 정의 방법: ' + METHOD_LABELS[p.centerMethod],
+      '- 분석 범위: 반경 ' + fmtDist(p.radius) + ' 원형, 링 간격 ' + fmtDist(ringInterval()) + ' (' + lastRings.length + '개 링)', '',
+      '## 파일', '',
+      '| 파일 | 내용 |', '|---|---|',
+      '| 01_composition.csv · .svg | ① 건물 용도 구성비 (미분류 포함) |',
+      '| 02_ring_density.csv · .svg | ② 링(권역)별 밀도표 — 개수가 아닌 링 면적 대비 밀도로 환산 |',
+      '| 03_smartpark_priority.csv · .svg | ③ 스마트공원 요소 우선순위 (효과 × 난이도) |',
+      '| metadata.json | 조회 조건 · 쿼리 원문 (재현용) |', '',
+      '## 데이터 기재율', '',
+      '- 수집 건물: ' + total + '동',
+      '- 용도 태그 기재율: ' + pct(total - unclas, total) + ' (미분류 ' + unclas + '동)',
+      '- 층수 태그 기재율: ' + pct(known, total) + ' — 미기재 건물은 ' + $('default-levels').value + '층으로 가정해 연면적 계산', '',
+      '## 방법', '',
+      '- 대상 건물: OSM `building=*` way 및 multipolygon relation (Overpass `around` 반경 필터)',
+      '- 링 배정: 건물 폴리곤 꼭짓점 평균(중심점)과 대상지 중심 사이의 거리',
+      '- 링 면적 = π × (R외² − R내²)',
+      '- 건물 밀도(동/km²) = 링 내 건물 수 ÷ 링 면적(km²)',
+      '- 건폐율(%) = 건축면적 합 ÷ 링 면적 × 100',
+      '- 용적률(%) = 연면적 합 ÷ 링 면적 × 100 (연면적 = 바닥면적 × 층수)',
+      '- 스마트공원 우선순위: 효과·난이도 1~5점, 4~5점 = 높음, 우선순위 점수 = 효과 × (6 − 난이도)',
+      '  - 우선 도입(효과↑·난이도↓) → 전략 과제(효과↑·난이도↑) → 선택 도입(효과↓·난이도↓) → 보류(효과↓·난이도↑)', '',
+      '## 한계', '',
+      '- OSM은 자원봉사 매핑 데이터라 지역별 태깅 편차가 있어 건축물대장 등 공식 자료와 교차검증이 필요함',
+      '- 건물 수·면적은 조회 시점 OSM 기준이며 재조회하면 달라질 수 있음', '',
+      '## Overpass 쿼리 원문', '', '```', p.query, '```', ''
+    ].join('\n');
+  }
+
+  function metadataJSON(){
+    const p = provenance;
+    return JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      queriedAt: p.queriedAt.toISOString(),
+      queriedAtLocal: dateTime(p.queriedAt),
+      source: { data:'OpenStreetMap contributors', via:'Overpass API', endpoint:p.endpoint, osmBaseTimestamp:p.osmBase, license:'ODbL 1.0', geocoder:'Nominatim' },
+      site: { name:p.siteName, center:p.center, centerMethod:METHOD_LABELS[p.centerMethod], radiusM:p.radius, ringIntervalM:ringInterval(), ringCount:lastRings.length },
+      assumptions: { defaultLevelsForUntaggedBuildings: +$('default-levels').value },
+      counts: { overpassElements:p.elementCount, buildings:buildings.length },
+      query: p.query
+    }, null, 2);
+  }
+
+  function svgFrame(W, H, title, sub, body){
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" font-family="Pretendard, \'Malgun Gothic\', sans-serif">'+
+      '<rect width="'+W+'" height="'+H+'" fill="#ffffff"/>'+
+      '<text x="32" y="40" font-size="18" font-weight="600" fill="#0a0a0a">'+escapeHtml(title)+'</text>'+
+      '<text x="32" y="62" font-size="11.5" fill="#75726b">'+escapeHtml(sub)+'</text>'+ body +
+      '<text x="32" y="'+(H-16)+'" font-size="10.5" fill="#75726b">'+escapeHtml(sourceCaption())+'</text></svg>';
+  }
+
+  function compSVG(){
+    const H = Math.max(360, 130 + lastComp.length * 30 + 40);
+    let body = buildDonutSVG(lastComp).replace('<svg ', '<svg x="40" y="92" ');
+    body += '<text x="140" y="198" text-anchor="middle" font-size="26" font-weight="500" fill="#0a0a0a">'+fmtNum(buildings.length)+'</text>'+
+      '<text x="140" y="218" text-anchor="middle" font-size="10" fill="#75726b">전체 건물</text>';
+    lastComp.forEach((sl, k) => {
+      const ly = 116 + k * 30;
+      body += '<rect x="300" y="'+(ly-10)+'" width="11" height="11" rx="2" fill="'+sl.color+'"/>'+
+        '<text x="322" y="'+ly+'" font-size="13" fill="#0a0a0a">'+sl.label+'</text>'+
+        '<text x="560" y="'+ly+'" text-anchor="end" font-size="13" font-weight="600" fill="#0a0a0a">'+sl.pct.toFixed(1)+'%</text>'+
+        '<text x="630" y="'+ly+'" text-anchor="end" font-size="12" fill="#75726b">'+fmtNum(sl.count)+'동</text>';
+    });
+    return svgFrame(720, H, '건물 용도 구성 · ' + provenance.siteName + ' 반경 ' + fmtDist(provenance.radius), '전체 ' + fmtNum(buildings.length) + '동 · 미분류 = 용도 태그 미기재', body);
+  }
+
+  function ringSVG(){
+    const rowH = 46, H = 110 + lastRings.length * rowH + 50, bx = 150, bw = 360;
+    const maxD = Math.max(1e-9, ...lastRings.map(r => r.density));
+    let body = '<text x="'+bx+'" y="96" font-size="10.5" fill="#75726b">건물 밀도(동/km²)</text>'+
+      '<text x="590" y="96" text-anchor="end" font-size="10.5" fill="#75726b">건폐율</text>'+
+      '<text x="670" y="96" text-anchor="end" font-size="10.5" fill="#75726b">용적률</text>'+
+      '<text x="730" y="96" text-anchor="end" font-size="10.5" fill="#75726b">건물 수</text>';
+    lastRings.forEach((r, i) => {
+      const y = 110 + i * rowH, t = r.density / maxD;
+      body += '<text x="32" y="'+(y+18)+'" font-size="13" font-weight="600" fill="#0a0a0a">'+r.label+'</text>'+
+        '<text x="32" y="'+(y+34)+'" font-size="10.5" fill="#75726b">'+r.range+'</text>'+
+        '<rect x="'+bx+'" y="'+(y+8)+'" width="'+bw+'" height="18" rx="9" fill="#edebe6"/>'+
+        '<rect x="'+bx+'" y="'+(y+8)+'" width="'+Math.max(2, t*bw).toFixed(1)+'" height="18" rx="9" fill="#0a0a0a"/>'+
+        '<text x="'+(t > 0.8 ? bx + t*bw - 8 : bx + t*bw + 8).toFixed(1)+'" y="'+(y+21)+'" text-anchor="'+(t > 0.8 ? 'end' : 'start')+'" font-size="11" font-weight="600" fill="'+(t > 0.8 ? '#ffffff' : '#0a0a0a')+'">'+fmtNum(r.density,0)+'</text>'+
+        '<text x="590" y="'+(y+21)+'" text-anchor="end" font-size="12" fill="#0a0a0a">'+r.bcr.toFixed(1)+'%</text>'+
+        '<text x="670" y="'+(y+21)+'" text-anchor="end" font-size="12" fill="#0a0a0a">'+r.far.toFixed(1)+'%</text>'+
+        '<text x="730" y="'+(y+21)+'" text-anchor="end" font-size="12" fill="#75726b">'+fmtNum(r.count)+'</text>';
+    });
+    return svgFrame(760, H, '링(권역)별 건물 밀도 · ' + provenance.siteName, '링 간격 ' + fmtDist(ringInterval()) + ' · 개수가 아니라 링 면적 대비 밀도로 환산', body);
+  }
+
+  function exportFiles(){
+    return [
+      ['README.md', readmeMD()],
+      ['metadata.json', metadataJSON()],
+      ['01_composition.csv', compCSV()],
+      ['01_composition.svg', compSVG()],
+      ['02_ring_density.csv', ringCSV()],
+      ['02_ring_density.svg', ringSVG()],
+      ['03_smartpark_priority.csv', parkCSV()],
+      ['03_smartpark_priority.svg', buildMatrixSVG({ title:'스마트공원 요소 우선순위 매트릭스', legend:true, caption:$('park-source').textContent })]
+    ];
+  }
+
+  function requireData(){
+    if (provenance && buildings.length) return true;
+    setStatus('먼저 밀도 분석을 실행해야 산출물을 내보낼 수 있습니다.', 'err');
+    return false;
+  }
+
+  $('btn-zip').addEventListener('click', async () => {
+    if (!requireData()) return;
+    const base = exportBaseName(), files = exportFiles();
+    if (typeof JSZip === 'undefined'){
+      files.forEach(([name, content]) => downloadBlob(base + '_' + name, content, mimeOf(name)));
+      setStatus('ZIP 라이브러리를 불러오지 못해 파일을 하나씩 내려받았습니다.', null);
+      return;
+    }
+    const zip = new JSZip();
+    const folder = zip.folder(base);
+    files.forEach(([name, content]) => folder.file(name, content));
+    downloadBlob(base + '.zip', await zip.generateAsync({ type:'blob' }), 'application/zip');
+  });
+
+  document.querySelectorAll('[data-export]').forEach(btn => btn.addEventListener('click', () => {
+    if (!requireData()) return;
+    const base = exportBaseName();
+    const map_ = { comp:['01_composition.csv', compCSV], ring:['02_ring_density.csv', ringCSV], park:['03_smartpark_priority.csv', parkCSV], readme:['README.md', readmeMD] };
+    const [name, fn] = map_[btn.dataset.export];
+    downloadBlob(base + '_' + name, fn(), mimeOf(name));
+  }));
+
+  function downloadBlob(filename, content, mime){
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  $('btn-csv').addEventListener('click', () => {
+    if (!buildings.length) return;
+    const header = ['id','type','use','category','label','levels_used','estimated','footprint_m2','floor_area_m2','dist_m','bearing_deg'];
+    const rows = buildings.map(b => [b.id,b.type,b.use,b.category,'"'+(b.label||'').replace(/"/g,'""')+'"',b.levelsUsed,b.estimated,b.area.toFixed(2),b.floorArea.toFixed(2),b.dist.toFixed(1),b.bearing.toFixed(1)]);
+    const csv = [header.join(','), ...rows.map(r=>r.join(','))].join('\n');
+    downloadBlob('buildings_' + Date.now() + '.csv', '﻿'+csv, 'text/csv;charset=utf-8');
+  });
+
+  $('btn-geojson').addEventListener('click', () => {
+    if (!buildings.length) return;
+    const features = buildings.map(b => ({
+      type:'Feature',
+      properties:{ id:b.id, use:b.use, category:b.category, label:b.label, levels_used:b.levelsUsed, estimated:b.estimated, footprint_m2:+b.area.toFixed(2), floor_area_m2:+b.floorArea.toFixed(2), dist_m:+b.dist.toFixed(1), bearing_deg:+b.bearing.toFixed(1) },
+      geometry: Array.isArray(b.latlngs[0][0])
+        ? { type:'Polygon', coordinates: b.latlngs.map(ring => ring.map(([lat,lon]) => [lon,lat])) }
+        : { type:'Polygon', coordinates: [b.latlngs.map(([lat,lon]) => [lon,lat])] }
+    }));
+    const fc = { type:'FeatureCollection', features };
+    downloadBlob('buildings_' + Date.now() + '.geojson', JSON.stringify(fc), 'application/geo+json');
+  });
+
+  $('place-input').addEventListener('keydown', (e) => { if (e.key==='Enter'){ e.preventDefault(); $('btn-search').click(); } });
+
+  // ---- 로딩 화면 ----
+  const splashStart = Date.now();
+  let splashDone = false;
+  let tilesResolve = null;
+  const tilesLoaded = new Promise(r => { tilesResolve = r; });
+
+  function splashStep(pct, msg){
+    if (splashDone) return;
+    const bar = $('splash-bar');
+    bar.style.width = Math.max(parseFloat(bar.style.width) || 0, pct) + '%';
+    if (msg) $('splash-status').textContent = msg;
+    if (pct >= 90) tilesResolve();
+  }
+  function finishSplash(){
+    if (splashDone) return;
+    splashStep(100, '준비 완료');
+    splashDone = true;
+    setTimeout(() => {
+      const el = $('splash');
+      el.classList.add('done');
+      el.addEventListener('transitionend', () => el.remove(), { once:true });
+    }, Math.max(250, 1100 - (Date.now() - splashStart))); // brief minimum so the splash doesn't just flash
+  }
+
+  if (IS_FILE_ORIGIN) $('file-warning').style.display = 'block';
+
+  splashStep(25, '지도 엔진 불러오는 중');
+  initMap();
+  bindOverlayToggle('toggle-ring', 'ring', ringLayerGroup);
+  bindOverlayToggle('toggle-sector', 'sector', sectorLayerGroup);
+  bindOverlayToggle('toggle-grid', 'grid', gridLayerGroup);
+  bindOverlayToggle('toggle-nuclei', 'nuclei', nucleiLayerGroup);
+  viewRadius = readRadius();
+  renderPark();
+  splashStep(60, '글꼴 · 지도 타일 불러오는 중');
+
+  const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  Promise.race([
+    Promise.all([fontsReady, tilesLoaded]),
+    new Promise(r => setTimeout(r, 4500))
+  ]).then(finishSplash);
+})();
+</script>
+</body>
+</html>
