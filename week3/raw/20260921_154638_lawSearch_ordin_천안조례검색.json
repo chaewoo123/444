@@ -1,0 +1,5 @@
+﻿{
+    "request":  "https://www.law.go.kr/DRF/lawSearch.do?OC=***\u0026target=ordin\u0026type=JSON\u0026query=%EC%B2%9C%EC%95%88%EC%8B%9C%20%EB%8F%84%EC%8B%9C%EA%B3%84%ED%9A%8D%20%EC%A1%B0%EB%A1%80\u0026display=20",
+    "fetchedAt":  "2026-09-21 15:46:38",
+    "body":  "{\"OrdinSearch\": {\n    \"law\": {\n        \"자치법규ID\": \"2152964\",\n        \"id\": \"1\",\n        \"자치법규분야명\": \"제5장 맑은도시\",\n        \"자치법규명\": \"천안시 도시계획 조례\",\n        \"자치법규일련번호\": \"1932763\",\n        \"자치법규상세링크\": \"/DRF/lawService.do?OC=***\u0026target=ordin\u0026MST=1932763\u0026type=HTML\u0026mobileYn=\",\n        \"시행일자\": \"20240517\",\n        \"지자체기관명\": \"충청남도 천안시\",\n        \"자치법규종류\": \"조례\",\n        \"공포번호\": \"2613\",\n        \"참조데이터구분\": \"1\",\n        \"제개정구분명\": \"일부개정\",\n        \"공포일자\": \"20240513\"\n    },\n    \"resultMsg\": \"success\",\n    \"키워드\": \"천안시 도시계획 조례\",\n    \"page\": \"1\",\n    \"resultCode\": \"00\",\n    \"target\": \"ordin\",\n    \"totalCnt\": \"1\",\n    \"section\": \"ordinNm\",\n    \"numOfRows\": \"1\"\n}}"
+}

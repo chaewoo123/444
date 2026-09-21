@@ -1,0 +1,3581 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-09-21T06:57:06Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "way",
+  "id": 45055785,
+  "bounds": {
+    "minlat": 36.8389541,
+    "minlon": 127.1476355,
+    "maxlat": 36.8389564,
+    "maxlon": 127.1492398
+  },
+  "geometry": [
+    { "lat": 36.8389541, "lon": 127.1492398 },
+    { "lat": 36.8389564, "lon": 127.1476355 }
+  ],
+  "tags": {
+    "bridge": "yes",
+    "bridge:name": "북부고가교",
+    "highway": "secondary",
+    "int_name": "Samsung Street",
+    "lanes": "4",
+    "layer": "1",
+    "maxspeed": "80",
+    "name": "북부고가교",
+    "name:en": "Bukbu Overpass",
+    "name:ja": "北部高架橋",
+    "name:ko": "북부고가교",
+    "name:ko-Hani": "北部高架橋",
+    "name:zh": "北部高架橋",
+    "name:zh-Hans": "北部高架桥",
+    "name:zh-Hant": "北部高架橋",
+    "old_name": "북부대로",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 85021683,
+  "bounds": {
+    "minlat": 36.8385170,
+    "minlon": 127.1452558,
+    "maxlat": 36.8388494,
+    "maxlon": 127.1457030
+  },
+  "geometry": [
+    { "lat": 36.8388494, "lon": 127.1452558 },
+    { "lat": 36.8387954, "lon": 127.1454900 },
+    { "lat": 36.8387424, "lon": 127.1455837 },
+    { "lat": 36.8386678, "lon": 127.1456428 },
+    { "lat": 36.8385714, "lon": 127.1456889 },
+    { "lat": 36.8385170, "lon": 127.1457030 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "1",
+    "maxspeed": "50",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 87367371,
+  "bounds": {
+    "minlat": 36.8389082,
+    "minlon": 127.1516716,
+    "maxlat": 36.8391623,
+    "maxlon": 127.1567431
+  },
+  "geometry": [
+    { "lat": 36.8389082, "lon": 127.1516716 },
+    { "lat": 36.8390161, "lon": 127.1531767 },
+    { "lat": 36.8390496, "lon": 127.1535945 },
+    { "lat": 36.8390783, "lon": 127.1541744 },
+    { "lat": 36.8391453, "lon": 127.1552006 },
+    { "lat": 36.8391623, "lon": 127.1557595 },
+    { "lat": 36.8391415, "lon": 127.1564103 },
+    { "lat": 36.8390850, "lon": 127.1567431 }
+  ],
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 87368076,
+  "bounds": {
+    "minlat": 36.8368687,
+    "minlon": 127.1337396,
+    "maxlat": 36.8369532,
+    "maxlon": 127.1382428
+  },
+  "geometry": [
+    { "lat": 36.8369532, "lon": 127.1337396 },
+    { "lat": 36.8369506, "lon": 127.1338780 },
+    { "lat": 36.8369418, "lon": 127.1343479 },
+    { "lat": 36.8369373, "lon": 127.1345876 },
+    { "lat": 36.8369325, "lon": 127.1348412 },
+    { "lat": 36.8369137, "lon": 127.1358427 },
+    { "lat": 36.8369121, "lon": 127.1359296 },
+    { "lat": 36.8368813, "lon": 127.1375732 },
+    { "lat": 36.8368712, "lon": 127.1381073 },
+    { "lat": 36.8368687, "lon": 127.1382428 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "int_name": "Buseong 7 Road",
+    "lanes": "2",
+    "maxspeed": "40",
+    "name": "부성7길",
+    "name:en": "Buseong 7-gil",
+    "name:ko": "부성7길",
+    "oneway": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 87368121,
+  "bounds": {
+    "minlat": 36.8337756,
+    "minlon": 127.1358235,
+    "maxlat": 36.8378445,
+    "maxlon": 127.1359612
+  },
+  "geometry": [
+    { "lat": 36.8337756, "lon": 127.1358235 },
+    { "lat": 36.8338347, "lon": 127.1358255 },
+    { "lat": 36.8342653, "lon": 127.1358401 },
+    { "lat": 36.8346345, "lon": 127.1358526 },
+    { "lat": 36.8353925, "lon": 127.1358782 },
+    { "lat": 36.8357002, "lon": 127.1358886 },
+    { "lat": 36.8361550, "lon": 127.1359040 },
+    { "lat": 36.8365467, "lon": 127.1359173 },
+    { "lat": 36.8368636, "lon": 127.1359280 },
+    { "lat": 36.8369121, "lon": 127.1359296 },
+    { "lat": 36.8369741, "lon": 127.1359317 },
+    { "lat": 36.8373925, "lon": 127.1359459 },
+    { "lat": 36.8378445, "lon": 127.1359612 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "int_name": "Buseong 1 Road",
+    "lanes": "2",
+    "name": "부성1길",
+    "name:en": "Buseong 1-gil",
+    "name:ko": "부성1길",
+    "oneway": "no",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 87661255,
+  "bounds": {
+    "minlat": 36.8387885,
+    "minlon": 127.1512779,
+    "maxlat": 36.8390939,
+    "maxlon": 127.1513288
+  },
+  "geometry": [
+    { "lat": 36.8390939, "lon": 127.1513288 },
+    { "lat": 36.8387885, "lon": 127.1512779 }
+  ],
+  "tags": {
+    "highway": "primary_link",
+    "int_name": "Cheonan Street",
+    "lanes": "2",
+    "maxspeed": "40",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ko": "천안대로",
+    "old_ref": "1",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 116446083,
+  "bounds": {
+    "minlat": 36.8338529,
+    "minlon": 127.1342872,
+    "maxlat": 36.8342846,
+    "maxlon": 127.1374893
+  },
+  "geometry": [
+    { "lat": 36.8338529, "lon": 127.1342872 },
+    { "lat": 36.8339178, "lon": 127.1342902 },
+    { "lat": 36.8341354, "lon": 127.1342906 },
+    { "lat": 36.8342249, "lon": 127.1342971 },
+    { "lat": 36.8342550, "lon": 127.1343196 },
+    { "lat": 36.8342724, "lon": 127.1343496 },
+    { "lat": 36.8342846, "lon": 127.1343936 },
+    { "lat": 36.8342755, "lon": 127.1350860 },
+    { "lat": 36.8342653, "lon": 127.1358401 },
+    { "lat": 36.8342248, "lon": 127.1374893 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "lanes": "2",
+    "name": "부성3길",
+    "name:en": "Buseong 3-gil",
+    "name:ko": "부성3길",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 116446084,
+  "bounds": {
+    "minlat": 36.8350585,
+    "minlon": 127.1335909,
+    "maxlat": 36.8354256,
+    "maxlon": 127.1358782
+  },
+  "geometry": [
+    { "lat": 36.8350720, "lon": 127.1335909 },
+    { "lat": 36.8350699, "lon": 127.1336846 },
+    { "lat": 36.8350585, "lon": 127.1342021 },
+    { "lat": 36.8354256, "lon": 127.1342206 },
+    { "lat": 36.8354020, "lon": 127.1354023 },
+    { "lat": 36.8353925, "lon": 127.1358782 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "name": "부성5길",
+    "name:en": "Buseong 5-gil",
+    "name:ko": "부성5길"
+  }
+},
+{
+  "type": "way",
+  "id": 116446438,
+  "bounds": {
+    "minlat": 36.8390111,
+    "minlon": 127.1344304,
+    "maxlat": 36.8390482,
+    "maxlon": 127.1378462
+  },
+  "geometry": [
+    { "lat": 36.8390165, "lon": 127.1344304 },
+    { "lat": 36.8390440, "lon": 127.1348048 },
+    { "lat": 36.8390449, "lon": 127.1357953 },
+    { "lat": 36.8390482, "lon": 127.1360512 },
+    { "lat": 36.8390385, "lon": 127.1369165 },
+    { "lat": 36.8390111, "lon": 127.1378462 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 116562462,
+  "bounds": {
+    "minlat": 36.8389850,
+    "minlon": 127.1378462,
+    "maxlat": 36.8390111,
+    "maxlon": 127.1387537
+  },
+  "geometry": [
+    { "lat": 36.8390111, "lon": 127.1378462 },
+    { "lat": 36.8389850, "lon": 127.1387537 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "layer": "-1",
+    "maxspeed": "80",
+    "name": "북부지하차도",
+    "name:en": "Bukbu Underpass",
+    "name:ja": "北部地下車道",
+    "name:ko": "북부지하차도",
+    "name:ko-Hani": "北部地下車道",
+    "name:zh": "北部地下車道",
+    "name:zh-Hans": "北部地下车道",
+    "name:zh-Hant": "北部地下車道",
+    "oneway": "yes",
+    "tunnel": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 116562463,
+  "bounds": {
+    "minlat": 36.8388980,
+    "minlon": 127.1379312,
+    "maxlat": 36.8391975,
+    "maxlon": 127.1380698
+  },
+  "geometry": [
+    { "lat": 36.8388980, "lon": 127.1379312 },
+    { "lat": 36.8389334, "lon": 127.1380081 },
+    { "lat": 36.8389699, "lon": 127.1380456 },
+    { "lat": 36.8390236, "lon": 127.1380698 },
+    { "lat": 36.8390665, "lon": 127.1380698 },
+    { "lat": 36.8391181, "lon": 127.1380510 },
+    { "lat": 36.8391975, "lon": 127.1379869 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 117170505,
+  "bounds": {
+    "minlat": 36.8325088,
+    "minlon": 127.1517171,
+    "maxlat": 36.8352609,
+    "maxlon": 127.1518787
+  },
+  "geometry": [
+    { "lat": 36.8325088, "lon": 127.1518787 },
+    { "lat": 36.8327137, "lon": 127.1518353 },
+    { "lat": 36.8328555, "lon": 127.1518209 },
+    { "lat": 36.8331361, "lon": 127.1518013 },
+    { "lat": 36.8334585, "lon": 127.1517842 },
+    { "lat": 36.8336396, "lon": 127.1517791 },
+    { "lat": 36.8339849, "lon": 127.1517647 },
+    { "lat": 36.8347772, "lon": 127.1517410 },
+    { "lat": 36.8349260, "lon": 127.1517358 },
+    { "lat": 36.8352609, "lon": 127.1517171 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 117172766,
+  "bounds": {
+    "minlat": 36.8356297,
+    "minlon": 127.1336610,
+    "maxlat": 36.8357527,
+    "maxlon": 127.1383106
+  },
+  "geometry": [
+    { "lat": 36.8357527, "lon": 127.1336610 },
+    { "lat": 36.8357439, "lon": 127.1338314 },
+    { "lat": 36.8357366, "lon": 127.1342270 },
+    { "lat": 36.8357208, "lon": 127.1349472 },
+    { "lat": 36.8357002, "lon": 127.1358886 },
+    { "lat": 36.8356541, "lon": 127.1375345 },
+    { "lat": 36.8356329, "lon": 127.1380839 },
+    { "lat": 36.8356306, "lon": 127.1382344 },
+    { "lat": 36.8356297, "lon": 127.1383106 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성6길",
+    "name:en": "Buseong 6-gil",
+    "name:ko": "부성6길"
+  }
+},
+{
+  "type": "way",
+  "id": 117173150,
+  "bounds": {
+    "minlat": 36.8389106,
+    "minlon": 127.1387537,
+    "maxlat": 36.8389850,
+    "maxlon": 127.1422977
+  },
+  "geometry": [
+    { "lat": 36.8389850, "lon": 127.1387537 },
+    { "lat": 36.8389398, "lon": 127.1411623 },
+    { "lat": 36.8389274, "lon": 127.1422349 },
+    { "lat": 36.8389106, "lon": 127.1422977 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 124321261,
+  "bounds": {
+    "minlat": 36.8385170,
+    "minlon": 127.1457030,
+    "maxlat": 36.8387576,
+    "maxlon": 127.1458245
+  },
+  "geometry": [
+    { "lat": 36.8385170, "lon": 127.1457030 },
+    { "lat": 36.8385765, "lon": 127.1457310 },
+    { "lat": 36.8386465, "lon": 127.1457427 },
+    { "lat": 36.8387106, "lon": 127.1457808 },
+    { "lat": 36.8387576, "lon": 127.1458245 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 124321263,
+  "bounds": {
+    "minlat": 36.8387911,
+    "minlon": 127.1492807,
+    "maxlat": 36.8387977,
+    "maxlon": 127.1493761
+  },
+  "geometry": [
+    { "lat": 36.8387977, "lon": 127.1492807 },
+    { "lat": 36.8387911, "lon": 127.1493761 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "int_name": "Samsung Street",
+    "lanes": "4",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ko": "삼성대로",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 124321266,
+  "bounds": {
+    "minlat": 36.8387576,
+    "minlon": 127.1458245,
+    "maxlat": 36.8388395,
+    "maxlon": 127.1461468
+  },
+  "geometry": [
+    { "lat": 36.8387576, "lon": 127.1458245 },
+    { "lat": 36.8387869, "lon": 127.1458878 },
+    { "lat": 36.8388052, "lon": 127.1459773 },
+    { "lat": 36.8388395, "lon": 127.1461468 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "1",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 124321278,
+  "bounds": {
+    "minlat": 36.8387977,
+    "minlon": 127.1476455,
+    "maxlat": 36.8388316,
+    "maxlon": 127.1492807
+  },
+  "geometry": [
+    { "lat": 36.8388316, "lon": 127.1476455 },
+    { "lat": 36.8387977, "lon": 127.1492807 }
+  ],
+  "tags": {
+    "bridge": "yes",
+    "bridge:name": "북부고가교",
+    "highway": "secondary",
+    "lanes": "4",
+    "layer": "1",
+    "name": "북부고가교",
+    "name:en": "Bukbu Overpass",
+    "name:ja": "北部高架橋",
+    "name:ko": "북부고가교",
+    "name:ko-Hani": "北部高架橋",
+    "name:zh": "北部高架橋",
+    "name:zh-Hans": "北部高架桥",
+    "name:zh-Hant": "北部高架橋",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 124323600,
+  "bounds": {
+    "minlat": 36.8387911,
+    "minlon": 127.1493761,
+    "maxlat": 36.8388779,
+    "maxlon": 127.1511011
+  },
+  "geometry": [
+    { "lat": 36.8387911, "lon": 127.1493761 },
+    { "lat": 36.8388156, "lon": 127.1497323 },
+    { "lat": 36.8388779, "lon": 127.1511011 }
+  ],
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 124323601,
+  "bounds": {
+    "minlat": 36.8388779,
+    "minlon": 127.1511011,
+    "maxlat": 36.8389082,
+    "maxlon": 127.1516716
+  },
+  "geometry": [
+    { "lat": 36.8388779, "lon": 127.1511011 },
+    { "lat": 36.8389082, "lon": 127.1516716 }
+  ],
+  "tags": {
+    "bridge": "yes",
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "layer": "1",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 124323602,
+  "bounds": {
+    "minlat": 36.8387695,
+    "minlon": 127.1507312,
+    "maxlat": 36.8387885,
+    "maxlon": 127.1512779
+  },
+  "geometry": [
+    { "lat": 36.8387695, "lon": 127.1507312 },
+    { "lat": 36.8387865, "lon": 127.1511300 },
+    { "lat": 36.8387885, "lon": 127.1512779 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "2",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 124323607,
+  "bounds": {
+    "minlat": 36.8382688,
+    "minlon": 127.1489548,
+    "maxlat": 36.8386650,
+    "maxlon": 127.1512372
+  },
+  "geometry": [
+    { "lat": 36.8386557, "lon": 127.1489548 },
+    { "lat": 36.8386650, "lon": 127.1499206 },
+    { "lat": 36.8386491, "lon": 127.1502088 },
+    { "lat": 36.8386351, "lon": 127.1503948 },
+    { "lat": 36.8386421, "lon": 127.1508964 },
+    { "lat": 36.8386321, "lon": 127.1509451 },
+    { "lat": 36.8385862, "lon": 127.1510349 },
+    { "lat": 36.8385292, "lon": 127.1511148 },
+    { "lat": 36.8384743, "lon": 127.1511634 },
+    { "lat": 36.8383904, "lon": 127.1512046 },
+    { "lat": 36.8382688, "lon": 127.1512372 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "1",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 124323608,
+  "bounds": {
+    "minlat": 36.8385131,
+    "minlon": 127.1493761,
+    "maxlat": 36.8387911,
+    "maxlon": 127.1512492
+  },
+  "geometry": [
+    { "lat": 36.8387911, "lon": 127.1493761 },
+    { "lat": 36.8387530, "lon": 127.1497751 },
+    { "lat": 36.8387444, "lon": 127.1500540 },
+    { "lat": 36.8387695, "lon": 127.1507312 },
+    { "lat": 36.8387246, "lon": 127.1509335 },
+    { "lat": 36.8386675, "lon": 127.1510944 },
+    { "lat": 36.8386491, "lon": 127.1511275 },
+    { "lat": 36.8386261, "lon": 127.1511479 },
+    { "lat": 36.8385131, "lon": 127.1512492 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "1",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 124323830,
+  "bounds": {
+    "minlat": 36.8352609,
+    "minlon": 127.1514303,
+    "maxlat": 36.8379161,
+    "maxlon": 127.1517171
+  },
+  "geometry": [
+    { "lat": 36.8352609, "lon": 127.1517171 },
+    { "lat": 36.8356253, "lon": 127.1516516 },
+    { "lat": 36.8362220, "lon": 127.1515888 },
+    { "lat": 36.8367545, "lon": 127.1515453 },
+    { "lat": 36.8374188, "lon": 127.1514677 },
+    { "lat": 36.8379161, "lon": 127.1514303 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 124815284,
+  "bounds": {
+    "minlat": 36.8369418,
+    "minlon": 127.1343479,
+    "maxlat": 36.8387401,
+    "maxlon": 127.1359612
+  },
+  "geometry": [
+    { "lat": 36.8378445, "lon": 127.1359612 },
+    { "lat": 36.8383604, "lon": 127.1359568 },
+    { "lat": 36.8387144, "lon": 127.1359609 },
+    { "lat": 36.8387401, "lon": 127.1344409 },
+    { "lat": 36.8383854, "lon": 127.1344247 },
+    { "lat": 36.8378690, "lon": 127.1344003 },
+    { "lat": 36.8369892, "lon": 127.1343501 },
+    { "lat": 36.8369418, "lon": 127.1343479 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "int_name": "Buseong 1 Road",
+    "name": "부성1길",
+    "name:en": "Buseong 1-gil",
+    "name:ko": "부성1길",
+    "oneway": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 124815285,
+  "bounds": {
+    "minlat": 36.8377968,
+    "minlon": 127.1338220,
+    "maxlat": 36.8378886,
+    "maxlon": 127.1382644
+  },
+  "geometry": [
+    { "lat": 36.8378886, "lon": 127.1338220 },
+    { "lat": 36.8378690, "lon": 127.1344003 },
+    { "lat": 36.8378442, "lon": 127.1358806 },
+    { "lat": 36.8378445, "lon": 127.1359612 },
+    { "lat": 36.8378179, "lon": 127.1369956 },
+    { "lat": 36.8378117, "lon": 127.1376026 },
+    { "lat": 36.8377997, "lon": 127.1381385 },
+    { "lat": 36.8377968, "lon": 127.1382644 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "lanes": "2",
+    "lanes:backward": "1",
+    "lanes:forward": "1",
+    "name": "부성8길",
+    "name:en": "Buseong 8-gil",
+    "name:ko": "부성8길",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 170297915,
+  "bounds": {
+    "minlat": 36.8386930,
+    "minlon": 127.1420127,
+    "maxlat": 36.8388918,
+    "maxlon": 127.1422156
+  },
+  "geometry": [
+    { "lat": 36.8386930, "lon": 127.1420127 },
+    { "lat": 36.8387607, "lon": 127.1420387 },
+    { "lat": 36.8388165, "lon": 127.1420736 },
+    { "lat": 36.8388540, "lon": 127.1421173 },
+    { "lat": 36.8388918, "lon": 127.1422156 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 170297922,
+  "bounds": {
+    "minlat": 36.8386930,
+    "minlon": 127.1415391,
+    "maxlat": 36.8388756,
+    "maxlon": 127.1420127
+  },
+  "geometry": [
+    { "lat": 36.8388756, "lon": 127.1415391 },
+    { "lat": 36.8388647, "lon": 127.1418008 },
+    { "lat": 36.8388518, "lon": 127.1418812 },
+    { "lat": 36.8388251, "lon": 127.1419421 },
+    { "lat": 36.8387853, "lon": 127.1419805 },
+    { "lat": 36.8386930, "lon": 127.1420127 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 170297931,
+  "bounds": {
+    "minlat": 36.8390794,
+    "minlon": 127.1378420,
+    "maxlat": 36.8391094,
+    "maxlon": 127.1387645
+  },
+  "geometry": [
+    { "lat": 36.8390794, "lon": 127.1387645 },
+    { "lat": 36.8391094, "lon": 127.1378420 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "layer": "-1",
+    "maxspeed": "80",
+    "name": "북부지하차도",
+    "name:en": "Bukbu Underpass",
+    "name:ja": "北部地下車道",
+    "name:ko": "북부지하차도",
+    "name:ko-Hani": "北部地下車道",
+    "name:zh": "北部地下車道",
+    "name:zh-Hans": "北部地下车道",
+    "name:zh-Hant": "北部地下車道",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "tunnel": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 170297941,
+  "bounds": {
+    "minlat": 36.8390493,
+    "minlon": 127.1387645,
+    "maxlat": 36.8390794,
+    "maxlon": 127.1422927
+  },
+  "geometry": [
+    { "lat": 36.8390777, "lon": 127.1422927 },
+    { "lat": 36.8390493, "lon": 127.1412456 },
+    { "lat": 36.8390794, "lon": 127.1387645 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 170297942,
+  "bounds": {
+    "minlat": 36.8391094,
+    "minlon": 127.1344188,
+    "maxlat": 36.8391834,
+    "maxlon": 127.1378420
+  },
+  "geometry": [
+    { "lat": 36.8391094, "lon": 127.1378420 },
+    { "lat": 36.8391252, "lon": 127.1363988 },
+    { "lat": 36.8391391, "lon": 127.1358543 },
+    { "lat": 36.8391402, "lon": 127.1349921 },
+    { "lat": 36.8391834, "lon": 127.1344188 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189611789,
+  "bounds": {
+    "minlat": 36.8389398,
+    "minlon": 127.1492398,
+    "maxlat": 36.8389840,
+    "maxlon": 127.1511203
+  },
+  "geometry": [
+    { "lat": 36.8389840, "lon": 127.1511203 },
+    { "lat": 36.8389398, "lon": 127.1499153 },
+    { "lat": 36.8389541, "lon": 127.1492398 }
+  ],
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189611795,
+  "bounds": {
+    "minlat": 36.8389564,
+    "minlon": 127.1454283,
+    "maxlat": 36.8390033,
+    "maxlon": 127.1476355
+  },
+  "geometry": [
+    { "lat": 36.8389564, "lon": 127.1476355 },
+    { "lat": 36.8389811, "lon": 127.1460538 },
+    { "lat": 36.8389982, "lon": 127.1456332 },
+    { "lat": 36.8390033, "lon": 127.1454283 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189611798,
+  "bounds": {
+    "minlat": 36.8389840,
+    "minlon": 127.1511203,
+    "maxlat": 36.8390112,
+    "maxlon": 127.1516682
+  },
+  "geometry": [
+    { "lat": 36.8390112, "lon": 127.1516682 },
+    { "lat": 36.8389840, "lon": 127.1511203 }
+  ],
+  "tags": {
+    "bridge": "yes",
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "layer": "1",
+    "maxspeed": "80",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630464,
+  "bounds": {
+    "minlat": 36.8391712,
+    "minlon": 127.1524153,
+    "maxlat": 36.8393730,
+    "maxlon": 127.1558479
+  },
+  "geometry": [
+    { "lat": 36.8393730, "lon": 127.1558479 },
+    { "lat": 36.8393441, "lon": 127.1548935 },
+    { "lat": 36.8391712, "lon": 127.1524153 }
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630465,
+  "bounds": {
+    "minlat": 36.8379161,
+    "minlon": 127.1514013,
+    "maxlat": 36.8394754,
+    "maxlon": 127.1516106
+  },
+  "geometry": [
+    { "lat": 36.8379161, "lon": 127.1514303 },
+    { "lat": 36.8382380, "lon": 127.1514109 },
+    { "lat": 36.8384363, "lon": 127.1514013 },
+    { "lat": 36.8386425, "lon": 127.1514038 },
+    { "lat": 36.8388340, "lon": 127.1514283 },
+    { "lat": 36.8391519, "lon": 127.1514937 },
+    { "lat": 36.8392600, "lon": 127.1515288 },
+    { "lat": 36.8394754, "lon": 127.1516106 }
+  ],
+  "tags": {
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "secondary",
+    "lanes": "2",
+    "layer": "-1",
+    "maxspeed": "60",
+    "name": "두정지하차도",
+    "name:en": "Dujeong Underpass",
+    "name:ko": "두정지하차도",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "tunnel": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 189630466,
+  "bounds": {
+    "minlat": 36.8394754,
+    "minlon": 127.1516106,
+    "maxlat": 36.8421839,
+    "maxlon": 127.1526846
+  },
+  "geometry": [
+    { "lat": 36.8394754, "lon": 127.1516106 },
+    { "lat": 36.8400706, "lon": 127.1518157 },
+    { "lat": 36.8410370, "lon": 127.1521607 },
+    { "lat": 36.8417969, "lon": 127.1524542 },
+    { "lat": 36.8421839, "lon": 127.1526846 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630468,
+  "bounds": {
+    "minlat": 36.8327508,
+    "minlon": 127.1516420,
+    "maxlat": 36.8336268,
+    "maxlon": 127.1517071
+  },
+  "geometry": [
+    { "lat": 36.8336268, "lon": 127.1516420 },
+    { "lat": 36.8332271, "lon": 127.1516588 },
+    { "lat": 36.8330194, "lon": 127.1516796 },
+    { "lat": 36.8328593, "lon": 127.1516891 },
+    { "lat": 36.8327508, "lon": 127.1517071 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630470,
+  "bounds": {
+    "minlat": 36.8432471,
+    "minlon": 127.1507814,
+    "maxlat": 36.8621803,
+    "maxlon": 127.1552939
+  },
+  "geometry": [
+    { "lat": 36.8621803, "lon": 127.1507814 },
+    { "lat": 36.8618491, "lon": 127.1509098 },
+    { "lat": 36.8614964, "lon": 127.1510466 },
+    { "lat": 36.8613438, "lon": 127.1511124 },
+    { "lat": 36.8609476, "lon": 127.1512844 },
+    { "lat": 36.8607041, "lon": 127.1514049 },
+    { "lat": 36.8604236, "lon": 127.1515437 },
+    { "lat": 36.8589184, "lon": 127.1522856 },
+    { "lat": 36.8570547, "lon": 127.1531420 },
+    { "lat": 36.8568905, "lon": 127.1532111 },
+    { "lat": 36.8560034, "lon": 127.1536138 },
+    { "lat": 36.8542017, "lon": 127.1544592 },
+    { "lat": 36.8537889, "lon": 127.1546605 },
+    { "lat": 36.8533239, "lon": 127.1548600 },
+    { "lat": 36.8530707, "lon": 127.1549429 },
+    { "lat": 36.8527540, "lon": 127.1550293 },
+    { "lat": 36.8518981, "lon": 127.1551792 },
+    { "lat": 36.8513228, "lon": 127.1552542 },
+    { "lat": 36.8504505, "lon": 127.1552839 },
+    { "lat": 36.8500056, "lon": 127.1552908 },
+    { "lat": 36.8498784, "lon": 127.1552928 },
+    { "lat": 36.8495007, "lon": 127.1552912 },
+    { "lat": 36.8492555, "lon": 127.1552928 },
+    { "lat": 36.8490991, "lon": 127.1552939 },
+    { "lat": 36.8487882, "lon": 127.1552896 },
+    { "lat": 36.8487138, "lon": 127.1552884 },
+    { "lat": 36.8481410, "lon": 127.1552789 },
+    { "lat": 36.8478917, "lon": 127.1552602 },
+    { "lat": 36.8473972, "lon": 127.1551798 },
+    { "lat": 36.8472588, "lon": 127.1551411 },
+    { "lat": 36.8467984, "lon": 127.1550125 },
+    { "lat": 36.8460578, "lon": 127.1547788 },
+    { "lat": 36.8452225, "lon": 127.1545297 },
+    { "lat": 36.8445723, "lon": 127.1543383 },
+    { "lat": 36.8442930, "lon": 127.1542368 },
+    { "lat": 36.8441048, "lon": 127.1541543 },
+    { "lat": 36.8439410, "lon": 127.1540576 },
+    { "lat": 36.8437945, "lon": 127.1539358 },
+    { "lat": 36.8436538, "lon": 127.1538068 },
+    { "lat": 36.8432471, "lon": 127.1533486 }
+  ],
+  "tags": {
+    "highway": "primary",
+    "lanes": "3",
+    "maxspeed": "50",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630471,
+  "bounds": {
+    "minlat": 36.8388291,
+    "minlon": 127.1517972,
+    "maxlat": 36.8390850,
+    "maxlon": 127.1567431
+  },
+  "geometry": [
+    { "lat": 36.8388291, "lon": 127.1517972 },
+    { "lat": 36.8390019, "lon": 127.1540201 },
+    { "lat": 36.8390375, "lon": 127.1547294 },
+    { "lat": 36.8390850, "lon": 127.1567431 }
+  ],
+  "tags": {
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "trunk_link",
+    "lanes": "2",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630472,
+  "bounds": {
+    "minlat": 36.8413549,
+    "minlon": 127.1520865,
+    "maxlat": 36.8421685,
+    "maxlon": 127.1525389
+  },
+  "geometry": [
+    { "lat": 36.8421685, "lon": 127.1525389 },
+    { "lat": 36.8419549, "lon": 127.1523766 },
+    { "lat": 36.8418173, "lon": 127.1522889 },
+    { "lat": 36.8416563, "lon": 127.1522099 },
+    { "lat": 36.8414301, "lon": 127.1521132 },
+    { "lat": 36.8413549, "lon": 127.1520865 }
+  ],
+  "tags": {
+    "highway": "primary_link",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "1"
+  }
+},
+{
+  "type": "way",
+  "id": 189630473,
+  "bounds": {
+    "minlat": 36.8379246,
+    "minlon": 127.1513109,
+    "maxlat": 36.8394893,
+    "maxlon": 127.1515149
+  },
+  "geometry": [
+    { "lat": 36.8394893, "lon": 127.1515149 },
+    { "lat": 36.8392714, "lon": 127.1514496 },
+    { "lat": 36.8390196, "lon": 127.1513914 },
+    { "lat": 36.8388575, "lon": 127.1513565 },
+    { "lat": 36.8387469, "lon": 127.1513369 },
+    { "lat": 36.8385619, "lon": 127.1513109 },
+    { "lat": 36.8383407, "lon": 127.1513125 },
+    { "lat": 36.8381016, "lon": 127.1513299 },
+    { "lat": 36.8379246, "lon": 127.1513423 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "layer": "-1",
+    "maxspeed": "60",
+    "name": "두정지하차도",
+    "name:en": "Dujeong Underpass",
+    "name:ko": "두정지하차도",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "tunnel": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 189630475,
+  "bounds": {
+    "minlat": 36.8392325,
+    "minlon": 127.1558479,
+    "maxlat": 36.8393775,
+    "maxlon": 127.1573049
+  },
+  "geometry": [
+    { "lat": 36.8392325, "lon": 127.1573049 },
+    { "lat": 36.8393126, "lon": 127.1569077 },
+    { "lat": 36.8393513, "lon": 127.1565716 },
+    { "lat": 36.8393775, "lon": 127.1562870 },
+    { "lat": 36.8393730, "lon": 127.1558479 }
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "lanes": "2",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "1"
+  }
+},
+{
+  "type": "way",
+  "id": 189630476,
+  "bounds": {
+    "minlat": 36.8394893,
+    "minlon": 127.1515149,
+    "maxlat": 36.8421685,
+    "maxlon": 127.1525389
+  },
+  "geometry": [
+    { "lat": 36.8421685, "lon": 127.1525389 },
+    { "lat": 36.8418556, "lon": 127.1523896 },
+    { "lat": 36.8409396, "lon": 127.1520355 },
+    { "lat": 36.8404936, "lon": 127.1518665 },
+    { "lat": 36.8395942, "lon": 127.1515400 },
+    { "lat": 36.8394893, "lon": 127.1515149 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "old_name": "북천안대로",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630477,
+  "bounds": {
+    "minlat": 36.8498813,
+    "minlon": 127.1507017,
+    "maxlat": 36.8628273,
+    "maxlon": 127.1554200
+  },
+  "geometry": [
+    { "lat": 36.8498813, "lon": 127.1554176 },
+    { "lat": 36.8499463, "lon": 127.1554200 },
+    { "lat": 36.8500041, "lon": 127.1554191 },
+    { "lat": 36.8504545, "lon": 127.1554032 },
+    { "lat": 36.8509191, "lon": 127.1553780 },
+    { "lat": 36.8512364, "lon": 127.1553603 },
+    { "lat": 36.8515418, "lon": 127.1553265 },
+    { "lat": 36.8520953, "lon": 127.1552360 },
+    { "lat": 36.8526297, "lon": 127.1551474 },
+    { "lat": 36.8530863, "lon": 127.1550403 },
+    { "lat": 36.8533163, "lon": 127.1549638 },
+    { "lat": 36.8535735, "lon": 127.1548614 },
+    { "lat": 36.8535909, "lon": 127.1548545 },
+    { "lat": 36.8539215, "lon": 127.1547063 },
+    { "lat": 36.8540544, "lon": 127.1546442 },
+    { "lat": 36.8544497, "lon": 127.1544581 },
+    { "lat": 36.8556366, "lon": 127.1539217 },
+    { "lat": 36.8560318, "lon": 127.1537348 },
+    { "lat": 36.8564242, "lon": 127.1535488 },
+    { "lat": 36.8569212, "lon": 127.1533246 },
+    { "lat": 36.8570793, "lon": 127.1532459 },
+    { "lat": 36.8573629, "lon": 127.1531022 },
+    { "lat": 36.8580467, "lon": 127.1527951 },
+    { "lat": 36.8588364, "lon": 127.1524170 },
+    { "lat": 36.8595382, "lon": 127.1521031 },
+    { "lat": 36.8602895, "lon": 127.1517524 },
+    { "lat": 36.8607909, "lon": 127.1515114 },
+    { "lat": 36.8608933, "lon": 127.1514603 },
+    { "lat": 36.8609943, "lon": 127.1514086 },
+    { "lat": 36.8613711, "lon": 127.1512340 },
+    { "lat": 36.8627010, "lon": 127.1507503 },
+    { "lat": 36.8628273, "lon": 127.1507017 }
+  ],
+  "tags": {
+    "highway": "primary",
+    "lanes": "2",
+    "maxspeed": "50",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630481,
+  "bounds": {
+    "minlat": 36.8350251,
+    "minlon": 127.1513423,
+    "maxlat": 36.8379246,
+    "maxlon": 127.1515999
+  },
+  "geometry": [
+    { "lat": 36.8379246, "lon": 127.1513423 },
+    { "lat": 36.8371359, "lon": 127.1513949 },
+    { "lat": 36.8361817, "lon": 127.1514791 },
+    { "lat": 36.8356635, "lon": 127.1515495 },
+    { "lat": 36.8350251, "lon": 127.1515999 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189639789,
+  "bounds": {
+    "minlat": 36.8390112,
+    "minlon": 127.1516682,
+    "maxlat": 36.8393010,
+    "maxlon": 127.1573049
+  },
+  "geometry": [
+    { "lat": 36.8392325, "lon": 127.1573049 },
+    { "lat": 36.8392783, "lon": 127.1567148 },
+    { "lat": 36.8392971, "lon": 127.1564165 },
+    { "lat": 36.8393010, "lon": 127.1559665 },
+    { "lat": 36.8392113, "lon": 127.1544192 },
+    { "lat": 36.8391291, "lon": 127.1532385 },
+    { "lat": 36.8390112, "lon": 127.1516682 }
+  ],
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 227404005,
+  "bounds": {
+    "minlat": 36.8390777,
+    "minlon": 127.1382690,
+    "maxlat": 36.8391795,
+    "maxlon": 127.1422927
+  },
+  "geometry": [
+    { "lat": 36.8390777, "lon": 127.1422927 },
+    { "lat": 36.8391010, "lon": 127.1419913 },
+    { "lat": 36.8391735, "lon": 127.1385681 },
+    { "lat": 36.8391795, "lon": 127.1382690 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "2",
+    "maxspeed": "60",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 227404006,
+  "bounds": {
+    "minlat": 36.8388918,
+    "minlon": 127.1419477,
+    "maxlat": 36.8389106,
+    "maxlon": 127.1422977
+  },
+  "geometry": [
+    { "lat": 36.8388930, "lon": 127.1419477 },
+    { "lat": 36.8388947, "lon": 127.1420164 },
+    { "lat": 36.8388918, "lon": 127.1422156 },
+    { "lat": 36.8389106, "lon": 127.1422977 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "5",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ko": "삼성대로",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 227404007,
+  "bounds": {
+    "minlat": 36.8388980,
+    "minlon": 127.1344304,
+    "maxlat": 36.8390165,
+    "maxlon": 127.1379312
+  },
+  "geometry": [
+    { "lat": 36.8390165, "lon": 127.1344304 },
+    { "lat": 36.8389585, "lon": 127.1347879 },
+    { "lat": 36.8389509, "lon": 127.1362388 },
+    { "lat": 36.8389309, "lon": 127.1371552 },
+    { "lat": 36.8388980, "lon": 127.1379312 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "2",
+    "maxspeed": "60",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 367980857,
+  "bounds": {
+    "minlat": 36.8350251,
+    "minlon": 127.1512372,
+    "maxlat": 36.8387885,
+    "maxlon": 127.1515999
+  },
+  "geometry": [
+    { "lat": 36.8387885, "lon": 127.1512779 },
+    { "lat": 36.8385131, "lon": 127.1512492 },
+    { "lat": 36.8382688, "lon": 127.1512372 },
+    { "lat": 36.8381746, "lon": 127.1512413 },
+    { "lat": 36.8379958, "lon": 127.1512423 },
+    { "lat": 36.8371104, "lon": 127.1513121 },
+    { "lat": 36.8359316, "lon": 127.1514204 },
+    { "lat": 36.8355749, "lon": 127.1514657 },
+    { "lat": 36.8353644, "lon": 127.1515107 },
+    { "lat": 36.8351903, "lon": 127.1515395 },
+    { "lat": 36.8350251, "lon": 127.1515999 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "2",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 367980860,
+  "bounds": {
+    "minlat": 36.8387885,
+    "minlon": 127.1512779,
+    "maxlat": 36.8388291,
+    "maxlon": 127.1517972
+  },
+  "geometry": [
+    { "lat": 36.8387885, "lon": 127.1512779 },
+    { "lat": 36.8388033, "lon": 127.1514421 },
+    { "lat": 36.8388291, "lon": 127.1517972 }
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "lanes": "2",
+    "maxspeed": "40",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ko": "천안대로",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 473715050,
+  "bounds": {
+    "minlat": 36.8338421,
+    "minlon": 127.1350691,
+    "maxlat": 36.8346445,
+    "maxlon": 127.1381971
+  },
+  "geometry": [
+    { "lat": 36.8338421, "lon": 127.1350721 },
+    { "lat": 36.8339010, "lon": 127.1350691 },
+    { "lat": 36.8342755, "lon": 127.1350860 },
+    { "lat": 36.8344228, "lon": 127.1350894 },
+    { "lat": 36.8345617, "lon": 127.1350977 },
+    { "lat": 36.8345909, "lon": 127.1351062 },
+    { "lat": 36.8346141, "lon": 127.1351169 },
+    { "lat": 36.8346307, "lon": 127.1351382 },
+    { "lat": 36.8346445, "lon": 127.1351746 },
+    { "lat": 36.8346441, "lon": 127.1353857 },
+    { "lat": 36.8346345, "lon": 127.1358526 },
+    { "lat": 36.8346015, "lon": 127.1375012 },
+    { "lat": 36.8345883, "lon": 127.1380505 },
+    { "lat": 36.8345849, "lon": 127.1381971 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "lanes": "2",
+    "maxspeed": "30",
+    "name": "부성4길",
+    "name:en": "Buseong 4-gil",
+    "name:ko": "부성4길",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 475288667,
+  "bounds": {
+    "minlat": 36.8391795,
+    "minlon": 127.1382271,
+    "maxlat": 36.8415482,
+    "maxlon": 127.1382690
+  },
+  "geometry": [
+    { "lat": 36.8391795, "lon": 127.1382690 },
+    { "lat": 36.8411717, "lon": 127.1382337 },
+    { "lat": 36.8415482, "lon": 127.1382271 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "4",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路"
+  }
+},
+{
+  "type": "way",
+  "id": 477431836,
+  "bounds": {
+    "minlat": 36.8346441,
+    "minlon": 127.1353857,
+    "maxlat": 36.8354020,
+    "maxlon": 127.1354023
+  },
+  "geometry": [
+    { "lat": 36.8346441, "lon": 127.1353857 },
+    { "lat": 36.8354020, "lon": 127.1354023 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "lanes": "2",
+    "name": "부성4길",
+    "name:en": "Buseong 4-gil",
+    "name:ko": "부성4길",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 477431847,
+  "bounds": {
+    "minlat": 36.8338052,
+    "minlon": 127.1374761,
+    "maxlat": 36.8378117,
+    "maxlon": 127.1376026
+  },
+  "geometry": [
+    { "lat": 36.8338052, "lon": 127.1374761 },
+    { "lat": 36.8338529, "lon": 127.1374776 },
+    { "lat": 36.8342248, "lon": 127.1374893 },
+    { "lat": 36.8346015, "lon": 127.1375012 },
+    { "lat": 36.8356541, "lon": 127.1375345 },
+    { "lat": 36.8361086, "lon": 127.1375488 },
+    { "lat": 36.8364988, "lon": 127.1375611 },
+    { "lat": 36.8368813, "lon": 127.1375732 },
+    { "lat": 36.8373319, "lon": 127.1375875 },
+    { "lat": 36.8378117, "lon": 127.1376026 }
+  ],
+  "tags": {
+    "highway": "living_street",
+    "lanes": "1",
+    "maxspeed": "30",
+    "name": "부성2길",
+    "name:en": "Buseong 2-gil",
+    "name:ko": "부성2길",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 477693801,
+  "bounds": {
+    "minlat": 36.8388316,
+    "minlon": 127.1452558,
+    "maxlat": 36.8388494,
+    "maxlon": 127.1476455
+  },
+  "geometry": [
+    { "lat": 36.8388494, "lon": 127.1452558 },
+    { "lat": 36.8388395, "lon": 127.1461468 },
+    { "lat": 36.8388316, "lon": 127.1476455 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 477693802,
+  "bounds": {
+    "minlat": 36.8390033,
+    "minlon": 127.1422927,
+    "maxlat": 36.8390777,
+    "maxlon": 127.1454283
+  },
+  "geometry": [
+    { "lat": 36.8390033, "lon": 127.1454283 },
+    { "lat": 36.8390059, "lon": 127.1453210 },
+    { "lat": 36.8390777, "lon": 127.1422927 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "5",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 478621117,
+  "bounds": {
+    "minlat": 36.8359463,
+    "minlon": 127.1573049,
+    "maxlat": 36.8392325,
+    "maxlon": 127.1618060
+  },
+  "geometry": [
+    { "lat": 36.8359463, "lon": 127.1618060 },
+    { "lat": 36.8361701, "lon": 127.1617274 },
+    { "lat": 36.8363939, "lon": 127.1616023 },
+    { "lat": 36.8366019, "lon": 127.1614851 },
+    { "lat": 36.8369452, "lon": 127.1612501 },
+    { "lat": 36.8371298, "lon": 127.1611116 },
+    { "lat": 36.8373071, "lon": 127.1609518 },
+    { "lat": 36.8375555, "lon": 127.1607236 },
+    { "lat": 36.8378928, "lon": 127.1603500 },
+    { "lat": 36.8380472, "lon": 127.1601541 },
+    { "lat": 36.8384163, "lon": 127.1596181 },
+    { "lat": 36.8387595, "lon": 127.1588925 },
+    { "lat": 36.8389859, "lon": 127.1583191 },
+    { "lat": 36.8390842, "lon": 127.1579879 },
+    { "lat": 36.8391540, "lon": 127.1577376 },
+    { "lat": 36.8392114, "lon": 127.1574337 },
+    { "lat": 36.8392325, "lon": 127.1573049 }
+  ],
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 478621120,
+  "bounds": {
+    "minlat": 36.8358796,
+    "minlon": 127.1567431,
+    "maxlat": 36.8390850,
+    "maxlon": 127.1612764
+  },
+  "geometry": [
+    { "lat": 36.8390850, "lon": 127.1567431 },
+    { "lat": 36.8390674, "lon": 127.1568784 },
+    { "lat": 36.8390292, "lon": 127.1571207 },
+    { "lat": 36.8389485, "lon": 127.1575199 },
+    { "lat": 36.8388171, "lon": 127.1579451 },
+    { "lat": 36.8386278, "lon": 127.1584535 },
+    { "lat": 36.8383954, "lon": 127.1589778 },
+    { "lat": 36.8382595, "lon": 127.1592116 },
+    { "lat": 36.8380193, "lon": 127.1596042 },
+    { "lat": 36.8378425, "lon": 127.1598265 },
+    { "lat": 36.8375795, "lon": 127.1601184 },
+    { "lat": 36.8371900, "lon": 127.1604861 },
+    { "lat": 36.8369949, "lon": 127.1606514 },
+    { "lat": 36.8366706, "lon": 127.1608799 },
+    { "lat": 36.8363475, "lon": 127.1610762 },
+    { "lat": 36.8358796, "lon": 127.1612764 }
+  ],
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 479518994,
+  "bounds": {
+    "minlat": 36.8352609,
+    "minlon": 127.1514358,
+    "maxlat": 36.8388033,
+    "maxlon": 127.1517173
+  },
+  "geometry": [
+    { "lat": 36.8352609, "lon": 127.1517171 },
+    { "lat": 36.8357959, "lon": 127.1517173 },
+    { "lat": 36.8374380, "lon": 127.1515605 },
+    { "lat": 36.8380128, "lon": 127.1515198 },
+    { "lat": 36.8380428, "lon": 127.1515154 },
+    { "lat": 36.8382103, "lon": 127.1514962 },
+    { "lat": 36.8383286, "lon": 127.1514800 },
+    { "lat": 36.8384817, "lon": 127.1514503 },
+    { "lat": 36.8385545, "lon": 127.1514402 },
+    { "lat": 36.8386480, "lon": 127.1514363 },
+    { "lat": 36.8387368, "lon": 127.1514358 },
+    { "lat": 36.8388033, "lon": 127.1514421 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 479518999,
+  "bounds": {
+    "minlat": 36.8391091,
+    "minlon": 127.1515160,
+    "maxlat": 36.8391712,
+    "maxlon": 127.1524153
+  },
+  "geometry": [
+    { "lat": 36.8391712, "lon": 127.1524153 },
+    { "lat": 36.8391091, "lon": 127.1515160 }
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 479519000,
+  "bounds": {
+    "minlat": 36.8390629,
+    "minlon": 127.1490526,
+    "maxlat": 36.8391359,
+    "maxlon": 127.1508583
+  },
+  "geometry": [
+    { "lat": 36.8390629, "lon": 127.1508583 },
+    { "lat": 36.8391291, "lon": 127.1504496 },
+    { "lat": 36.8391359, "lon": 127.1503661 },
+    { "lat": 36.8391054, "lon": 127.1490526 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 479519001,
+  "bounds": {
+    "minlat": 36.8390629,
+    "minlon": 127.1508583,
+    "maxlat": 36.8394091,
+    "maxlon": 127.1513984
+  },
+  "geometry": [
+    { "lat": 36.8394091, "lon": 127.1513984 },
+    { "lat": 36.8393215, "lon": 127.1513449 },
+    { "lat": 36.8392476, "lon": 127.1512900 },
+    { "lat": 36.8392084, "lon": 127.1512433 },
+    { "lat": 36.8391570, "lon": 127.1511545 },
+    { "lat": 36.8391196, "lon": 127.1510681 },
+    { "lat": 36.8390629, "lon": 127.1508583 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 479519002,
+  "bounds": {
+    "minlat": 36.8393815,
+    "minlon": 127.1514294,
+    "maxlat": 36.8394992,
+    "maxlon": 127.1517255
+  },
+  "geometry": [
+    { "lat": 36.8394992, "lon": 127.1514294 },
+    { "lat": 36.8394516, "lon": 127.1514356 },
+    { "lat": 36.8394161, "lon": 127.1514554 },
+    { "lat": 36.8393899, "lon": 127.1515126 },
+    { "lat": 36.8393815, "lon": 127.1515535 },
+    { "lat": 36.8393861, "lon": 127.1515909 },
+    { "lat": 36.8394114, "lon": 127.1516446 },
+    { "lat": 36.8394529, "lon": 127.1517255 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 479519003,
+  "bounds": {
+    "minlat": 36.8384817,
+    "minlon": 127.1514503,
+    "maxlat": 36.8388291,
+    "maxlon": 127.1517972
+  },
+  "geometry": [
+    { "lat": 36.8384817, "lon": 127.1514503 },
+    { "lat": 36.8385676, "lon": 127.1514648 },
+    { "lat": 36.8386291, "lon": 127.1514951 },
+    { "lat": 36.8386749, "lon": 127.1515368 },
+    { "lat": 36.8387391, "lon": 127.1515953 },
+    { "lat": 36.8387802, "lon": 127.1516582 },
+    { "lat": 36.8388291, "lon": 127.1517972 }
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 479528428,
+  "bounds": {
+    "minlat": 36.8379958,
+    "minlon": 127.1512423,
+    "maxlat": 36.8380612,
+    "maxlon": 127.1515198
+  },
+  "geometry": [
+    { "lat": 36.8380128, "lon": 127.1515198 },
+    { "lat": 36.8380426, "lon": 127.1514846 },
+    { "lat": 36.8380523, "lon": 127.1514680 },
+    { "lat": 36.8380577, "lon": 127.1514447 },
+    { "lat": 36.8380612, "lon": 127.1514049 },
+    { "lat": 36.8380612, "lon": 127.1513650 },
+    { "lat": 36.8380541, "lon": 127.1513207 },
+    { "lat": 36.8380382, "lon": 127.1512742 },
+    { "lat": 36.8379958, "lon": 127.1512423 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 479528429,
+  "bounds": {
+    "minlat": 36.8381173,
+    "minlon": 127.1512413,
+    "maxlat": 36.8382103,
+    "maxlon": 127.1514962
+  },
+  "geometry": [
+    { "lat": 36.8381746, "lon": 127.1512413 },
+    { "lat": 36.8381460, "lon": 127.1512545 },
+    { "lat": 36.8381298, "lon": 127.1512793 },
+    { "lat": 36.8381210, "lon": 127.1513022 },
+    { "lat": 36.8381173, "lon": 127.1513370 },
+    { "lat": 36.8381188, "lon": 127.1513801 },
+    { "lat": 36.8381239, "lon": 127.1514021 },
+    { "lat": 36.8381335, "lon": 127.1514370 },
+    { "lat": 36.8381518, "lon": 127.1514590 },
+    { "lat": 36.8381804, "lon": 127.1514746 },
+    { "lat": 36.8382103, "lon": 127.1514962 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 484153547,
+  "bounds": {
+    "minlat": 36.8388998,
+    "minlon": 127.1382690,
+    "maxlat": 36.8391795,
+    "maxlon": 127.1383507
+  },
+  "geometry": [
+    { "lat": 36.8388998, "lon": 127.1383507 },
+    { "lat": 36.8391441, "lon": 127.1383199 },
+    { "lat": 36.8391795, "lon": 127.1382690 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "50",
+    "name": "쌍용대로",
+    "name:en": "Ssangyong-daero",
+    "name:ko": "쌍용대로",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 484153548,
+  "bounds": {
+    "minlat": 36.8388599,
+    "minlon": 127.1383507,
+    "maxlat": 36.8388998,
+    "maxlon": 127.1419477
+  },
+  "geometry": [
+    { "lat": 36.8388998, "lon": 127.1383507 },
+    { "lat": 36.8388955, "lon": 127.1385357 },
+    { "lat": 36.8388955, "lon": 127.1386201 },
+    { "lat": 36.8388599, "lon": 127.1411713 },
+    { "lat": 36.8388756, "lon": 127.1415391 },
+    { "lat": 36.8388930, "lon": 127.1419477 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "2",
+    "maxspeed": "60",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 488192220,
+  "bounds": {
+    "minlat": 36.8495338,
+    "minlon": 127.1400451,
+    "maxlat": 36.8503215,
+    "maxlon": 127.1403234
+  },
+  "geometry": [
+    { "lat": 36.8495338, "lon": 127.1402141 },
+    { "lat": 36.8498119, "lon": 127.1403234 },
+    { "lat": 36.8500071, "lon": 127.1402585 },
+    { "lat": 36.8503215, "lon": 127.1400451 }
+  ],
+  "tags": {
+    "bridge": "yes",
+    "highway": "secondary",
+    "layer": "1",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 506253561,
+  "bounds": {
+    "minlat": 36.8388980,
+    "minlon": 127.1379312,
+    "maxlat": 36.8389066,
+    "maxlon": 127.1383507
+  },
+  "geometry": [
+    { "lat": 36.8388980, "lon": 127.1379312 },
+    { "lat": 36.8389066, "lon": 127.1382300 },
+    { "lat": 36.8388998, "lon": 127.1383507 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "2",
+    "maxspeed": "60",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 506253562,
+  "bounds": {
+    "minlat": 36.8391834,
+    "minlon": 127.1344188,
+    "maxlat": 36.8392235,
+    "maxlon": 127.1379869
+  },
+  "geometry": [
+    { "lat": 36.8391975, "lon": 127.1379869 },
+    { "lat": 36.8392235, "lon": 127.1365668 },
+    { "lat": 36.8392210, "lon": 127.1354048 },
+    { "lat": 36.8392196, "lon": 127.1347580 },
+    { "lat": 36.8391834, "lon": 127.1344188 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "2",
+    "maxspeed": "60",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 507617796,
+  "bounds": {
+    "minlat": 36.8391795,
+    "minlon": 127.1379869,
+    "maxlat": 36.8391975,
+    "maxlon": 127.1382690
+  },
+  "geometry": [
+    { "lat": 36.8391795, "lon": 127.1382690 },
+    { "lat": 36.8391975, "lon": 127.1379869 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "lanes": "2",
+    "maxspeed": "60",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 510511221,
+  "bounds": {
+    "minlat": 36.8400699,
+    "minlon": 127.1519389,
+    "maxlat": 36.8412812,
+    "maxlon": 127.1523429
+  },
+  "geometry": [
+    { "lat": 36.8400699, "lon": 127.1519389 },
+    { "lat": 36.8403495, "lon": 127.1520363 },
+    { "lat": 36.8407059, "lon": 127.1521583 },
+    { "lat": 36.8410651, "lon": 127.1522649 },
+    { "lat": 36.8411234, "lon": 127.1522832 },
+    { "lat": 36.8412812, "lon": 127.1523429 }
+  ],
+  "tags": {
+    "highway": "primary_link",
+    "lanes": "1",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 551331038,
+  "bounds": {
+    "minlat": 36.8391712,
+    "minlon": 127.1518472,
+    "maxlat": 36.8400699,
+    "maxlon": 127.1524153
+  },
+  "geometry": [
+    { "lat": 36.8391712, "lon": 127.1524153 },
+    { "lat": 36.8392045, "lon": 127.1522064 },
+    { "lat": 36.8392177, "lon": 127.1521182 },
+    { "lat": 36.8392351, "lon": 127.1520588 },
+    { "lat": 36.8392706, "lon": 127.1519969 },
+    { "lat": 36.8393411, "lon": 127.1519147 },
+    { "lat": 36.8394210, "lon": 127.1518739 },
+    { "lat": 36.8394774, "lon": 127.1518630 },
+    { "lat": 36.8395967, "lon": 127.1518472 },
+    { "lat": 36.8399008, "lon": 127.1518932 },
+    { "lat": 36.8400699, "lon": 127.1519389 }
+  ],
+  "tags": {
+    "highway": "trunk_link",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 551331039,
+  "bounds": {
+    "minlat": 36.8388494,
+    "minlon": 127.1422977,
+    "maxlat": 36.8389106,
+    "maxlon": 127.1452558
+  },
+  "geometry": [
+    { "lat": 36.8389106, "lon": 127.1422977 },
+    { "lat": 36.8388494, "lon": 127.1452558 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "5",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 640873105,
+  "bounds": {
+    "minlat": 36.8470449,
+    "minlon": 127.1514226,
+    "maxlat": 36.8481433,
+    "maxlon": 127.1552789
+  },
+  "geometry": [
+    { "lat": 36.8470449, "lon": 127.1514226 },
+    { "lat": 36.8472856, "lon": 127.1522474 },
+    { "lat": 36.8475638, "lon": 127.1529421 },
+    { "lat": 36.8478001, "lon": 127.1534637 },
+    { "lat": 36.8479869, "lon": 127.1539501 },
+    { "lat": 36.8480791, "lon": 127.1542902 },
+    { "lat": 36.8481327, "lon": 127.1546279 },
+    { "lat": 36.8481433, "lon": 127.1549415 },
+    { "lat": 36.8481362, "lon": 127.1552091 },
+    { "lat": 36.8481410, "lon": 127.1552789 }
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "name": "부성19로",
+    "name:en": "Buseong 19-ro",
+    "name:ko": "부성19로"
+  }
+},
+{
+  "type": "way",
+  "id": 695033506,
+  "bounds": {
+    "minlat": 36.8415482,
+    "minlon": 127.1382271,
+    "maxlat": 36.8438672,
+    "maxlon": 127.1382350
+  },
+  "geometry": [
+    { "lat": 36.8415482, "lon": 127.1382271 },
+    { "lat": 36.8419036, "lon": 127.1382283 },
+    { "lat": 36.8434812, "lon": 127.1382337 },
+    { "lat": 36.8438672, "lon": 127.1382350 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "4",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路"
+  }
+},
+{
+  "type": "way",
+  "id": 789215144,
+  "bounds": {
+    "minlat": 36.8388033,
+    "minlon": 127.1514421,
+    "maxlat": 36.8400699,
+    "maxlon": 127.1519389
+  },
+  "geometry": [
+    { "lat": 36.8388033, "lon": 127.1514421 },
+    { "lat": 36.8388607, "lon": 127.1514467 },
+    { "lat": 36.8389335, "lon": 127.1514649 },
+    { "lat": 36.8390020, "lon": 127.1514813 },
+    { "lat": 36.8390726, "lon": 127.1515040 },
+    { "lat": 36.8391091, "lon": 127.1515160 },
+    { "lat": 36.8391710, "lon": 127.1515488 },
+    { "lat": 36.8391954, "lon": 127.1515624 },
+    { "lat": 36.8392314, "lon": 127.1515824 },
+    { "lat": 36.8393021, "lon": 127.1516316 },
+    { "lat": 36.8393741, "lon": 127.1516789 },
+    { "lat": 36.8394529, "lon": 127.1517255 },
+    { "lat": 36.8395217, "lon": 127.1517511 },
+    { "lat": 36.8400699, "lon": 127.1519389 }
+  ],
+  "tags": {
+    "highway": "primary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 789215145,
+  "bounds": {
+    "minlat": 36.8389541,
+    "minlon": 127.1492398,
+    "maxlat": 36.8391091,
+    "maxlon": 127.1515160
+  },
+  "geometry": [
+    { "lat": 36.8391091, "lon": 127.1515160 },
+    { "lat": 36.8390939, "lon": 127.1513288 },
+    { "lat": 36.8390629, "lon": 127.1508583 },
+    { "lat": 36.8390316, "lon": 127.1504454 },
+    { "lat": 36.8390214, "lon": 127.1498849 },
+    { "lat": 36.8390169, "lon": 127.1497448 },
+    { "lat": 36.8390105, "lon": 127.1496415 },
+    { "lat": 36.8389541, "lon": 127.1492398 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 790785978,
+  "bounds": {
+    "minlat": 36.8417017,
+    "minlon": 127.1516517,
+    "maxlat": 36.8433414,
+    "maxlon": 127.1520643
+  },
+  "geometry": [
+    { "lat": 36.8433414, "lon": 127.1520643 },
+    { "lat": 36.8429375, "lon": 127.1519627 },
+    { "lat": 36.8418208, "lon": 127.1516817 },
+    { "lat": 36.8417017, "lon": 127.1516517 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성9로",
+    "name:en": "Buseong 9-ro",
+    "name:ko": "부성9로"
+  }
+},
+{
+  "type": "way",
+  "id": 790785980,
+  "bounds": {
+    "minlat": 36.8449837,
+    "minlon": 127.1477380,
+    "maxlat": 36.8494448,
+    "maxlon": 127.1540488
+  },
+  "geometry": [
+    { "lat": 36.8494448, "lon": 127.1524163 },
+    { "lat": 36.8491239, "lon": 127.1526207 },
+    { "lat": 36.8486303, "lon": 127.1529350 },
+    { "lat": 36.8483864, "lon": 127.1530904 },
+    { "lat": 36.8481452, "lon": 127.1532439 },
+    { "lat": 36.8478001, "lon": 127.1534637 },
+    { "lat": 36.8474197, "lon": 127.1537060 },
+    { "lat": 36.8469591, "lon": 127.1540044 },
+    { "lat": 36.8467552, "lon": 127.1540475 },
+    { "lat": 36.8466269, "lon": 127.1540488 },
+    { "lat": 36.8465307, "lon": 127.1540157 },
+    { "lat": 36.8456686, "lon": 127.1533537 },
+    { "lat": 36.8455742, "lon": 127.1530767 },
+    { "lat": 36.8455495, "lon": 127.1524151 },
+    { "lat": 36.8455262, "lon": 127.1521350 },
+    { "lat": 36.8454726, "lon": 127.1519662 },
+    { "lat": 36.8453482, "lon": 127.1517701 },
+    { "lat": 36.8452446, "lon": 127.1515818 },
+    { "lat": 36.8451714, "lon": 127.1514490 },
+    { "lat": 36.8451318, "lon": 127.1511907 },
+    { "lat": 36.8450988, "lon": 127.1508317 },
+    { "lat": 36.8449884, "lon": 127.1498120 },
+    { "lat": 36.8449837, "lon": 127.1495806 },
+    { "lat": 36.8450302, "lon": 127.1494009 },
+    { "lat": 36.8451904, "lon": 127.1488836 },
+    { "lat": 36.8452032, "lon": 127.1486883 },
+    { "lat": 36.8451695, "lon": 127.1482904 },
+    { "lat": 36.8451040, "lon": 127.1477380 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성18로",
+    "name:en": "Buseong 18-ro",
+    "name:ko": "부성18로"
+  }
+},
+{
+  "type": "way",
+  "id": 790785982,
+  "bounds": {
+    "minlat": 36.8469155,
+    "minlon": 127.1473425,
+    "maxlat": 36.8471764,
+    "maxlon": 127.1496622
+  },
+  "geometry": [
+    { "lat": 36.8471764, "lon": 127.1496622 },
+    { "lat": 36.8470979, "lon": 127.1489701 },
+    { "lat": 36.8470509, "lon": 127.1485567 },
+    { "lat": 36.8470026, "lon": 127.1481303 },
+    { "lat": 36.8469547, "lon": 127.1477085 },
+    { "lat": 36.8469155, "lon": 127.1473425 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성23길",
+    "name:en": "Buseong 23-gil",
+    "name:ko": "부성23길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785983,
+  "bounds": {
+    "minlat": 36.8477715,
+    "minlon": 127.1472546,
+    "maxlat": 36.8479558,
+    "maxlon": 127.1487923
+  },
+  "geometry": [
+    { "lat": 36.8479558, "lon": 127.1487923 },
+    { "lat": 36.8479034, "lon": 127.1483659 },
+    { "lat": 36.8478501, "lon": 127.1479316 },
+    { "lat": 36.8477996, "lon": 127.1475209 },
+    { "lat": 36.8477715, "lon": 127.1472546 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성24길",
+    "name:en": "Buseong 24-gil",
+    "name:ko": "부성24길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785984,
+  "bounds": {
+    "minlat": 36.8437864,
+    "minlon": 127.1466756,
+    "maxlat": 36.8502750,
+    "maxlon": 127.1480542
+  },
+  "geometry": [
+    { "lat": 36.8502750, "lon": 127.1466756 },
+    { "lat": 36.8500251, "lon": 127.1467769 },
+    { "lat": 36.8491514, "lon": 127.1469755 },
+    { "lat": 36.8488654, "lon": 127.1470169 },
+    { "lat": 36.8486057, "lon": 127.1470751 },
+    { "lat": 36.8477715, "lon": 127.1472546 },
+    { "lat": 36.8476127, "lon": 127.1472834 },
+    { "lat": 36.8474854, "lon": 127.1473029 },
+    { "lat": 36.8472931, "lon": 127.1473007 },
+    { "lat": 36.8470857, "lon": 127.1472895 },
+    { "lat": 36.8469155, "lon": 127.1473425 },
+    { "lat": 36.8464848, "lon": 127.1474654 },
+    { "lat": 36.8457811, "lon": 127.1476218 },
+    { "lat": 36.8451040, "lon": 127.1477380 },
+    { "lat": 36.8437864, "lon": 127.1480542 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성10로",
+    "name:en": "Buseong 10-ro",
+    "name:ko": "부성10로"
+  }
+},
+{
+  "type": "way",
+  "id": 790785985,
+  "bounds": {
+    "minlat": 36.8444067,
+    "minlon": 127.1470169,
+    "maxlat": 36.8490720,
+    "maxlon": 127.1518723
+  },
+  "geometry": [
+    { "lat": 36.8488654, "lon": 127.1470169 },
+    { "lat": 36.8490588, "lon": 127.1485628 },
+    { "lat": 36.8490720, "lon": 127.1489789 },
+    { "lat": 36.8490542, "lon": 127.1492813 },
+    { "lat": 36.8490066, "lon": 127.1496145 },
+    { "lat": 36.8488743, "lon": 127.1500174 },
+    { "lat": 36.8487094, "lon": 127.1503180 },
+    { "lat": 36.8485194, "lon": 127.1505484 },
+    { "lat": 36.8483541, "lon": 127.1506864 },
+    { "lat": 36.8482558, "lon": 127.1507497 },
+    { "lat": 36.8480678, "lon": 127.1508592 },
+    { "lat": 36.8474298, "lon": 127.1512305 },
+    { "lat": 36.8470449, "lon": 127.1514226 },
+    { "lat": 36.8453482, "lon": 127.1517701 },
+    { "lat": 36.8449484, "lon": 127.1518462 },
+    { "lat": 36.8448192, "lon": 127.1518723 },
+    { "lat": 36.8447056, "lon": 127.1518361 },
+    { "lat": 36.8446451, "lon": 127.1518086 },
+    { "lat": 36.8445663, "lon": 127.1517231 },
+    { "lat": 36.8445272, "lon": 127.1515954 },
+    { "lat": 36.8444705, "lon": 127.1509689 },
+    { "lat": 36.8444184, "lon": 127.1504540 },
+    { "lat": 36.8444067, "lon": 127.1503386 },
+    { "lat": 36.8444588, "lon": 127.1501827 },
+    { "lat": 36.8445149, "lon": 127.1500622 },
+    { "lat": 36.8446998, "lon": 127.1498548 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성26로",
+    "name:en": "Buseong 26-ro",
+    "name:ko": "부성26로"
+  }
+},
+{
+  "type": "way",
+  "id": 790785986,
+  "bounds": {
+    "minlat": 36.8466362,
+    "minlon": 127.1486176,
+    "maxlat": 36.8487952,
+    "maxlon": 127.1490668
+  },
+  "geometry": [
+    { "lat": 36.8487952, "lon": 127.1486176 },
+    { "lat": 36.8479558, "lon": 127.1487923 },
+    { "lat": 36.8470979, "lon": 127.1489701 },
+    { "lat": 36.8466362, "lon": 127.1490668 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성34길",
+    "name:en": "Buseong 34-gil",
+    "name:ko": "부성34길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785987,
+  "bounds": {
+    "minlat": 36.8433212,
+    "minlon": 127.1480542,
+    "maxlat": 36.8438888,
+    "maxlon": 127.1520643
+  },
+  "geometry": [
+    { "lat": 36.8433414, "lon": 127.1520643 },
+    { "lat": 36.8433473, "lon": 127.1517182 },
+    { "lat": 36.8433212, "lon": 127.1506645 },
+    { "lat": 36.8433417, "lon": 127.1503549 },
+    { "lat": 36.8434164, "lon": 127.1498811 },
+    { "lat": 36.8435099, "lon": 127.1496883 },
+    { "lat": 36.8436931, "lon": 127.1493865 },
+    { "lat": 36.8438009, "lon": 127.1492078 },
+    { "lat": 36.8438655, "lon": 127.1489939 },
+    { "lat": 36.8438888, "lon": 127.1487098 },
+    { "lat": 36.8438476, "lon": 127.1483768 },
+    { "lat": 36.8437864, "lon": 127.1480542 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성13로",
+    "name:en": "Buseong 13-ro",
+    "name:ko": "부성13로"
+  }
+},
+{
+  "type": "way",
+  "id": 790785988,
+  "bounds": {
+    "minlat": 36.8446998,
+    "minlon": 127.1492509,
+    "maxlat": 36.8449484,
+    "maxlon": 127.1518462
+  },
+  "geometry": [
+    { "lat": 36.8447345, "lon": 127.1492509 },
+    { "lat": 36.8446998, "lon": 127.1498548 },
+    { "lat": 36.8448058, "lon": 127.1506035 },
+    { "lat": 36.8448299, "lon": 127.1508844 },
+    { "lat": 36.8448925, "lon": 127.1515644 },
+    { "lat": 36.8449484, "lon": 127.1518462 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성16길",
+    "name:en": "Buseong 16-gil",
+    "name:ko": "부성16길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785989,
+  "bounds": {
+    "minlat": 36.8439416,
+    "minlon": 127.1508317,
+    "maxlat": 36.8450988,
+    "maxlon": 127.1510848
+  },
+  "geometry": [
+    { "lat": 36.8439416, "lon": 127.1510848 },
+    { "lat": 36.8444705, "lon": 127.1509689 },
+    { "lat": 36.8448299, "lon": 127.1508844 },
+    { "lat": 36.8450988, "lon": 127.1508317 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성17길",
+    "name:en": "Buseong 17-gil",
+    "name:ko": "부성17길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785991,
+  "bounds": {
+    "minlat": 36.8430189,
+    "minlon": 127.1484266,
+    "maxlat": 36.8435480,
+    "maxlon": 127.1516428
+  },
+  "geometry": [
+    { "lat": 36.8430344, "lon": 127.1516428 },
+    { "lat": 36.8430189, "lon": 127.1511614 },
+    { "lat": 36.8430203, "lon": 127.1507103 },
+    { "lat": 36.8430357, "lon": 127.1502470 },
+    { "lat": 36.8430808, "lon": 127.1499192 },
+    { "lat": 36.8431201, "lon": 127.1497668 },
+    { "lat": 36.8433151, "lon": 127.1493887 },
+    { "lat": 36.8434504, "lon": 127.1491444 },
+    { "lat": 36.8435121, "lon": 127.1489709 },
+    { "lat": 36.8435480, "lon": 127.1488155 },
+    { "lat": 36.8435446, "lon": 127.1486273 },
+    { "lat": 36.8435195, "lon": 127.1484266 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성15길",
+    "name:en": "Buseong 15-gil",
+    "name:ko": "부성15길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785992,
+  "bounds": {
+    "minlat": 36.8420640,
+    "minlon": 127.1499841,
+    "maxlat": 36.8433417,
+    "maxlon": 127.1503549
+  },
+  "geometry": [
+    { "lat": 36.8433417, "lon": 127.1503549 },
+    { "lat": 36.8430357, "lon": 127.1502470 },
+    { "lat": 36.8422863, "lon": 127.1500339 },
+    { "lat": 36.8420640, "lon": 127.1499841 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성11길",
+    "name:en": "Buseong 11-gil",
+    "name:ko": "부성11길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785993,
+  "bounds": {
+    "minlat": 36.8422966,
+    "minlon": 127.1488865,
+    "maxlat": 36.8433151,
+    "maxlon": 127.1493887
+  },
+  "geometry": [
+    { "lat": 36.8433151, "lon": 127.1493887 },
+    { "lat": 36.8429921, "lon": 127.1492031 },
+    { "lat": 36.8425342, "lon": 127.1489875 },
+    { "lat": 36.8422966, "lon": 127.1488865 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성12길",
+    "name:en": "Buseong 12-gil",
+    "name:ko": "부성12길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785997,
+  "bounds": {
+    "minlat": 36.8421343,
+    "minlon": 127.1483768,
+    "maxlat": 36.8438476,
+    "maxlon": 127.1517182
+  },
+  "geometry": [
+    { "lat": 36.8438476, "lon": 127.1483768 },
+    { "lat": 36.8435195, "lon": 127.1484266 },
+    { "lat": 36.8431178, "lon": 127.1484562 },
+    { "lat": 36.8427217, "lon": 127.1485373 },
+    { "lat": 36.8426371, "lon": 127.1485914 },
+    { "lat": 36.8425869, "lon": 127.1486885 },
+    { "lat": 36.8425342, "lon": 127.1489875 },
+    { "lat": 36.8424187, "lon": 127.1495131 },
+    { "lat": 36.8422863, "lon": 127.1500339 },
+    { "lat": 36.8422004, "lon": 127.1504892 },
+    { "lat": 36.8421548, "lon": 127.1506574 },
+    { "lat": 36.8421349, "lon": 127.1509324 },
+    { "lat": 36.8421343, "lon": 127.1513990 },
+    { "lat": 36.8430344, "lon": 127.1516428 },
+    { "lat": 36.8433473, "lon": 127.1517182 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성14길",
+    "name:en": "Buseong 14-gil",
+    "name:ko": "부성14길"
+  }
+},
+{
+  "type": "way",
+  "id": 790785999,
+  "bounds": {
+    "minlat": 36.8451695,
+    "minlon": 127.1481114,
+    "maxlat": 36.8461675,
+    "maxlon": 127.1491643
+  },
+  "geometry": [
+    { "lat": 36.8461675, "lon": 127.1491643 },
+    { "lat": 36.8460266, "lon": 127.1481114 },
+    { "lat": 36.8455065, "lon": 127.1482201 },
+    { "lat": 36.8451695, "lon": 127.1482904 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성20길",
+    "name:en": "Buseong 20-gil",
+    "name:ko": "부성20길"
+  }
+},
+{
+  "type": "way",
+  "id": 790786002,
+  "bounds": {
+    "minlat": 36.8474298,
+    "minlon": 127.1512305,
+    "maxlat": 36.8497120,
+    "maxlon": 127.1544878
+  },
+  "geometry": [
+    { "lat": 36.8474298, "lon": 127.1512305 },
+    { "lat": 36.8475383, "lon": 127.1515358 },
+    { "lat": 36.8477977, "lon": 127.1522660 },
+    { "lat": 36.8481452, "lon": 127.1532439 },
+    { "lat": 36.8483147, "lon": 127.1536769 },
+    { "lat": 36.8484198, "lon": 127.1540349 },
+    { "lat": 36.8485164, "lon": 127.1544878 },
+    { "lat": 36.8489110, "lon": 127.1543947 },
+    { "lat": 36.8493867, "lon": 127.1542824 },
+    { "lat": 36.8497120, "lon": 127.1542057 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성25길",
+    "name:en": "Buseong 25-gil",
+    "name:ko": "부성25길"
+  }
+},
+{
+  "type": "way",
+  "id": 790786003,
+  "bounds": {
+    "minlat": 36.8450302,
+    "minlon": 127.1490668,
+    "maxlat": 36.8466362,
+    "maxlon": 127.1494009
+  },
+  "geometry": [
+    { "lat": 36.8450302, "lon": 127.1494009 },
+    { "lat": 36.8456181, "lon": 127.1492786 },
+    { "lat": 36.8461675, "lon": 127.1491643 },
+    { "lat": 36.8466362, "lon": 127.1490668 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성21로",
+    "name:en": "Buseong 21-ro",
+    "name:ko": "부성21로"
+  }
+},
+{
+  "type": "way",
+  "id": 790786004,
+  "bounds": {
+    "minlat": 36.8469591,
+    "minlon": 127.1537060,
+    "maxlat": 36.8475887,
+    "maxlon": 127.1544815
+  },
+  "geometry": [
+    { "lat": 36.8469591, "lon": 127.1540044 },
+    { "lat": 36.8470589, "lon": 127.1544009 },
+    { "lat": 36.8473641, "lon": 127.1544815 },
+    { "lat": 36.8475887, "lon": 127.1543871 },
+    { "lat": 36.8474197, "lon": 127.1537060 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성22길",
+    "name:en": "Buseong 22-gil",
+    "name:ko": "부성22길"
+  }
+},
+{
+  "type": "way",
+  "id": 790786005,
+  "bounds": {
+    "minlat": 36.8491239,
+    "minlon": 127.1526207,
+    "maxlat": 36.8493867,
+    "maxlon": 127.1542824
+  },
+  "geometry": [
+    { "lat": 36.8491239, "lon": 127.1526207 },
+    { "lat": 36.8493867, "lon": 127.1542824 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성30길",
+    "name:en": "Buseong 30-gil",
+    "name:ko": "부성30길"
+  }
+},
+{
+  "type": "way",
+  "id": 790786006,
+  "bounds": {
+    "minlat": 36.8486303,
+    "minlon": 127.1529350,
+    "maxlat": 36.8489110,
+    "maxlon": 127.1543947
+  },
+  "geometry": [
+    { "lat": 36.8486303, "lon": 127.1529350 },
+    { "lat": 36.8489110, "lon": 127.1543947 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성29길",
+    "name:en": "Buseong 29-gil",
+    "name:ko": "부성29길"
+  }
+},
+{
+  "type": "way",
+  "id": 790786007,
+  "bounds": {
+    "minlat": 36.8491278,
+    "minlon": 127.1469755,
+    "maxlat": 36.8493601,
+    "maxlon": 127.1501786
+  },
+  "geometry": [
+    { "lat": 36.8491278, "lon": 127.1501786 },
+    { "lat": 36.8492251, "lon": 127.1499432 },
+    { "lat": 36.8493208, "lon": 127.1495023 },
+    { "lat": 36.8493601, "lon": 127.1490857 },
+    { "lat": 36.8493186, "lon": 127.1485087 },
+    { "lat": 36.8492549, "lon": 127.1479171 },
+    { "lat": 36.8492010, "lon": 127.1474165 },
+    { "lat": 36.8491514, "lon": 127.1469755 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성27길",
+    "name:en": "Buseong 27-gil",
+    "name:ko": "부성27길"
+  }
+},
+{
+  "type": "way",
+  "id": 790786008,
+  "bounds": {
+    "minlat": 36.8480128,
+    "minlon": 127.1511764,
+    "maxlat": 36.8483864,
+    "maxlon": 127.1530904
+  },
+  "geometry": [
+    { "lat": 36.8483864, "lon": 127.1530904 },
+    { "lat": 36.8480128, "lon": 127.1520399 },
+    { "lat": 36.8481111, "lon": 127.1518333 },
+    { "lat": 36.8482745, "lon": 127.1515086 },
+    { "lat": 36.8482856, "lon": 127.1514591 },
+    { "lat": 36.8482730, "lon": 127.1514041 },
+    { "lat": 36.8481918, "lon": 127.1511764 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성28길",
+    "name:en": "Buseong 28-gil",
+    "name:ko": "부성28길",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 790786013,
+  "bounds": {
+    "minlat": 36.8470026,
+    "minlon": 127.1477431,
+    "maxlat": 36.8486847,
+    "maxlon": 127.1481303
+  },
+  "geometry": [
+    { "lat": 36.8486847, "lon": 127.1477431 },
+    { "lat": 36.8478501, "lon": 127.1479316 },
+    { "lat": 36.8470026, "lon": 127.1481303 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성32길",
+    "name:en": "Buseong 32-gil",
+    "name:ko": "부성32길"
+  }
+},
+{
+  "type": "way",
+  "id": 790786014,
+  "bounds": {
+    "minlat": 36.8469547,
+    "minlon": 127.1473411,
+    "maxlat": 36.8486339,
+    "maxlon": 127.1477085
+  },
+  "geometry": [
+    { "lat": 36.8486339, "lon": 127.1473411 },
+    { "lat": 36.8480594, "lon": 127.1474644 },
+    { "lat": 36.8477996, "lon": 127.1475209 },
+    { "lat": 36.8469547, "lon": 127.1477085 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성31길",
+    "name:en": "Buseong 31-gil",
+    "name:ko": "부성31길"
+  }
+},
+{
+  "type": "way",
+  "id": 790786015,
+  "bounds": {
+    "minlat": 36.8470509,
+    "minlon": 127.1481782,
+    "maxlat": 36.8487396,
+    "maxlon": 127.1485567
+  },
+  "geometry": [
+    { "lat": 36.8487396, "lon": 127.1481782 },
+    { "lat": 36.8479034, "lon": 127.1483659 },
+    { "lat": 36.8470509, "lon": 127.1485567 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성33길",
+    "name:en": "Buseong 33-gil",
+    "name:ko": "부성33길"
+  }
+},
+{
+  "type": "way",
+  "id": 815798503,
+  "bounds": {
+    "minlat": 36.8415441,
+    "minlon": 127.1378862,
+    "maxlat": 36.8419036,
+    "maxlon": 127.1382283
+  },
+  "geometry": [
+    { "lat": 36.8419036, "lon": 127.1382283 },
+    { "lat": 36.8416952, "lon": 127.1380744 },
+    { "lat": 36.8415441, "lon": 127.1378862 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 815798504,
+  "bounds": {
+    "minlat": 36.8411717,
+    "minlon": 127.1378862,
+    "maxlat": 36.8415441,
+    "maxlon": 127.1382337
+  },
+  "geometry": [
+    { "lat": 36.8415441, "lon": 127.1378862 },
+    { "lat": 36.8413987, "lon": 127.1380831 },
+    { "lat": 36.8411717, "lon": 127.1382337 }
+  ],
+  "tags": {
+    "highway": "secondary_link",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 860895781,
+  "bounds": {
+    "minlat": 36.8390939,
+    "minlon": 127.1513288,
+    "maxlat": 36.8413549,
+    "maxlon": 127.1520865
+  },
+  "geometry": [
+    { "lat": 36.8413549, "lon": 127.1520865 },
+    { "lat": 36.8409762, "lon": 127.1519521 },
+    { "lat": 36.8407331, "lon": 127.1518600 },
+    { "lat": 36.8397809, "lon": 127.1515262 },
+    { "lat": 36.8394992, "lon": 127.1514294 },
+    { "lat": 36.8394091, "lon": 127.1513984 },
+    { "lat": 36.8390939, "lon": 127.1513288 }
+  ],
+  "tags": {
+    "highway": "primary_link",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "1"
+  }
+},
+{
+  "type": "way",
+  "id": 860895783,
+  "bounds": {
+    "minlat": 36.8412812,
+    "minlon": 127.1523429,
+    "maxlat": 36.8421839,
+    "maxlon": 127.1526846
+  },
+  "geometry": [
+    { "lat": 36.8412812, "lon": 127.1523429 },
+    { "lat": 36.8421839, "lon": 127.1526846 }
+  ],
+  "tags": {
+    "highway": "primary_link",
+    "lanes": "1",
+    "maxspeed": "40",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 860895785,
+  "bounds": {
+    "minlat": 36.8503215,
+    "minlon": 127.1349831,
+    "maxlat": 36.8560788,
+    "maxlon": 127.1400451
+  },
+  "geometry": [
+    { "lat": 36.8503215, "lon": 127.1400451 },
+    { "lat": 36.8504897, "lon": 127.1399424 },
+    { "lat": 36.8513248, "lon": 127.1391822 },
+    { "lat": 36.8523886, "lon": 127.1382713 },
+    { "lat": 36.8529013, "lon": 127.1377608 },
+    { "lat": 36.8532639, "lon": 127.1374531 },
+    { "lat": 36.8556953, "lon": 127.1353276 },
+    { "lat": 36.8559476, "lon": 127.1350845 },
+    { "lat": 36.8560788, "lon": 127.1349831 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 860895786,
+  "bounds": {
+    "minlat": 36.8501158,
+    "minlon": 127.1348591,
+    "maxlat": 36.8560248,
+    "maxlon": 127.1400196
+  },
+  "geometry": [
+    { "lat": 36.8560248, "lon": 127.1348591 },
+    { "lat": 36.8559082, "lon": 127.1349640 },
+    { "lat": 36.8556566, "lon": 127.1351899 },
+    { "lat": 36.8545591, "lon": 127.1361450 },
+    { "lat": 36.8531701, "lon": 127.1373542 },
+    { "lat": 36.8528604, "lon": 127.1376627 },
+    { "lat": 36.8520129, "lon": 127.1384187 },
+    { "lat": 36.8504543, "lon": 127.1397742 },
+    { "lat": 36.8501158, "lon": 127.1400196 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 867172137,
+  "bounds": {
+    "minlat": 36.8438672,
+    "minlon": 127.1382350,
+    "maxlat": 36.8495338,
+    "maxlon": 127.1402141
+  },
+  "geometry": [
+    { "lat": 36.8438672, "lon": 127.1382350 },
+    { "lat": 36.8445480, "lon": 127.1382850 },
+    { "lat": 36.8458395, "lon": 127.1385045 },
+    { "lat": 36.8479089, "lon": 127.1394705 },
+    { "lat": 36.8488638, "lon": 127.1399583 },
+    { "lat": 36.8493796, "lon": 127.1401761 },
+    { "lat": 36.8495338, "lon": 127.1402141 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路"
+  }
+},
+{
+  "type": "way",
+  "id": 867172138,
+  "bounds": {
+    "minlat": 36.8495338,
+    "minlon": 127.1400196,
+    "maxlat": 36.8501158,
+    "maxlon": 127.1402141
+  },
+  "geometry": [
+    { "lat": 36.8501158, "lon": 127.1400196 },
+    { "lat": 36.8499702, "lon": 127.1400749 },
+    { "lat": 36.8496516, "lon": 127.1401811 },
+    { "lat": 36.8495338, "lon": 127.1402141 }
+  ],
+  "tags": {
+    "bridge": "yes",
+    "highway": "secondary",
+    "layer": "1",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409888,
+  "bounds": {
+    "minlat": 36.8475383,
+    "minlon": 127.1501786,
+    "maxlat": 36.8491278,
+    "maxlon": 127.1515358
+  },
+  "geometry": [
+    { "lat": 36.8475383, "lon": 127.1515358 },
+    { "lat": 36.8481918, "lon": 127.1511764 },
+    { "lat": 36.8484547, "lon": 127.1510074 },
+    { "lat": 36.8486998, "lon": 127.1507879 },
+    { "lat": 36.8489281, "lon": 127.1505216 },
+    { "lat": 36.8491278, "lon": 127.1501786 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성27길",
+    "name:en": "Buseong 27-gil",
+    "name:ko": "부성27길",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409889,
+  "bounds": {
+    "minlat": 36.8479710,
+    "minlon": 127.1505813,
+    "maxlat": 36.8481918,
+    "maxlon": 127.1511764
+  },
+  "geometry": [
+    { "lat": 36.8481918, "lon": 127.1511764 },
+    { "lat": 36.8480678, "lon": 127.1508592 },
+    { "lat": 36.8479710, "lon": 127.1505813 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성28길",
+    "name:en": "Buseong 28-gil",
+    "name:ko": "부성28길"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409890,
+  "bounds": {
+    "minlat": 36.8464773,
+    "minlon": 127.1473955,
+    "maxlat": 36.8466362,
+    "maxlon": 127.1490668
+  },
+  "geometry": [
+    { "lat": 36.8464773, "lon": 127.1473955 },
+    { "lat": 36.8464848, "lon": 127.1474654 },
+    { "lat": 36.8466362, "lon": 127.1490668 }
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "name": "부성19로",
+    "name:en": "Buseong 19-ro",
+    "name:ko": "부성19로"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409891,
+  "bounds": {
+    "minlat": 36.8493186,
+    "minlon": 127.1467769,
+    "maxlat": 36.8500873,
+    "maxlon": 127.1485087
+  },
+  "geometry": [
+    { "lat": 36.8500251, "lon": 127.1467769 },
+    { "lat": 36.8500756, "lon": 127.1472411 },
+    { "lat": 36.8500827, "lon": 127.1474239 },
+    { "lat": 36.8500873, "lon": 127.1475505 },
+    { "lat": 36.8500847, "lon": 127.1477448 },
+    { "lat": 36.8500119, "lon": 127.1479890 },
+    { "lat": 36.8498948, "lon": 127.1481864 },
+    { "lat": 36.8497308, "lon": 127.1483406 },
+    { "lat": 36.8495736, "lon": 127.1484541 },
+    { "lat": 36.8493186, "lon": 127.1485087 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성34길",
+    "name:en": "Buseong 34-gil",
+    "name:ko": "부성34길"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409892,
+  "bounds": {
+    "minlat": 36.8418208,
+    "minlon": 127.1480542,
+    "maxlat": 36.8437864,
+    "maxlon": 127.1516817
+  },
+  "geometry": [
+    { "lat": 36.8437864, "lon": 127.1480542 },
+    { "lat": 36.8426730, "lon": 127.1482808 },
+    { "lat": 36.8425596, "lon": 127.1483338 },
+    { "lat": 36.8424735, "lon": 127.1484126 },
+    { "lat": 36.8424006, "lon": 127.1485303 },
+    { "lat": 36.8423461, "lon": 127.1486572 },
+    { "lat": 36.8422966, "lon": 127.1488865 },
+    { "lat": 36.8420640, "lon": 127.1499841 },
+    { "lat": 36.8418917, "lon": 127.1506366 },
+    { "lat": 36.8419057, "lon": 127.1513340 },
+    { "lat": 36.8418208, "lon": 127.1516817 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성10로",
+    "name:en": "Buseong 10-ro",
+    "name:ko": "부성10로"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409893,
+  "bounds": {
+    "minlat": 36.8466362,
+    "minlon": 127.1490668,
+    "maxlat": 36.8470449,
+    "maxlon": 127.1514226
+  },
+  "geometry": [
+    { "lat": 36.8466362, "lon": 127.1490668 },
+    { "lat": 36.8467506, "lon": 127.1498948 },
+    { "lat": 36.8467984, "lon": 127.1502962 },
+    { "lat": 36.8468890, "lon": 127.1507699 },
+    { "lat": 36.8470449, "lon": 127.1514226 }
+  ],
+  "tags": {
+    "highway": "tertiary",
+    "name": "부성19로",
+    "name:en": "Buseong 19-ro",
+    "name:ko": "부성19로"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409894,
+  "bounds": {
+    "minlat": 36.8486057,
+    "minlon": 127.1470751,
+    "maxlat": 36.8488155,
+    "maxlon": 127.1498493
+  },
+  "geometry": [
+    { "lat": 36.8486057, "lon": 127.1470751 },
+    { "lat": 36.8486339, "lon": 127.1473411 },
+    { "lat": 36.8486847, "lon": 127.1477431 },
+    { "lat": 36.8487396, "lon": 127.1481782 },
+    { "lat": 36.8487952, "lon": 127.1486176 },
+    { "lat": 36.8488155, "lon": 127.1490152 },
+    { "lat": 36.8487977, "lon": 127.1492532 },
+    { "lat": 36.8487406, "lon": 127.1495134 },
+    { "lat": 36.8486101, "lon": 127.1498493 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성25길",
+    "name:en": "Buseong 25-gil",
+    "name:ko": "부성25길"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409895,
+  "bounds": {
+    "minlat": 36.8473422,
+    "minlon": 127.1498493,
+    "maxlat": 36.8486101,
+    "maxlon": 127.1512305
+  },
+  "geometry": [
+    { "lat": 36.8486101, "lon": 127.1498493 },
+    { "lat": 36.8484732, "lon": 127.1501234 },
+    { "lat": 36.8483265, "lon": 127.1503030 },
+    { "lat": 36.8481910, "lon": 127.1504387 },
+    { "lat": 36.8479710, "lon": 127.1505813 },
+    { "lat": 36.8473422, "lon": 127.1509297 },
+    { "lat": 36.8474298, "lon": 127.1512305 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성25길",
+    "name:en": "Buseong 25-gil",
+    "name:ko": "부성25길",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409896,
+  "bounds": {
+    "minlat": 36.8487952,
+    "minlon": 127.1485087,
+    "maxlat": 36.8493186,
+    "maxlon": 127.1486176
+  },
+  "geometry": [
+    { "lat": 36.8493186, "lon": 127.1485087 },
+    { "lat": 36.8490588, "lon": 127.1485628 },
+    { "lat": 36.8487952, "lon": 127.1486176 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성34길",
+    "name:en": "Buseong 34-gil",
+    "name:ko": "부성34길"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409900,
+  "bounds": {
+    "minlat": 36.8421685,
+    "minlon": 127.1525389,
+    "maxlat": 36.8432471,
+    "maxlon": 127.1533486
+  },
+  "geometry": [
+    { "lat": 36.8432471, "lon": 127.1533486 },
+    { "lat": 36.8432201, "lon": 127.1533162 },
+    { "lat": 36.8431576, "lon": 127.1532542 },
+    { "lat": 36.8429367, "lon": 127.1530672 },
+    { "lat": 36.8428762, "lon": 127.1530183 },
+    { "lat": 36.8426854, "lon": 127.1528884 },
+    { "lat": 36.8424040, "lon": 127.1527022 },
+    { "lat": 36.8421685, "lon": 127.1525389 }
+  ],
+  "tags": {
+    "highway": "primary",
+    "lanes": "3",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409901,
+  "bounds": {
+    "minlat": 36.8431366,
+    "minlon": 127.1520643,
+    "maxlat": 36.8433414,
+    "maxlon": 127.1533784
+  },
+  "geometry": [
+    { "lat": 36.8431366, "lon": 127.1533784 },
+    { "lat": 36.8431576, "lon": 127.1532542 },
+    { "lat": 36.8431832, "lon": 127.1531029 },
+    { "lat": 36.8431954, "lon": 127.1530306 },
+    { "lat": 36.8433414, "lon": 127.1520643 }
+  ],
+  "tags": {
+    "highway": "residential",
+    "name": "부성13로",
+    "name:en": "Buseong 13-ro",
+    "name:ko": "부성13로"
+  }
+},
+{
+  "type": "way",
+  "id": 1027611424,
+  "bounds": {
+    "minlat": 36.8336268,
+    "minlon": 127.1515999,
+    "maxlat": 36.8350251,
+    "maxlon": 127.1516420
+  },
+  "geometry": [
+    { "lat": 36.8350251, "lon": 127.1515999 },
+    { "lat": 36.8349209, "lon": 127.1516056 },
+    { "lat": 36.8347673, "lon": 127.1516069 },
+    { "lat": 36.8343001, "lon": 127.1516180 },
+    { "lat": 36.8337222, "lon": 127.1516380 },
+    { "lat": 36.8336268, "lon": 127.1516420 }
+  ],
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1336461486,
+  "bounds": {
+    "minlat": 36.8421839,
+    "minlon": 127.1526846,
+    "maxlat": 36.8498813,
+    "maxlon": 127.1554182
+  },
+  "geometry": [
+    { "lat": 36.8421839, "lon": 127.1526846 },
+    { "lat": 36.8426343, "lon": 127.1529498 },
+    { "lat": 36.8428302, "lon": 127.1531023 },
+    { "lat": 36.8429546, "lon": 127.1532145 },
+    { "lat": 36.8431366, "lon": 127.1533784 },
+    { "lat": 36.8432047, "lon": 127.1534605 },
+    { "lat": 36.8433884, "lon": 127.1536752 },
+    { "lat": 36.8434110, "lon": 127.1537017 },
+    { "lat": 36.8436493, "lon": 127.1539404 },
+    { "lat": 36.8436930, "lon": 127.1539761 },
+    { "lat": 36.8438103, "lon": 127.1540719 },
+    { "lat": 36.8439722, "lon": 127.1541790 },
+    { "lat": 36.8440258, "lon": 127.1542087 },
+    { "lat": 36.8441129, "lon": 127.1542569 },
+    { "lat": 36.8442718, "lon": 127.1543347 },
+    { "lat": 36.8443976, "lon": 127.1543761 },
+    { "lat": 36.8445165, "lon": 127.1544152 },
+    { "lat": 36.8447806, "lon": 127.1544970 },
+    { "lat": 36.8449930, "lon": 127.1545627 },
+    { "lat": 36.8460233, "lon": 127.1548765 },
+    { "lat": 36.8461858, "lon": 127.1549263 },
+    { "lat": 36.8465577, "lon": 127.1550402 },
+    { "lat": 36.8469441, "lon": 127.1551555 },
+    { "lat": 36.8473691, "lon": 127.1552655 },
+    { "lat": 36.8476975, "lon": 127.1553379 },
+    { "lat": 36.8479765, "lon": 127.1553754 },
+    { "lat": 36.8481411, "lon": 127.1553844 },
+    { "lat": 36.8483753, "lon": 127.1553875 },
+    { "lat": 36.8490961, "lon": 127.1554174 },
+    { "lat": 36.8497209, "lon": 127.1554182 },
+    { "lat": 36.8498813, "lon": 127.1554176 }
+  ],
+  "tags": {
+    "highway": "primary",
+    "lanes": "3",
+    "maxspeed": "50",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+}
+
+  ]
+}

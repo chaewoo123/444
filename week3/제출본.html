@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>스마트도시계획 3주차 과제</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c2733; --muted: #5b6875; --line: #d5dce3; --bg: #ffffff; --soft: #f3f6f9;
+    --accent: #0b4a8b; --warn: #b54708; --ok: #1f7a4d; --bad: #b42318;
+    --map-bg: #f7f8f6; --street: #9aa6b2; --arterial: #e0a437; --rail: #4a4f57;
+    --c400: #0b4a8b; --c400-fill: rgba(11,74,139,.08); --c250: #b54708;
+    --park: #3f9b5f; --school: #0b4a8b; --school2: #8a96a3;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #e9edf1; color: var(--ink); font: 10pt/1.5 'Noto Sans KR', 'Malgun Gothic', sans-serif; }
+  .page { width: 210mm; min-height: 297mm; margin: 12px auto; padding: 14mm 14mm 12mm; background: var(--bg); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; box-shadow: none; min-height: auto; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+  header.top { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--accent); padding-bottom: 4px; margin-bottom: 10px; }
+  header.top .course { font-size: 8.5pt; color: var(--muted); }
+  h1 { font-size: 15pt; margin: 0; }
+  h2 { font-size: 11.5pt; margin: 12px 0 5px; color: var(--accent); }
+  h3 { font-size: 10pt; margin: 8px 0 3px; }
+  p { margin: 3px 0; }
+  .meta { font-size: 8.5pt; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: 92mm 1fr; gap: 6mm; }
+  .map svg { width: 100%; height: auto; border: 1px solid var(--line); }
+  .map svg .lb { font: 10px 'Noto Sans KR', sans-serif; fill: var(--ink); }
+  .map svg .strong { font-weight: 700; fill: var(--c400); }
+  .map svg .c250 { fill: var(--c250); font-weight: 700; }
+  .map svg .rail { fill: var(--rail); } .map svg .art { fill: #8a5a00; }
+  .legend { font-size: 8pt; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+  .legend i { display: inline-block; width: 14px; height: 0; vertical-align: middle; margin-right: 3px; border-top: 3px solid; }
+  .hyp { background: var(--soft); border-left: 3px solid var(--accent); padding: 6px 8px; margin: 4px 0 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+  th, td { border: 1px solid var(--line); padding: 3px 5px; vertical-align: top; text-align: left; }
+  th { background: var(--soft); font-weight: 500; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tag { display: inline-block; padding: 0 5px; border-radius: 3px; font-size: 8pt; font-weight: 500; white-space: nowrap; }
+  .t-bad { background: #fde8e7; color: var(--bad); } .t-ok { background: #e3f4ea; color: var(--ok); } .t-warn { background: #fff1e0; color: var(--warn); }
+  .verdict { font-weight: 700; }
+  .note { font-size: 8pt; color: var(--muted); }
+  ul { margin: 3px 0; padding-left: 16px; } li { margin: 1px 0; }
+  .small td, .small th { font-size: 7.6pt; padding: 2px 4px; }
+  .small td:nth-child(4), .small td:nth-child(5), .small th:nth-child(4), .small th:nth-child(5) { white-space: nowrap; }
+  .foot { margin-top: 8px; border-top: 1px solid var(--line); padding-top: 4px; font-size: 7.6pt; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. 계획단위 가설 1장 ============ -->
+<section class="page">
+  <header class="top">
+    <h1>① 대상지 계획단위 가설 — 천안 부성지구</h1>
+    <span class="course">스마트도시계획(캡스톤디자인) 3주차 · 팀 LUOGO · 저장소 [저장소 주소 — 확정 후 기입]</span>
+  </header>
+
+  <div class="grid">
+    <div class="map">
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640' role='img' aria-label='부성지구 400m 가설 도면'>
+<rect width='640' height='640' fill='var(--map-bg)'/>
+<path d='M-167.9,603.0 L-163.8,603.1 L-149.7,603.4 L-142.5,603.6 L-134.9,603.8 L-104.8,604.5 L-102.2,604.5 L-52.9,605.7 L-36.9,606.1 L-32.8,606.2' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-105.4,722.1 L-105.3,719.9 L-104.9,703.8 L-104.5,689.9 L-103.8,661.5 L-103.5,650.0 L-103.0,632.9 L-102.6,618.2 L-102.3,606.3 L-102.2,604.5 L-102.2,602.2 L-101.7,586.5 L-101.3,569.6' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-151.5,719.2 L-151.4,716.8 L-151.4,708.6 L-151.2,705.3 L-150.5,704.2 L-149.6,703.5 L-148.3,703.0 L-127.5,703.4 L-104.9,703.8 L-55.4,705.3' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-172.4,673.5 L-169.6,673.6 L-154.1,674.0 L-153.5,660.3 L-118.0,661.2 L-103.8,661.5' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-170.3,648.0 L-165.2,648.3 L-153.3,648.6 L-131.7,649.2 L-103.5,650.0 L-54.1,651.7 L-37.6,652.5 L-33.1,652.6 L-30.8,652.6' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-101.3,569.6 L-101.4,550.2 L-101.3,536.9 L-146.9,536.0 L-147.4,549.3 L-148.1,568.6 L-149.6,601.6 L-149.7,603.4' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-165.5,567.9 L-148.1,568.6 L-103.7,569.6 L-101.3,569.6 L-70.2,570.6 L-52.0,570.8 L-35.9,571.2 L-32.2,571.4' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-128.0,719.6 L-128.0,717.4 L-127.5,703.4 L-127.4,697.9 L-127.2,692.7 L-126.9,691.6 L-126.6,690.7 L-126.0,690.1 L-124.9,689.6 L-118.5,689.6 L-104.5,689.9 L-55.1,691.2 L-38.6,691.7 L-34.2,691.8' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-118.5,689.6 L-118.0,661.2' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M-55.8,721.0 L-55.8,719.2 L-55.4,705.3 L-55.1,691.2 L-54.1,651.7 L-53.6,634.7 L-53.3,620.0 L-52.9,605.7 L-52.5,588.8 L-52.0,570.8' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M362.7,224.6 L387.4,215.5 L408.3,205.1 L423.9,196.3 L438.5,189.3 L448.7,185.8 L458.9,183.8 L468.3,183.4 L476.3,183.7 L478.4,183.5' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M381.9,363.4 L378.9,378.6 L370.5,420.5 L369.6,424.9' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M392.5,134.6 L398.6,146.6 L408.1,165.1 L412.7,174.3 L417.3,183.3 L423.9,196.3 L431.2,210.5 L440.2,227.8 L441.5,235.4 L441.5,240.2 L440.5,243.9 L420.6,276.2 L412.3,279.7 L392.5,280.6 L384.1,281.5 L379.0,283.5 L373.1,288.2 L367.5,292.1 L363.5,294.8 L355.7,296.3 L345.0,297.5 L314.4,301.7 L307.4,301.9 L302.0,300.1 L286.5,294.1 L280.6,293.6 L268.7,294.9 L252.1,297.4' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M309.9,219.6 L289.1,222.6 L276.7,224.3 L263.9,226.2 L251.2,228.0 L240.3,229.4' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M283.8,190.4 L271.0,192.4 L257.9,194.4 L245.6,196.3 L237.6,197.3' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M220.2,103.5 L223.3,112.8 L229.2,145.6 L230.5,156.3 L232.2,166.0 L237.6,197.3 L238.5,203.3 L239.1,208.1 L239.0,215.3 L238.7,223.0 L240.3,229.4 L243.9,245.6 L248.6,272.0 L252.1,297.4 L261.6,346.8' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M230.5,156.3 L276.9,149.1 L289.4,148.6 L298.4,149.2 L308.4,151.0 L320.5,156.0 L329.5,162.2 L336.5,169.3 L340.6,175.5 L342.5,179.2 L345.8,186.2 L356.9,210.1 L362.7,224.6 L373.1,288.2 L375.4,303.2 L376.2,308.0 L375.1,312.3 L374.3,314.6 L371.7,317.5 L367.9,319.0 L349.1,321.1 L333.6,323.1 L330.2,323.5 L325.5,321.5 L321.9,319.4 L315.6,312.5' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M278.5,158.9 L283.8,190.4 L289.1,222.6 L292.0,239.9' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M381.9,363.4 L371.6,363.2 L339.9,364.2 L330.6,363.4 L316.4,360.6 L310.6,357.1 L301.6,350.3 L296.2,346.2 L289.8,343.8 L281.3,342.9 L271.3,344.5 L261.6,346.8' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M297.5,311.2 L315.6,312.5 L338.1,308.5 L346.5,307.6 L366.9,305.3 L375.4,303.2' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M352.6,340.9 L349.1,321.1 L346.5,307.6 L345.0,297.5' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M369.3,375.0 L354.9,375.5 L341.3,375.5 L327.4,374.9 L317.6,373.2 L313.0,371.7 L301.7,364.4 L294.3,359.4 L289.1,357.0 L284.5,355.7 L278.8,355.8 L272.8,356.8' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M330.6,363.4 L327.4,374.9 L321.0,403.0 L319.5,411.3' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M301.7,364.4 L296.1,376.5 L289.6,393.7 L286.6,402.6' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M271.3,344.5 L272.8,356.8 L273.7,371.8 L276.1,386.7 L277.7,389.9 L280.6,391.7 L289.6,393.7 L305.4,398.0 L321.0,403.0 L334.7,406.2 L339.7,407.9 L348.0,408.7 L362.0,408.7 L369.3,375.0 L371.6,363.2' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M294.9,257.5 L263.3,262.8 L266.6,282.3 L268.7,294.9' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M356.9,210.1 L366.1,206.1 L388.0,196.3 L417.3,183.3 L430.3,177.0 L441.1,173.0 L454.7,169.4 L451.9,154.6 L448.5,136.8 L446.2,124.6' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M302.0,300.1 L298.4,278.1 L294.9,257.5 L292.0,239.9' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M440.2,227.8 L452.1,224.0 L454.5,212.6 L451.6,204.2 L431.2,210.5' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M398.6,146.6 L448.5,136.8' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M408.1,165.1 L451.9,154.6' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M325.4,146.5 L318.3,142.8 L305.1,139.2 L292.6,137.8 L275.2,139.3 L257.5,141.7 L242.5,143.7 L229.2,145.6' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M412.7,174.3 L381.2,188.3 L375.0,184.6 L365.3,178.5 L363.8,178.1 L362.1,178.5 L355.3,181.6' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M252.3,163.1 L257.9,194.4 L263.9,226.2' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M240.2,165.0 L243.9,186.5 L245.6,196.3 L251.2,228.0' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M265.3,161.0 L271.0,192.4 L276.7,224.3' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M366.1,206.1 L355.3,181.6 L350.2,171.7 L343.6,162.5 L335.7,154.0 L325.4,146.5' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M355.3,181.6 L345.8,186.2 L337.4,189.8' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M241.8,245.9 L243.9,245.6 L292.0,239.9' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M223.3,112.8 L237.2,110.9 L242.7,110.7 L246.5,110.5 L252.3,110.6 L259.7,113.3 L265.6,117.7 L270.2,123.9 L273.6,129.8 L275.2,139.3' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M261.6,346.8 L268.4,388.5 L270.0,392.8 L272.4,396.0 L275.9,398.7 L279.7,400.8 L286.6,402.6 L319.5,411.3 L339.1,417.8 L360.0,417.3 L370.5,420.5' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M292.0,239.9 L316.8,235.6 L328.9,233.8 L343.1,230.4 L362.7,224.6' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M232.2,166.0 L240.2,165.0 L252.3,163.1 L265.3,161.0 L278.5,158.9 L290.4,158.2 L297.6,158.8 L305.4,161.0 L315.5,165.9' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M315.5,165.9 L323.7,171.0 L329.1,176.5 L333.2,181.6 L337.4,189.8 L347.9,213.4 L356.9,210.1' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M275.2,139.3 L276.9,149.1 L278.5,158.9' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M421.4,371.1 L417.7,370.3 L413.1,369.4 L410.9,368.9 L381.9,363.4' fill='none' stroke='var(--street)' stroke-width='1.6'/>
+<path d='M297.2,528.0 L249.0,527.9' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M370.2,529.7 L415.3,525.6 L427.9,524.4 L445.3,523.3 L476.1,520.8 L492.8,520.1 L512.4,520.9 L522.3,523.0' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-147.2,525.6 L-136.0,524.6 L-106.3,524.6 L-98.6,524.4 L-72.6,524.8 L-44.7,525.8' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-44.7,525.8 L-17.5,526.8' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M376.4,769.6 L375.1,762.0 L374.6,756.6 L374.1,746.1 L373.5,734.0 L373.4,727.2 L373.0,714.3 L372.2,684.6 L372.1,679.0 L371.5,666.4' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-17.5,526.8 L54.8,528.5 L87.0,529.0 L88.9,529.6' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M298.4,533.8 L301.3,534.1' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M249.3,532.5 L298.4,533.8' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M301.3,534.1 L312.0,533.1 L353.0,530.8' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M353.0,530.8 L370.2,529.7' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M371.5,666.4 L369.6,652.8 L367.7,630.4 L366.4,610.4 L364.0,585.5 L362.9,566.9' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-17.2,523.3 L-44.8,522.1' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M88.7,523.3 L57.3,524.4 L-17.2,523.3' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-44.8,522.1 L-88.1,521.5 L-104.5,521.0 L-130.4,521.0 L-147.6,519.4' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M353.6,526.8 L317.5,528.5 L297.2,528.0' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M249.0,527.9 L201.6,526.9 L189.0,526.3 L182.8,526.1' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M370.1,525.8 L353.6,526.8' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M362.9,566.9 L362.3,554.8 L362.0,547.4 L362.1,539.6 L362.9,532.5 L364.8,520.5 L365.9,516.5 L368.3,508.4' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M368.3,508.4 L374.5,486.1 L384.8,449.9 L393.6,421.4 L400.6,406.8' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M369.3,727.7 L369.8,742.7 L370.4,750.5 L370.7,756.5 L371.2,760.6' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M343.4,-343.0 L347.3,-330.5 L351.4,-317.3 L353.4,-311.6 L358.5,-296.7 L362.2,-287.6 L366.3,-277.1 L388.6,-220.7 L414.3,-150.8 L416.4,-144.6 L428.4,-111.3 L453.8,-43.8 L459.9,-28.3 L465.8,-10.9 L468.3,-1.4 L470.9,10.5 L475.4,42.6 L477.7,64.2 L478.6,96.9 L478.8,113.6 L478.8,118.3 L478.8,132.5 L478.8,141.7 L478.9,147.5 L478.7,159.2 L478.7,162.0 L478.4,183.5 L477.8,192.8 L475.4,211.4 L474.3,216.6 L470.4,233.8 L463.4,261.6 L455.9,292.9 L450.2,317.3 L447.1,327.8 L444.7,334.8 L441.8,341.0 L438.1,346.5 L434.2,351.7 L420.5,367.0' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M365.5,507.9 L363.5,516.1 L361.8,525.5 L360.7,531.6 L360.1,535.7 L359.3,542.7 L359.4,551.0 L359.9,559.9 L360.3,566.6' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M396.2,407.4 L391.7,419.2 L381.1,453.5 L376.0,470.2 L366.2,504.0 L365.5,507.9' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M482.6,118.2 L482.6,115.8 L482.6,113.6 L482.1,96.7 L481.4,79.3 L480.9,67.4 L479.8,56.0 L477.1,35.2 L474.5,15.2 L471.2,-2.0 L469.0,-10.6 L465.9,-20.2 L465.7,-20.9 L461.2,-33.3 L459.4,-38.3 L453.8,-53.1 L437.7,-97.6 L432.1,-112.4 L426.5,-127.1 L419.8,-145.8 L417.4,-151.7 L413.1,-162.3 L403.9,-188.0 L392.5,-217.6 L383.1,-243.9 L372.6,-272.1 L365.4,-290.9 L363.8,-294.7 L362.3,-298.5 L357.0,-312.6 L342.5,-362.5 L341.1,-367.2' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M360.3,566.6 L361.9,596.1 L364.4,631.9 L366.5,651.3 L368.0,675.3' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M539.2,517.5 L521.5,515.8 L512.5,515.1 L499.0,514.9 L452.6,518.3 L417.2,521.4 L370.1,525.8' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-32.0,519.5 L-33.1,444.8 L-33.3,430.7' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M177.6,531.9 L204.4,532.3 L249.3,532.5' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M182.8,526.1 L179.6,526.0 L88.7,523.3' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M674.3,640.7 L671.9,632.3 L668.2,624.0 L664.6,616.2 L657.6,603.3 L653.4,596.4 L648.6,589.7 L641.8,580.4 L630.6,567.8 L624.7,562.0 L608.6,548.1 L586.8,535.3 L569.6,526.8 L559.7,523.1 L552.2,520.5 L543.1,518.3 L539.2,517.5' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M522.3,523.0 L526.4,523.7 L533.7,525.1 L545.7,528.2 L558.4,533.1 L573.7,540.2 L589.4,548.9 L596.4,554.0 L608.2,563.0 L614.9,569.6 L623.6,579.5 L634.7,594.1 L639.6,601.4 L646.5,613.6 L652.4,625.7 L658.4,643.2' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-29.6,530.0 L-30.5,520.8 L-32.0,519.5' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M26.3,131.2 L29.6,120.8 L27.7,113.5 L21.3,101.7' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M88.9,529.6 L177.6,531.9' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-33.3,430.7 L-33.2,417.4 L-33.1,358.2 L-33.0,343.7' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M21.3,101.7 L18.2,95.4 L-4.6,64.1 L-32.0,24.2 L-47.3,5.0 L-56.5,-8.6 L-120.3,-99.8 L-127.6,-109.3 L-130.6,-114.2' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-134.3,-112.1 L-131.2,-107.8 L-124.4,-98.3 L-95.8,-57.2 L-59.5,-5.1 L-50.2,6.5 L-27.5,38.3 L13.1,96.7 L20.5,109.4' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M-33.0,343.7 L-31.5,318.2 L-25.0,269.8 L4.0,192.2 L18.7,156.4 L25.2,137.0 L26.3,131.2' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M20.5,109.4 L22.2,114.9 L25.4,126.8 L26.3,131.2' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M420.5,367.0 L419.5,368.0 L417.7,370.3 L412.0,378.6 L410.6,380.9 L406.7,388.0 L401.1,398.6 L396.2,407.4' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M368.0,675.3 L368.2,679.2 L368.2,684.9 L368.6,702.5 L369.2,724.1 L369.3,727.7' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M400.6,406.8 L408.5,390.0 L413.1,382.6 L416.5,377.9 L421.4,371.1 L423.8,368.6 L430.3,361.7 L431.1,360.8 L438.2,351.9 L439.3,350.3 L442.2,345.9 L445.4,339.8 L446.3,337.8 L447.7,334.5 L450.1,328.6 L451.3,323.8 L452.5,319.4 L454.9,309.5 L456.9,301.5 L466.3,262.9 L467.8,256.8 L471.2,242.8 L474.7,228.4 L478.0,212.4 L480.2,200.1 L481.3,189.6 L481.6,183.5 L481.7,174.7 L482.6,147.7 L482.6,124.2 L482.6,118.2' fill='none' stroke='var(--arterial)' stroke-width='4' stroke-linecap='round'/>
+<path d='M230.3,256.1 L226.0,233.5 L219.0,190.8 L212.1,148.5 L209.3,130.6 L204.1,99.0 L199.6,71.8 L193.3,33.3 L189.7,15.2 L186.4,-9.6 L184.9,-19.9 L183.6,-34.5 L183.0,-46.3 L182.8,-57.5 L182.7,-65.0 L182.8,-73.3 L182.7,-83.4 L183.4,-92.6 L184.8,-103.2 L186.2,-112.9 L187.7,-123.7 L192.2,-149.9 L197.4,-177.3 L199.5,-188.0' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M226.8,256.6 L222.9,234.1 L215.2,191.2 L208.8,149.2 L195.3,71.3 L186.2,14.8 L183.1,-4.2 L180.8,-17.4 L180.2,-31.7 L178.0,-59.4 L178.0,-66.6 L177.8,-76.3 L178.0,-90.1 L179.8,-103.2 L183.2,-122.9 L188.1,-151.1 L194.2,-180.2 L195.4,-188.7' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M231.9,264.7 L230.9,259.7 L230.3,256.1' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M245.7,342.9 L250.4,372.6 L256.1,406.7 L261.3,438.0 L269.5,494.1' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M230.4,265.1 L230.9,267.8 L237.3,302.6 L242.9,337.3' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M228.8,256.5 L230.4,265.1' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M228.3,265.4 L226.8,256.6' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M225.8,266.0 L224.3,257.2' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M224.9,-353.5 L224.6,-336.8 L222.5,-315.9 L215.8,-278.3 L210.5,-250.8 L202.6,-214.3 L199.0,-195.1' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M224.3,257.2 L220.3,234.1 L213.2,191.7 L206.7,149.3 L200.5,114.7 L194.0,78.9 L184.1,17.1 L179.0,-15.8 L176.6,-45.6 L175.4,-66.2 L175.6,-90.5 L177.1,-104.0 L181.0,-123.6 L186.2,-152.4 L191.9,-180.5 L193.6,-190.2' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M265.8,495.2 L264.8,486.5 L261.2,460.2 L257.7,437.9 L253.2,413.6 L246.5,373.1 L241.4,343.3' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M298.8,891.0 L296.9,864.4 L290.6,776.7 L289.6,761.1 L283.1,663.9 L280.1,624.8 L276.7,588.1 L273.4,560.7 L272.5,551.3 L267.3,507.9 L265.8,495.2' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M268.1,494.6 L270.5,515.0 L273.2,539.7 L278.3,587.8 L281.4,624.6 L292.1,776.3 L296.7,842.6 L298.3,867.9 L299.0,878.3 L300.3,891.7' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M268.0,526.8 L264.8,503.7 L263.7,489.5 L259.6,460.6 L256.3,439.3 L244.5,373.4 L239.1,343.3' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M278.7,625.0 L272.1,559.2 L268.0,526.8' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M194.8,-195.8 L198.4,-216.4 L206.3,-251.6 L211.6,-278.5 L214.3,-292.1 L217.1,-309.4 L220.1,-328.3 L221.0,-352.9' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M193.6,-190.2 L194.8,-195.8' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M201.1,-195.2 L202.9,-203.9 L204.8,-212.6 L212.4,-250.5 L217.6,-278.5 L224.9,-316.4 L225.9,-325.5 L226.6,-337.1 L226.9,-350.4 L227.1,-353.7' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M199.5,-188.0 L200.4,-191.9 L201.1,-195.2' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M196.7,-195.3 L200.4,-216.4 L208.6,-251.3 L213.8,-278.7 L220.4,-315.8 L222.4,-332.1 L223.3,-353.3' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M195.4,-188.7 L196.7,-195.3' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M197.6,-188.4 L195.9,-179.5 L190.1,-151.3 L185.2,-122.0 L182.6,-103.1 L180.6,-88.9 L180.4,-65.4 L182.1,-32.1 L183.1,-17.8 L188.1,14.6 L197.7,72.3 L201.0,92.6 L210.5,149.0 L217.1,191.1 L224.5,233.6 L228.8,256.5' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M199.0,-195.1 L197.6,-188.4' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M238.1,337.8 L237.1,332.2 L232.0,303.8 L226.4,269.3 L225.8,266.0' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M239.1,343.3 L238.1,337.8' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M240.5,337.5 L228.9,269.0 L228.3,265.4' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M241.4,343.3 L240.5,337.5' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M242.9,337.3 L243.8,342.9' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M244.8,337.1 L242.3,321.1 L238.7,302.2 L232.4,267.8 L231.9,264.7' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M245.7,342.9 L245.3,340.2 L244.8,337.1' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<path d='M243.8,342.9 L248.6,372.9 L250.1,381.2 L255.4,413.0 L260.0,438.7 L268.1,494.6' fill='none' stroke='var(--rail)' stroke-width='3' stroke-dasharray='8 5'/>
+<circle cx='380.3' cy='160.3' r='134.736842105263' fill='var(--c400-fill)' stroke='var(--c400)' stroke-width='2'/>
+<circle cx='284.3' cy='381.9' r='84.2105263157895' fill='none' stroke='var(--c250)' stroke-width='2' stroke-dasharray='6 4'/>
+<circle cx='81.9' cy='434.1' r='5' fill='var(--school2)'/>
+<text x='90.9' y='438.1' class='lb'>오성고</text>
+<circle cx='318.0' cy='198.4' r='5' fill='var(--school2)'/>
+<text x='327.0' y='202.4' class='lb'>부성중학교</text>
+<circle cx='231.0' cy='627.3' r='7' fill='var(--school)'/>
+<text x='240.0' y='631.3' class='lb'>두정초</text>
+<circle cx='106.3' cy='591.3' r='7' fill='var(--school)'/>
+<text x='115.3' y='595.3' class='lb'>신대초</text>
+<rect x='380.5' y='105.7' width='12' height='12' rx='2' fill='var(--park)'/>
+<circle cx='380.2' cy='160.3' r='7' fill='var(--school)'/>
+<text x='389.2' y='164.3' class='lb'>부대초</text>
+<circle cx='594.5' cy='60.1' r='5' fill='var(--school2)'/>
+<text x='603.5' y='64.1' class='lb'>신당고</text>
+<rect x='278.2' y='376.0' width='12' height='12' rx='2' fill='var(--park)'/>
+<rect x='293.4' y='585.6' width='12' height='12' rx='2' fill='var(--park)'/>
+<rect x='289.8' y='168.7' width='12' height='12' rx='2' fill='var(--park)'/>
+<rect x='349.7' y='75.5' width='12' height='12' rx='2' fill='var(--park)'/>
+<text x='389.3' y='150.3' class='lb strong'>H 중심 · 400m</text>
+<text x='214.3' y='482.110526315789' class='lb c250'>H2 후보 · 250m</text>
+<text x='176' y='95' class='lb rail'>경부선</text>
+<text x='494' y='301.3' class='lb art'>천안대로</text>
+<text x='365' y='593.7' class='lb art'>삼성대로</text>
+<g transform='translate(20,612)'><rect width='67.3684210526316' height='6' fill='var(--ink)'/><text x='0' y='-6' class='lb'>0</text><text x='45.3684210526316' y='-6' class='lb'>200 m</text></g>
+<g transform='translate(606,40)'><path d='M0,-18 L7,4 L0,-2 L-7,4 Z' fill='var(--ink)'/><text x='-4' y='20' class='lb'>N</text></g>
+</svg>
+
+      <div class="legend">
+        <i style="border-color:var(--c400)"></i>H: 천안부대초 중심 반경 400m &nbsp;
+        <i style="border-color:var(--c250);border-top-style:dashed"></i>H2 후보: 남측 공원 중심 250m<br>
+        <i style="border-color:var(--arterial)"></i>간선(secondary 이상) &nbsp;
+        <i style="border-color:var(--rail);border-top-style:dashed"></i>경부선 &nbsp;
+        <i style="border-color:var(--street);border-top-width:2px"></i>부성 가로 &nbsp;
+        <span style="color:var(--park)">■</span> 공원(OSM leisure=park) &nbsp;
+        <span style="color:var(--school)">●</span> 초등학교
+      </div>
+      <p class="note">도면: OpenStreetMap 데이터(© OpenStreetMap contributors, ODbL, 기준시각 2026-09-21T06:56:06Z)를 make_map.ps1로 직접 그림. 직선거리 기준이며 보행 네트워크 거리가 아님.</p>
+    </div>
+
+    <div>
+      <h2 style="margin-top:0">가설 H (계수 전에 고정 — 가설_사전기록.md)</h2>
+      <div class="hyp">부성지구는 <b>천안부대초등학교를 중심</b>으로 하는 페리형 근린주구 하나(반경 400m)로 작동한다.</div>
+      <p><b>중심 — 왜 여기인가:</b> 경부선과 천안대로 사이 쐐기 안의 초등학교는 부대초 한 곳뿐 → 페리 원칙 ①규모(초등학교 1개교)·④공공시설 중심 배치를 그대로 대입.</p>
+      <p><b>경계:</b> 서 경부선(철도) · 동 천안대로(국도 1호) · 남 삼성대로(국도 1호, trunk) · 북 공주대 천안캠퍼스</p>
+      <p><b>규모 참고:</b> 부대동 240-4 일원 54만 3천㎡, 2,740세대 7,400명 수용 계획(충청타임즈 2011.3.22 기사 기준 — 이후 개발계획 변경분 [확인 필요])</p>
+
+      <h2>기각 조건과 계수 결과</h2>
+      <table>
+        <tr><th>#</th><th>이 결과면 기각</th><th class="num">원정의</th><th class="num">경계내</th></tr>
+        <tr><td>K1</td><td>가로망 중심점 400m 안 초등학교 0개면 기각</td><td class='num'>0 개 <span class='tag t-bad'>기각</span></td><td class='num'>1 개 <span class='tag t-ok'>통과</span></td></tr>
+<tr><td>K2</td><td>부대초 400m 안 근린공원 0개면 기각</td><td class='num'>3 개 <span class='tag t-ok'>통과</span></td><td class='num'>3 개 <span class='tag t-ok'>통과</span></td></tr>
+<tr><td>K3</td><td>부대초 400m 밖 가로 비율 50% 이상이면 기각</td><td class='num'>62.2 % <span class='tag t-bad'>기각</span></td><td class='num'>48.7 % <span class='tag t-ok'>통과</span></td></tr>
+<tr><td>K4</td><td>부대초로 가는 직선이 secondary 이상 간선을 가로지르면 기각</td><td class='num'>26.4 % 교차 <span class='tag t-bad'>기각</span></td><td class='num'>0.1 % 교차 <span class='tag t-bad'>기각</span></td></tr>
+      </table>
+      <p class="note"><b>원정의</b> = 사전 기록 그대로 '부성'으로 시작하는 모든 가로. 그런데 부성1~8길이 경부선 서쪽·삼성대로 남쪽에 있어 같은 문서의 경계와 충돌함 → <b>경계내</b> = 사전 기록한 경계 안의 가로만(사후 수정, 사유 명시). 두 결과를 모두 남김.</p>
+      <p class="verdict">판정: H 기각 <span class="tag t-bad">K4 규칙상</span> <span class="tag t-warn">K3 경계선</span></p>
+      <p class="note">K4는 부성13로가 천안대로에 붙는 교차로 접속부 선분 1개(11.3m, 천안대로에서 약 5m)에서 걸림 — 실제 횡단이 필요한 가로는 없으나 사전 규칙을 바꾸지 않음. 실질 약점은 K3: 가로의 48.7%(남측 부성9~15 일대)가 400m 밖.</p>
+    </div>
+  </div>
+
+  <h2>무엇이 다른가 → 다음 가설</h2>
+  <ul>
+    <li><b>이론이 틀린 것이 아니라 대상지가 다름:</b> 부대초가 쐐기의 북측에 치우쳐 있고(가로망 중심점에서 311m), 쐐기가 남북으로 길어 원 하나에 담기지 않음. 페리의 '학교를 중심에'는 대상지 형태가 원에 가까울 때의 전제임.</li>
+    <li><b>H2 (다음 주 검증):</b> 부성지구는 <b>부대초 중심 근린주구(북)</b> + <b>남측 공원(way/598567634, 부대초에서 717m) 중심 근린분구(반경 250m, 남)</b>의 2단 구조다.<br>
+      <span class="note">기각 조건(미리 적음): ① 경계내 가로 중 부대초 400m 밖 연장(4,844m)의 50% 미만만 남측 250m 원에 들어옴 ② 남측 원 안에 유치원·어린이공원·근린상가가 하나도 없음 ③ 남측 가로에서 부대초로 가는 경로가 간선을 횡단</span></li>
+    <li><b>확인하지 못한 것:</b> 부성지구 도시개발구역 법정 경계(토지이음 지형도면), 공원의 도시계획시설 종류(어린이공원/근린공원 — OSM에 구분 없음·이름 없음), 유치원 위치(OSM 미등록), 학령인구(SGIS) — 모두 [조회 대기]로 남김.</li>
+  </ul>
+
+  <div class="foot">
+    재현: raw\*overpass_*.json(Overpass API 응답 원본) → analysis_400m.ps1 -Scope 원정의 / 경계내 → 계수결과_400m_*.csv · make_map.ps1 → map.svg.
+    학교 좌표: Nominatim(천안부대초등학교 36.84876, 127.15201). 조회일 2026-09-21.
+  </div>
+</section>
+
+<!-- ============ 2. 법령 검증 로그 ============ -->
+<section class="page">
+  <header class="top">
+    <h1>② 법령 검증 로그 — AI 법규 요약 레드팀</h1>
+    <span class="course">원본: 검증로그.csv · AI요약_원본.md</span>
+  </header>
+  <p><b>검증 대상:</b> Claude Haiku 4.5가 <u>도구 없이 기억만으로</u> 쓴 「부성지구 법규 요약」(AI요약_원본.md, 수정 없이 보관). 1차 요청은 모델이 "정확성 보증 불가"로 거절 → 레드팀 연습 목적을 알리고 재요청한 출력을 사용.</p>
+  <p><b>근거화:</b> 국가법령정보 OPEN API(lawSearch·lawService, target=law/ordin)로 전 조문 조회 · 응답 원본은 raw\ 폴더(OC 값은 *** 처리). 판정은 <b>일치 / 시점 불일치 / 실재하지 않음</b> 셋만 사용.</p>
+  <table>
+    <tr><th class="num">유형</th><th class="num">건수</th><th>과제 요건(각 1건 이상)</th></tr>
+    <tr><td class='num'>조문</td><td class='num'>16</td><td><span class='tag t-ok'>충족</span></td></tr>
+<tr><td class='num'>시점</td><td class='num'>3</td><td><span class='tag t-ok'>충족</span></td></tr>
+<tr><td class='num'>수치</td><td class='num'>10</td><td><span class='tag t-ok'>충족</span></td></tr>
+  </table>
+  <h2>판정 내역</h2>
+  <table class="small">
+    <tr><th>#</th><th>출처</th><th>AI·자료의 주장</th><th>유형</th><th>판정</th><th>정정값 (근거 조항 · 시행일)</th></tr>
+    <tr><td>V01</td><td>AI요약 &#167;1 광역도시계획</td><td>수립권자: 시&#183;도지사 (「국토의 계획 및 이용에 관한 법률」 제19조)</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>수립권자 근거는 제11조제1항이며 광역계획권 범위에 따라 시장&#183;군수 공동 / 시&#183;도지사 공동 / 도지사 / 국토교통부장관으로 갈림 <span class='note'>(제11조제1항 · 2026-07-01)</span></td></tr>
+<tr><td>V02</td><td>AI요약 &#167;1 광역도시계획</td><td>재검토 주기: 5년마다 (제20조)</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>제20조에 해당 내용 없음. &#39;5년마다 재검토&#39;는 기본계획(제23조제1항)과 관리계획(제34조제1항)의 규정임 <span class='note'>(제20조 · 2026-07-01)</span></td></tr>
+<tr><td>V03</td><td>AI요약 &#167;1 도시&#183;군기본계획</td><td>수립권자: 시장&#183;군수 (제23조)</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>수립권자 근거는 제18조제1항 (값 &#39;시장&#183;군수&#39;는 맞고 조문 번호가 틀림) <span class='note'>(제18조제1항 · 2026-07-01)</span></td></tr>
+<tr><td>V04</td><td>AI요약 &#167;1 도시&#183;군기본계획</td><td>계획기간: 20년 (제23조 제2항)</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>법 조문에는 계획기간 규정이 없음. 20년은 법이 아닌 수립지침 사항으로 보이나 지침 원문은 조회하지 않음 [확인 필요] <span class='note'>(제23조제2항 · 2026-07-01)</span></td></tr>
+<tr><td>V05</td><td>AI요약 &#167;1 도시&#183;군기본계획</td><td>재검토 주기: 5년마다 (제26조)</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>근거는 제23조제1항 (값 5년은 맞고 조문 번호가 틀림) <span class='note'>(제23조제1항 · 2026-07-01)</span></td></tr>
+<tr><td>V06</td><td>AI요약 &#167;1 도시&#183;군관리계획</td><td>수립권자: 시장&#183;군수 (제30조)</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>입안권자는 제24조제1항, 결정권자는 제29조제1항으로 나뉨 (강의 슬라이드 37: 부성지구 결정도의 결정권자는 대도시 시장인 천안시장) <span class='note'>(제24조제1항 &#183; 제29조제1항 · 2026-07-01)</span></td></tr>
+<tr><td>V07</td><td>AI요약 &#167;1 도시&#183;군관리계획</td><td>재검토 주기: 3년마다 (제32조)</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>5년마다, 제34조제1항 (수치와 조문 번호 둘 다 틀림) <span class='note'>(제34조제1항 · 2026-07-01)</span></td></tr>
+<tr><td>V08</td><td>AI요약 &#167;2 용도지역 세분</td><td>공업지역: 중화학공업지역, 일반공업지역, 경공업지역 (3가지) (제36조 제3항)</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>전용공업지역&#183;일반공업지역&#183;준공업지역. AI가 지정 목적에 나오는 단어(중화학&#183;경공업)를 지역 명칭으로 바꿔 씀 <span class='note'>(영 제30조제1항제3호 · 2026-09-18)</span></td></tr>
+<tr><td>V09</td><td>AI요약 &#167;2 용도지역 세분</td><td>주거지역 3가지 … 총 12가지 세분</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>도시지역 16종, 전체 21종 (영 제84조제1항&#183;제85조제1항의 21개 호와 일치) <span class='note'>(영 제30조제1항 &#183; 법 제36조제1항 · 2026-09-18)</span></td></tr>
+<tr><td>V10</td><td>AI요약 &#167;3 용도지구</td><td>근거: 시행령 제30조&#183;제36조 / 목록: 경관&#183;고도&#183;방화&#183;진흥&#183;특정용도제한&#183;복합용도&#183;중심지육성&#183;전략산업&#183;문화&#183;예술지구 / 총 9~11가지</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>근거는 법 제37조제1항이며 9종임. &#39;진흥지구&#183;중심지육성지구&#183;전략산업지구&#183;문화&#183;예술지구&#39;는 없고 방재&#183;보호&#183;취락지구가 빠짐 <span class='note'>(제37조제1항 · 2026-07-01)</span></td></tr>
+<tr><td>V11</td><td>AI요약 &#167;4 용도구역</td><td>농업진흥구역 (제40조)</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>국토계획법에 &#39;농업진흥구역&#39;이라는 용도구역은 없음. 제40조는 수산자원보호구역이며 AI 목록에서 빠짐 <span class='note'>(제38조~제40조 · 2026-07-01)</span></td></tr>
+<tr><td>V12</td><td>AI요약 &#167;4 용도구역</td><td>용도구역 목록 4개(개발제한&#183;도시자연공원&#183;시가화조정&#183;농업진흥)에 도시혁신구역&#183;복합용도구역&#183;도시&#183;군계획시설입체복합구역이 없음</td><td>시점</td><td><span class='tag t-warn'>시점 불일치</span></td><td>2024.2.6 개정 이후 체계로 정정: 도시혁신구역&#183;복합용도구역&#183;도시&#183;군계획시설입체복합구역 추가 (강의 슬라이드 31 ③&#183;④와 같은 유형) <span class='note'>(제2조제4호 사목~자목 · 2026-07-01)</span></td></tr>
+<tr><td>V13</td><td>AI요약 &#167;5 법정 상한</td><td>자연녹지지역: 건폐율 10%, 용적률 50% (제78조 제3항)</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>건폐율 20% 이하, 용적률 50~100%. AI의 50%는 하한값을 상한으로 잘못 적은 것 <span class='note'>(영 제84조제1항제16호 &#183; 제85조제1항제16호 · 2026-09-18)</span></td></tr>
+<tr><td>V14</td><td>AI요약 &#167;5 법정 상한</td><td>중심상업지역: 건폐율 80%, 용적률 400% (제78조 제1항)</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>건폐율 90% 이하, 용적률 200~1,500% <span class='note'>(영 제84조제1항제7호 &#183; 제85조제1항제7호 · 2026-09-18)</span></td></tr>
+<tr><td>V15</td><td>AI요약 &#167;5 법정 상한</td><td>제3종 주거지역: 건폐율 60%, 용적률 200% (제77조 제1항)</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>제3종일반주거지역 건폐율 50% 이하, 용적률 100~300%. 세분 21종의 기준은 법이 아니라 시행령에 있음 <span class='note'>(영 제84조제1항제5호 &#183; 제85조제1항제5호 · 2026-09-18)</span></td></tr>
+<tr><td>V16</td><td>AI요약 &#167;5 법정 상한</td><td>근거: 시행령 제79조&#183;제80조</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>건폐율은 영 제84조, 용적률은 영 제85조 <span class='note'>(영 제84조 &#183; 제85조 · 2026-09-18)</span></td></tr>
+<tr><td>V17</td><td>AI요약 &#167;6 천안 조례</td><td>조례명: 「천안시 도시&#183;군관리계획조례」</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>정식 명칭은 「천안시 도시계획 조례」 <span class='note'>((법규명) · 2024-05-17)</span></td></tr>
+<tr><td>V18</td><td>AI요약 &#167;6 천안 조례</td><td>제1종 일반주거지역: 건폐율 50%, 용적률 100~120%</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>건폐율 60% 이하, 용적률 200% 이하 <span class='note'>(제56조제1항제3호 &#183; 제61조제1항제3호 · 2024-05-17)</span></td></tr>
+<tr><td>V19</td><td>AI요약 &#167;6 천안 조례</td><td>제2종 일반주거지역: 건폐율 50%, 용적률 150~180%</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>건폐율 60% 이하, 용적률 250% 이하 <span class='note'>(제56조제1항제4호 &#183; 제61조제1항제4호 · 2024-05-17)</span></td></tr>
+<tr><td>V20</td><td>AI요약 &#167;6 천안 조례</td><td>제3종 일반주거지역: 건폐율 60%, 용적률 200~250%</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>건폐율 50% 이하, 용적률 300% 이하. 실제로는 제3종의 건폐율이 제1&#183;2종(60%)보다 낮은데 AI는 반대로 적음 <span class='note'>(제56조제1항제5호 &#183; 제61조제1항제5호 · 2024-05-17)</span></td></tr>
+<tr><td>V21</td><td>AI요약 &#167;6 천안 조례</td><td>준주거지역: 건폐율 60%, 용적률 200~300%</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>건폐율 70% 이하, 용적률 500% 이하 (천안은 시행령 상한 500%를 그대로 씀 — 강의 슬라이드 35) <span class='note'>(제56조제1항제6호 &#183; 제61조제1항제6호 · 2024-05-17)</span></td></tr>
+<tr><td>V22</td><td>AI요약 &#167;6 천안 조례</td><td>자연녹지지역: 건폐율 10%, 용적률 50~80%</td><td>수치</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>건폐율 20% 이하, 용적률 80% 이하 <span class='note'>(제56조제1항제16호 &#183; 제61조제1항제16호 · 2024-05-17)</span></td></tr>
+<tr><td>V23</td><td>AI요약 &#167;7 지구단위계획</td><td>정의: (제50조) 도시&#183;군기본계획 또는 도시&#183;군관리계획의 내용을 구체화&#183;상세화하여 …</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>정의 조문은 제2조제5호이고, 제50조는 결정 방식을 정한 조문임 <span class='note'>(제2조제5호 · 2026-07-01)</span></td></tr>
+<tr><td>V24</td><td>AI요약 &#167;7 지구단위계획</td><td>수립 내용: (제50조 제2항) 토지이용계획, 도로&#183;교통계획, 공공시설계획, 건축계획, 경관계획, 환경보전계획 등</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>근거는 제52조제1항이며 제2호(기반시설)와 제4호(건축물 용도&#183;건폐율&#183;용적률&#183;높이)는 반드시 포함 <span class='note'>(제52조제1항 · 2026-07-01)</span></td></tr>
+<tr><td>V25</td><td>AI요약 &#167;7 지구단위계획</td><td>실효: 3년 (제52조 제2항) 지구단위계획 지정 후 3년 내에 계획을 수립하지 않으면 지정이 자동 해제됨</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>근거는 제53조제1항 (값 3년은 맞음). 기산점은 구역 지정 결정의 고시일이고 효력 상실일은 3년이 되는 날의 다음날임 <span class='note'>(제53조제1항 · 2026-07-01)</span></td></tr>
+<tr><td>V26</td><td>AI요약 &#167;8 임대주택 완화</td><td>(제84조 제1항) 주택법에 따른 임대주택 건설 시 용적률 상한의 20% 범위 내에서 완화</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>근거는 영 제85조제3항제1호와 천안 조례 제61조제3항. &#39;최대한도의 120% 이내&#39;는 AI의 &#39;20% 범위&#39;와 크기는 같으나, 대상이 주거지역 6종에서 공공임대 또는 임대의무 8년 이상 민간임대로 한정되고 근거 법률도 주택법이 아님 <span class='note'>(영 제85조제3항제1호 &#183; 천안 조례 제61조제3항 · 2026-09-18)</span></td></tr>
+<tr><td>V27</td><td>AI요약 &#167;8 임대주택 완화</td><td>근거: 시행령 제86조</td><td>조문</td><td><span class='tag t-bad'>실재하지 않음</span></td><td>영 제85조제3항제1호 <span class='note'>(영 제85조제3항제1호 · 2026-09-18)</span></td></tr>
+<tr><td>V28</td><td>2025 강의자료 (3주차 슬라이드 30&#183;31이 원본 45&#183;53번으로 인용)</td><td>용도지구 10종</td><td>시점</td><td><span class='tag t-warn'>시점 불일치</span></td><td>현행 9종 (미관지구→경관지구, 보존&#183;시설보호지구→보호지구로 통폐합, 복합용도지구 신설). 교수님이 슬라이드 30에서 &#39;시점 오류 1건은 이 목록으로 채울 수 있음&#39;이라고 한 항목을 원문으로 재확인한 것 <span class='note'>(제37조제1항 &#183; 영 제31조제2항 · 2026-07-01)</span></td></tr>
+<tr><td>V29</td><td>3주차 강의자료 (슬라이드 12&#183;35 출처 표기, 참고문헌 [2])</td><td>「국토의 계획 및 이용에 관한 법률 시행령」 2026-09-08 공포&#183;시행</td><td>시점</td><td><span class='tag t-warn'>시점 불일치</span></td><td>조회일 2026-09-21 기준 현행본은 2026-09-18 시행본임. 강의자료 조회일(2026-09-09) 뒤에 판본이 바뀐 것이지 강의자료가 틀린 것은 아님. 제84조①&#183;제85조① 21종 수치는 강의 값과 모두 같음 (슬라이드 33 &#39;시행령이 조회 전날 바뀌는 일이 실제로 있음&#39;의 실례) <span class='note'>((법령 판본) · 2026-09-18)</span></td></tr>
+  </table>
+  <div class="foot">
+    식별자: 「국토의 계획 및 이용에 관한 법률」 법령ID 009294 · MST 284013 · 시행 2026-07-01 / 같은 법 시행령 법령ID 009419 · MST 288857 · 시행 2026-09-18 / 「천안시 도시계획 조례」 자치법규ID 2152964 · 일련번호 1932763 · 시행 2024-05-17. 조회일 모두 2026-09-21. 원문 발췌 전문은 CSV의 '원문_발췌' 열과 원문_조문모음.txt 참고.
+  </div>
+</section>
+
+<!-- ============ 3. 조례 21종 표 ============ -->
+<section class="page">
+  <header class="top">
+    <h1>③ 대상지 조례 21종 표 — 「천안시 도시계획 조례」</h1>
+    <span class="course">원본: 조례_21종표_천안시.csv</span>
+  </header>
+  <p>법은 범위를, 조례는 값을 정함(슬라이드 36). 대상지 설계조건은 오른쪽 두 열(천안 조례)에서 가져온다.</p>
+  <table>
+    <tr><th class="num">#</th><th>대분류</th><th>용도지역</th><th class="num">건폐율<br>법 상한</th><th class="num">건폐율<br>시행령</th><th class="num">건폐율<br><b>천안</b></th><th class="num">용적률<br>시행령 범위</th><th class="num">용적률<br><b>천안</b></th></tr>
+    <tr><td class='num'>1</td><td>도시지역</td><td>제1종전용주거지역</td><td class='num'>70</td><td class='num'>50</td><td class='num'><b>50</b></td><td class='num'>50~100</td><td class='num'><b>100</b></td></tr>
+<tr><td class='num'>2</td><td>도시지역</td><td>제2종전용주거지역</td><td class='num'>70</td><td class='num'>50</td><td class='num'><b>50</b></td><td class='num'>50~150</td><td class='num'><b>150</b></td></tr>
+<tr><td class='num'>3</td><td>도시지역</td><td>제1종일반주거지역</td><td class='num'>70</td><td class='num'>60</td><td class='num'><b>60</b></td><td class='num'>100~200</td><td class='num'><b>200</b></td></tr>
+<tr><td class='num'>4</td><td>도시지역</td><td>제2종일반주거지역</td><td class='num'>70</td><td class='num'>60</td><td class='num'><b>60</b></td><td class='num'>100~250</td><td class='num'><b>250</b></td></tr>
+<tr><td class='num'>5</td><td>도시지역</td><td>제3종일반주거지역</td><td class='num'>70</td><td class='num'>50</td><td class='num'><b>50</b></td><td class='num'>100~300</td><td class='num'><b>300</b></td></tr>
+<tr><td class='num'>6</td><td>도시지역</td><td>준주거지역</td><td class='num'>70</td><td class='num'>70</td><td class='num'><b>70</b></td><td class='num'>200~500</td><td class='num'><b>500</b></td></tr>
+<tr><td class='num'>7</td><td>도시지역</td><td>중심상업지역</td><td class='num'>90</td><td class='num'>90</td><td class='num'><b>90</b></td><td class='num'>200~1500</td><td class='num'><b>1200</b></td></tr>
+<tr><td class='num'>8</td><td>도시지역</td><td>일반상업지역</td><td class='num'>90</td><td class='num'>80</td><td class='num'><b>80</b></td><td class='num'>200~1300</td><td class='num'><b>1100</b></td></tr>
+<tr><td class='num'>9</td><td>도시지역</td><td>근린상업지역</td><td class='num'>90</td><td class='num'>70</td><td class='num'><b>70</b></td><td class='num'>200~900</td><td class='num'><b>700</b></td></tr>
+<tr><td class='num'>10</td><td>도시지역</td><td>유통상업지역</td><td class='num'>90</td><td class='num'>80</td><td class='num'><b>80</b></td><td class='num'>200~1100</td><td class='num'><b>700</b></td></tr>
+<tr><td class='num'>11</td><td>도시지역</td><td>전용공업지역</td><td class='num'>70</td><td class='num'>70</td><td class='num'><b>70</b></td><td class='num'>150~300</td><td class='num'><b>300</b></td></tr>
+<tr><td class='num'>12</td><td>도시지역</td><td>일반공업지역</td><td class='num'>70</td><td class='num'>70</td><td class='num'><b>70</b></td><td class='num'>150~350</td><td class='num'><b>350</b></td></tr>
+<tr><td class='num'>13</td><td>도시지역</td><td>준공업지역</td><td class='num'>70</td><td class='num'>70</td><td class='num'><b>70</b></td><td class='num'>150~400</td><td class='num'><b>350</b></td></tr>
+<tr><td class='num'>14</td><td>도시지역</td><td>보전녹지지역</td><td class='num'>20</td><td class='num'>20</td><td class='num'><b>20</b></td><td class='num'>50~80</td><td class='num'><b>60</b></td></tr>
+<tr><td class='num'>15</td><td>도시지역</td><td>생산녹지지역</td><td class='num'>20</td><td class='num'>20</td><td class='num'><b>20</b></td><td class='num'>50~100</td><td class='num'><b>80</b></td></tr>
+<tr><td class='num'>16</td><td>도시지역</td><td>자연녹지지역</td><td class='num'>20</td><td class='num'>20</td><td class='num'><b>20</b></td><td class='num'>50~100</td><td class='num'><b>80</b></td></tr>
+<tr><td class='num'>17</td><td>관리지역</td><td>보전관리지역</td><td class='num'>20</td><td class='num'>20</td><td class='num'><b>20</b></td><td class='num'>50~80</td><td class='num'><b>80</b></td></tr>
+<tr><td class='num'>18</td><td>관리지역</td><td>생산관리지역</td><td class='num'>20</td><td class='num'>20</td><td class='num'><b>20</b></td><td class='num'>50~80</td><td class='num'><b>80</b></td></tr>
+<tr><td class='num'>19</td><td>관리지역</td><td>계획관리지역</td><td class='num'>40</td><td class='num'>40</td><td class='num'><b>40</b></td><td class='num'>50~100</td><td class='num'><b>100</b></td></tr>
+<tr><td class='num'>20</td><td>농림지역</td><td>농림지역</td><td class='num'>20</td><td class='num'>20</td><td class='num'><b>20</b></td><td class='num'>50~80</td><td class='num'><b>80</b></td></tr>
+<tr><td class='num'>21</td><td>자연환경보전지역</td><td>자연환경보전지역</td><td class='num'>20</td><td class='num'>20</td><td class='num'><b>20</b></td><td class='num'>50~80</td><td class='num'><b>60</b></td></tr>
+  </table>
+  <h3>근거와 시점</h3>
+  <ul class="note">
+    <li>천안: 「천안시 도시계획 조례」 제56조제1항(건폐율)·제61조제1항(용적률) 제1호~제21호 · 자치법규ID 2152964 · 일련번호 1932763 · 시행 2024-05-17 · 조회 2026-09-21</li>
+    <li>법: 「국토의 계획 및 이용에 관한 법률」 제77조제1항·제78조제1항 · MST 284013 · 시행 2026-07-01 / 시행령 제84조제1항·제85조제1항 · MST 288857 · 시행 2026-09-18</li>
+    <li>검산: 표의 42개 조례값과 42개 시행령값을 API 원문과 정규식으로 자동 대조 → 불일치 0건</li>
+    <li>기본값과 따로 둘 단서: 임대주택 건설 시 제1~6호 용적률의 120%(조례 제61조제3항), 방화지구 내화구조 건폐율 80%(제59조), 성장관리계획구역은 제20조의3을 따름(제56조제4항·제61조제6항)</li>
+  </ul>
+  <div class="foot">부성지구는 지구단위계획구역이 겹쳐 있어(강의 슬라이드 37) 실제 필지 값은 지구단위계획 결정조서가 우선할 수 있음(법 제52조제3항) — 결정조서 미확보 [확인 필요].</div>
+</section>
+
+</body>
+</html>

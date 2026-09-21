@@ -1,0 +1,2546 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-09-21T06:56:06Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 3427906838,
+  "lat": 36.8336521,
+  "lon": 127.1489375,
+  "tags": {
+    "addr:city": "천안시",
+    "addr:district": "서북구",
+    "addr:housenumber": "289",
+    "addr:province": "충청남도",
+    "addr:street": "두정로",
+    "name": "두정",
+    "name:en": "Dujeong",
+    "name:ja": "斗井",
+    "name:ko": "두정",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "public_transport": "station",
+    "railway": "station",
+    "station": "subway",
+    "subway": "yes",
+    "train": "yes",
+    "wikidata": "Q167556",
+    "wikipedia": "ko:두정역"
+  }
+},
+{
+  "type": "way",
+  "id": 45055785,
+  "center": {
+    "lat": 36.8389552,
+    "lon": 127.1484377
+  },
+  "tags": {
+    "bridge": "yes",
+    "bridge:name": "북부고가교",
+    "highway": "secondary",
+    "int_name": "Samsung Street",
+    "lanes": "4",
+    "layer": "1",
+    "maxspeed": "80",
+    "name": "북부고가교",
+    "name:en": "Bukbu Overpass",
+    "name:ja": "北部高架橋",
+    "name:ko": "북부고가교",
+    "name:ko-Hani": "北部高架橋",
+    "name:zh": "北部高架橋",
+    "name:zh-Hans": "北部高架桥",
+    "name:zh-Hant": "北部高架橋",
+    "old_name": "북부대로",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 69210927,
+  "center": {
+    "lat": 36.9079296,
+    "lon": 127.1259559
+  },
+  "tags": {
+    "name": "성환천",
+    "name:en": "Seonghwancheon (River)",
+    "name:ja": "成歡川",
+    "name:ko": "성환천",
+    "name:ko-Hani": "成歡川",
+    "name:zh": "成歡川",
+    "name:zh-Hans": "成欢川",
+    "name:zh-Hant": "成歡川",
+    "waterway": "river"
+  }
+},
+{
+  "type": "way",
+  "id": 87367371,
+  "center": {
+    "lat": 36.8390353,
+    "lon": 127.1542074
+  },
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 96696848,
+  "center": {
+    "lat": 36.8414564,
+    "lon": 127.1420659
+  },
+  "tags": {
+    "addr:housenumber": "27",
+    "addr:postcode": "31079",
+    "addr:street": "과수원길",
+    "amenity": "school",
+    "check_date": "2026-01-07",
+    "isced:level": "3",
+    "name": "천안오성고등학교",
+    "name:en": "Cheonan Oseong High School",
+    "name:ko": "천안오성고등학교",
+    "name:zh": "天安五城高中",
+    "website": "http://ohsung.caehs.kr",
+    "wikidata": "Q12618931",
+    "wikipedia": "ko:천안오성고등학교"
+  }
+},
+{
+  "type": "way",
+  "id": 99011469,
+  "center": {
+    "lat": 36.8521257,
+    "lon": 127.1462162
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 117150799,
+  "center": {
+    "lat": 36.8366049,
+    "lon": 127.1544305
+  },
+  "tags": {
+    "highway": "tertiary",
+    "lanes": "4",
+    "maxspeed": "40",
+    "name": "두정공원2길",
+    "name:en": "Dujeonggongwon 2-gil",
+    "name:ko": "두정공원2길",
+    "oneway": "no",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 117173150,
+  "center": {
+    "lat": 36.8389478,
+    "lon": 127.1405257
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 121103106,
+  "center": {
+    "lat": 36.8521285,
+    "lon": 127.1460773
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 122254429,
+  "center": {
+    "lat": 36.8477341,
+    "lon": 127.1465815
+  },
+  "tags": {
+    "waterway": "stream"
+  }
+},
+{
+  "type": "way",
+  "id": 122254434,
+  "center": {
+    "lat": 36.8477433,
+    "lon": 127.1499333
+  },
+  "tags": {
+    "addr:housenumber": "45-9",
+    "addr:postcode": "31080",
+    "addr:street": "공대길",
+    "amenity": "school",
+    "isced:level": "2",
+    "name": "천안부성중학교",
+    "operator": "충청남도교육청",
+    "wikidata": "Q12618908"
+  }
+},
+{
+  "type": "way",
+  "id": 123812283,
+  "center": {
+    "lat": 36.8578700,
+    "lon": 127.1512119
+  },
+  "tags": {
+    "waterway": "stream"
+  }
+},
+{
+  "type": "way",
+  "id": 124321263,
+  "center": {
+    "lat": 36.8387944,
+    "lon": 127.1493284
+  },
+  "tags": {
+    "highway": "secondary",
+    "int_name": "Samsung Street",
+    "lanes": "4",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ko": "삼성대로",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 124321276,
+  "center": {
+    "lat": 36.8383362,
+    "lon": 127.1457028
+  },
+  "tags": {
+    "highway": "tertiary",
+    "lanes": "4",
+    "maxspeed": "50",
+    "name": "봉정로",
+    "name:en": "Bongjeong-ro",
+    "name:ko": "봉정로",
+    "oneway": "no",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 124321278,
+  "center": {
+    "lat": 36.8388147,
+    "lon": 127.1484631
+  },
+  "tags": {
+    "bridge": "yes",
+    "bridge:name": "북부고가교",
+    "highway": "secondary",
+    "lanes": "4",
+    "layer": "1",
+    "name": "북부고가교",
+    "name:en": "Bukbu Overpass",
+    "name:ja": "北部高架橋",
+    "name:ko": "북부고가교",
+    "name:ko-Hani": "北部高架橋",
+    "name:zh": "北部高架橋",
+    "name:zh-Hans": "北部高架桥",
+    "name:zh-Hant": "北部高架橋",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 124323600,
+  "center": {
+    "lat": 36.8388345,
+    "lon": 127.1502386
+  },
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 124323601,
+  "center": {
+    "lat": 36.8388931,
+    "lon": 127.1513863
+  },
+  "tags": {
+    "bridge": "yes",
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "layer": "1",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 124323830,
+  "center": {
+    "lat": 36.8365885,
+    "lon": 127.1515737
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 170297941,
+  "center": {
+    "lat": 36.8390644,
+    "lon": 127.1405286
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189611789,
+  "center": {
+    "lat": 36.8389619,
+    "lon": 127.1501801
+  },
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189611795,
+  "center": {
+    "lat": 36.8389799,
+    "lon": 127.1465319
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189611798,
+  "center": {
+    "lat": 36.8389976,
+    "lon": 127.1513943
+  },
+  "tags": {
+    "bridge": "yes",
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "layer": "1",
+    "maxspeed": "80",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630465,
+  "center": {
+    "lat": 36.8386957,
+    "lon": 127.1515060
+  },
+  "tags": {
+    "bicycle": "no",
+    "foot": "no",
+    "highway": "secondary",
+    "lanes": "2",
+    "layer": "-1",
+    "maxspeed": "60",
+    "name": "두정지하차도",
+    "name:en": "Dujeong Underpass",
+    "name:ko": "두정지하차도",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "tunnel": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 189630466,
+  "center": {
+    "lat": 36.8408296,
+    "lon": 127.1521476
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630470,
+  "center": {
+    "lat": 36.8527137,
+    "lon": 127.1530377
+  },
+  "tags": {
+    "highway": "primary",
+    "lanes": "3",
+    "maxspeed": "50",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630473,
+  "center": {
+    "lat": 36.8387069,
+    "lon": 127.1514129
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "layer": "-1",
+    "maxspeed": "60",
+    "name": "두정지하차도",
+    "name:en": "Dujeong Underpass",
+    "name:ko": "두정지하차도",
+    "oneway": "yes",
+    "surface": "asphalt",
+    "tunnel": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 189630476,
+  "center": {
+    "lat": 36.8408289,
+    "lon": 127.1520269
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "old_name": "북천안대로",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630477,
+  "center": {
+    "lat": 36.8563543,
+    "lon": 127.1530609
+  },
+  "tags": {
+    "highway": "primary",
+    "lanes": "2",
+    "maxspeed": "50",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630481,
+  "center": {
+    "lat": 36.8364748,
+    "lon": 127.1514711
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 189630657,
+  "center": {
+    "lat": 36.8439778,
+    "lon": 127.1583459
+  },
+  "tags": {
+    "landuse": "residential",
+    "name": "안터마을"
+  }
+},
+{
+  "type": "way",
+  "id": 189639789,
+  "center": {
+    "lat": 36.8391561,
+    "lon": 127.1544866
+  },
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "3",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 469673157,
+  "center": {
+    "lat": 36.8525291,
+    "lon": 127.1579893
+  },
+  "tags": {
+    "addr:city": "천안시",
+    "addr:housenumber": "29-12",
+    "addr:postcode": "31083",
+    "addr:street": "신당새터2길",
+    "landuse": "residential",
+    "name": "조승아파트"
+  }
+},
+{
+  "type": "way",
+  "id": 473817570,
+  "center": {
+    "lat": 36.8371825,
+    "lon": 127.1566877
+  },
+  "tags": {
+    "addr:city": "천안시",
+    "addr:district": "서북구",
+    "addr:housenumber": "50",
+    "addr:postcode": "31112",
+    "addr:province": "충청남도",
+    "addr:street": "두정공원2길",
+    "construction": "apartments",
+    "landuse": "residential",
+    "name": "e편한세상두정4차아파트",
+    "name:en": "e-Pyeonhansesang Dujeong 4-cha Apts.",
+    "name:ko": "e편한세상두정4차아파트",
+    "residential": "apartments"
+  }
+},
+{
+  "type": "way",
+  "id": 473920395,
+  "center": {
+    "lat": 36.8382031,
+    "lon": 127.1469178
+  },
+  "tags": {
+    "addr:city": "천안시",
+    "addr:district": "서북구",
+    "addr:housenumber": "11",
+    "addr:postcode": "31103",
+    "addr:province": "충청남도",
+    "addr:street": "두정역서5길",
+    "landuse": "residential",
+    "name": "두정우남1단지아파트",
+    "name:en": "Dujeong Woonam 1-danji Apts.",
+    "name:ko": "두정우남1단지아파트",
+    "residential": "apartments"
+  }
+},
+{
+  "type": "way",
+  "id": 473920396,
+  "center": {
+    "lat": 36.8372386,
+    "lon": 127.1470264
+  },
+  "tags": {
+    "addr:city": "천안시",
+    "addr:district": "서북구",
+    "addr:housenumber": "22",
+    "addr:postcode": "31103",
+    "addr:province": "충청남도",
+    "addr:street": "두정역서1길",
+    "landuse": "residential",
+    "name": "두정우남2단지아파트",
+    "name:en": "Dujeong Woonam 2-danji Apts.",
+    "name:ko": "두정우남2단지아파트",
+    "residential": "apartments"
+  }
+},
+{
+  "type": "way",
+  "id": 473920397,
+  "center": {
+    "lat": 36.8363041,
+    "lon": 127.1470335
+  },
+  "tags": {
+    "amenity": "school",
+    "isced:level": "1",
+    "name": "천안두정초등학교",
+    "name:en": "Cheonan Dujeong Elementary School"
+  }
+},
+{
+  "type": "way",
+  "id": 473920401,
+  "center": {
+    "lat": 36.8372655,
+    "lon": 127.1428788
+  },
+  "tags": {
+    "amenity": "school",
+    "isced:level": "1",
+    "name": "천안신대초등학교",
+    "name:en": "Cheonan Sindae Elementary School",
+    "name:ko": "천안신대초등학교",
+    "wikidata": "Q21825139"
+  }
+},
+{
+  "type": "way",
+  "id": 473920402,
+  "center": {
+    "lat": 36.8381742,
+    "lon": 127.1429433
+  },
+  "tags": {
+    "addr:city": "천안시",
+    "addr:district": "서북구",
+    "addr:housenumber": "142",
+    "addr:postcode": "31102",
+    "addr:province": "충청남도",
+    "addr:street": "성정두정로",
+    "landuse": "residential",
+    "name": "두정푸르지오3차아파트",
+    "name:en": "Dujeong PRUGIO 3-cha Apts.",
+    "name:ko": "두정푸르지오3차아파트",
+    "residential": "apartments"
+  }
+},
+{
+  "type": "way",
+  "id": 477693801,
+  "center": {
+    "lat": 36.8388405,
+    "lon": 127.1464506
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 477693802,
+  "center": {
+    "lat": 36.8390405,
+    "lon": 127.1438605
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "5",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 478001157,
+  "center": {
+    "lat": 36.8534065,
+    "lon": 127.1594463
+  },
+  "tags": {
+    "addr:city": "천안시",
+    "addr:housename": "신당코아루아파트",
+    "addr:housenumber": "55",
+    "addr:postcode": "31083",
+    "addr:street": "신당새터2길",
+    "landuse": "residential",
+    "name": "신당코아루아파트"
+  }
+},
+{
+  "type": "way",
+  "id": 478621117,
+  "center": {
+    "lat": 36.8375894,
+    "lon": 127.1595554
+  },
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 478621120,
+  "center": {
+    "lat": 36.8374823,
+    "lon": 127.1590097
+  },
+  "tags": {
+    "expressway": "yes",
+    "highway": "trunk",
+    "lanes": "4",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 478621882,
+  "center": {
+    "lat": 36.8329178,
+    "lon": 127.1493655
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "90",
+    "name": "천안직결선",
+    "name:en": "Cheonan Direct Connection Line",
+    "name:ja": "天安直結線",
+    "name:ko": "천안직결선",
+    "oneway": "yes",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "ref": "30207",
+    "tracks": "1",
+    "usage": "branch",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 479512032,
+  "center": {
+    "lat": 36.8500560,
+    "lon": 127.1522174
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 479720282,
+  "center": {
+    "lat": 36.8487595,
+    "lon": 127.1520060
+  },
+  "tags": {
+    "addr:housenumber": "37",
+    "addr:postcode": "31080",
+    "addr:street": "공대길",
+    "amenity": "school",
+    "isced:level": "1",
+    "name": "천안부대초등학교",
+    "name:en": "Cheonan Budae Elementary School",
+    "name:ko": "천안부대초등학교",
+    "website": "http://budae.caees.kr/",
+    "wikidata": "Q21825130",
+    "wikipedia": "ko:천안부대초등학교"
+  }
+},
+{
+  "type": "way",
+  "id": 479821582,
+  "center": {
+    "lat": 36.8540125,
+    "lon": 127.1433212
+  },
+  "tags": {
+    "waterway": "drain"
+  }
+},
+{
+  "type": "way",
+  "id": 479821586,
+  "center": {
+    "lat": 36.8548842,
+    "lon": 127.1502071
+  },
+  "tags": {
+    "addr:city": "천안시",
+    "addr:district": "서북구",
+    "addr:housenumber": "1287-1",
+    "addr:postcode": "31080",
+    "addr:province": "충청남도",
+    "addr:street": "천안대로",
+    "landuse": "residential",
+    "name": "e편한세상부성",
+    "name:en": "e-Pyeonhansesang Buseong Apts.",
+    "name:ko": "e편한세상부성",
+    "residential": "apartments"
+  }
+},
+{
+  "type": "way",
+  "id": 480404702,
+  "center": {
+    "lat": 36.8514302,
+    "lon": 127.1591472
+  },
+  "tags": {
+    "addr:housenumber": "36",
+    "addr:postcode": "31083",
+    "addr:street": "신당새터2길",
+    "amenity": "school",
+    "isced:level": "3",
+    "name": "천안신당고등학교",
+    "name:en": "Cheonan Sindang High School",
+    "name:ko": "천안신당고등학교",
+    "name:zh": "天安新堂高中",
+    "operator": "충청남도교육청",
+    "phone": "+82 41 523 4829",
+    "wikidata": "Q12618926"
+  }
+},
+{
+  "type": "way",
+  "id": 488192220,
+  "center": {
+    "lat": 36.8499277,
+    "lon": 127.1401843
+  },
+  "tags": {
+    "bridge": "yes",
+    "highway": "secondary",
+    "layer": "1",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 507582511,
+  "center": {
+    "lat": 36.8357153,
+    "lon": 127.1456193
+  },
+  "tags": {
+    "highway": "tertiary",
+    "lanes": "4",
+    "maxspeed": "50",
+    "name": "봉정로",
+    "name:en": "Bongjeong-ro",
+    "name:ko": "봉정로",
+    "oneway": "no",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 523316782,
+  "center": {
+    "lat": 36.8438918,
+    "lon": 127.1348453
+  },
+  "tags": {
+    "highway": "tertiary",
+    "name": "성성5로",
+    "name:en": "Seongseong 5-ro",
+    "name:ja": "聖城5路",
+    "name:ko": "성성5로",
+    "name:ko-Hani": "聖城5路",
+    "name:zh": "聖城5路",
+    "name:zh-Hans": "圣城5路",
+    "name:zh-Hant": "聖城5路"
+  }
+},
+{
+  "type": "way",
+  "id": 551331039,
+  "center": {
+    "lat": 36.8388800,
+    "lon": 127.1437768
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "5",
+    "maxspeed": "80",
+    "name": "삼성대로",
+    "name:en": "Samsung-daero",
+    "name:ja": "三星大路",
+    "name:ko": "삼성대로",
+    "name:ko-Hani": "三星大路",
+    "name:zh": "三星大路",
+    "name:zh-Hans": "三星大路",
+    "name:zh-Hant": "三星大路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 571156267,
+  "center": {
+    "lat": 36.8460896,
+    "lon": 127.1470359
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "bridge": "yes",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "layer": "1",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 571156268,
+  "center": {
+    "lat": 36.8418739,
+    "lon": 127.1479209
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "oneway": "yes",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 571156269,
+  "center": {
+    "lat": 36.8450015,
+    "lon": 127.1472217
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "source": "Railroad4.0.7.kmz",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 571156270,
+  "center": {
+    "lat": 36.8460788,
+    "lon": 127.1469868
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "bridge": "yes",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "layer": "1",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "source": "Railroad4.0.7.kmz",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 571156271,
+  "center": {
+    "lat": 36.8460739,
+    "lon": 127.1469185
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "bridge": "yes",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "layer": "1",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 571156272,
+  "center": {
+    "lat": 36.8328195,
+    "lon": 127.1489586
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:etcs": "1",
+    "service": "siding",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 571156273,
+  "center": {
+    "lat": 36.8460576,
+    "lon": 127.1468357
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "bridge": "yes",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "layer": "1",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "tracks": "1",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 571156274,
+  "center": {
+    "lat": 36.8305817,
+    "lon": 127.1489453
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "90",
+    "name": "천안직결선",
+    "name:en": "Cheonan Direct Connection Line",
+    "name:ja": "天安直結線",
+    "name:ko": "천안직결선",
+    "oneway": "yes",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "ref": "30207",
+    "tracks": "1",
+    "usage": "branch",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 574648061,
+  "center": {
+    "lat": 36.8521409,
+    "lon": 127.1459958
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "tracks": "1",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 598567634,
+  "center": {
+    "lat": 36.8428469,
+    "lon": 127.1488073
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 624334354,
+  "center": {
+    "lat": 36.8418532,
+    "lon": 127.1477861
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "oneway": "yes",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 624334357,
+  "center": {
+    "lat": 36.8345499,
+    "lon": 127.1487427
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "oneway": "yes",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 624334358,
+  "center": {
+    "lat": 36.8345481,
+    "lon": 127.1488074
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "oneway": "yes",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 624334360,
+  "center": {
+    "lat": 36.8414322,
+    "lon": 127.1477862
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "oneway": "yes",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "tracks": "1",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 624334366,
+  "center": {
+    "lat": 36.8346785,
+    "lon": 127.1488721
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "operator": "한국철도공사",
+    "railway": "rail",
+    "service": "siding",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 624334370,
+  "center": {
+    "lat": 36.8394277,
+    "lon": 127.1483825
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "operator": "한국철도공사",
+    "railway": "rail",
+    "service": "siding",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 624334374,
+  "center": {
+    "lat": 36.8416858,
+    "lon": 127.1479469
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "operator": "한국철도공사",
+    "railway": "rail",
+    "service": "siding",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 624334377,
+  "center": {
+    "lat": 36.8424365,
+    "lon": 127.1477211
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "operator": "한국철도공사",
+    "railway": "rail",
+    "service": "crossover",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 625376941,
+  "center": {
+    "lat": 36.8376752,
+    "lon": 127.1484458
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 640873105,
+  "center": {
+    "lat": 36.8475941,
+    "lon": 127.1533508
+  },
+  "tags": {
+    "highway": "tertiary",
+    "name": "부성19로",
+    "name:en": "Buseong 19-ro",
+    "name:ko": "부성19로"
+  }
+},
+{
+  "type": "way",
+  "id": 695033506,
+  "center": {
+    "lat": 36.8427077,
+    "lon": 127.1382311
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "4",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路"
+  }
+},
+{
+  "type": "way",
+  "id": 770332782,
+  "center": {
+    "lat": 36.8521262,
+    "lon": 127.1461537
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "source": "Railroad4.0.7.kmz",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 770547909,
+  "center": {
+    "lat": 36.8449828,
+    "lon": 127.1470662
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "tracks": "1",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 770547910,
+  "center": {
+    "lat": 36.8439530,
+    "lon": 127.1472883
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "bridge": "yes",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "layer": "1",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "tracks": "1",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 770547911,
+  "center": {
+    "lat": 36.8449946,
+    "lon": 127.1471473
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 770547912,
+  "center": {
+    "lat": 36.8439562,
+    "lon": 127.1473653
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "bridge": "yes",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "layer": "1",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 770547913,
+  "center": {
+    "lat": 36.8345490,
+    "lon": 127.1488905
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:etcs": "1",
+    "service": "siding",
+    "source": "Railroad4.0.7.kmz",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 770547914,
+  "center": {
+    "lat": 36.8439644,
+    "lon": 127.1474454
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "bridge": "yes",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "layer": "1",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "source": "Railroad4.0.7.kmz",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 770547915,
+  "center": {
+    "lat": 36.8450101,
+    "lon": 127.1472787
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 770547916,
+  "center": {
+    "lat": 36.8439673,
+    "lon": 127.1475099
+  },
+  "tags": {
+    "alt_name": "경부제2본선",
+    "alt_name:ko": "경부제2본선",
+    "bridge": "yes",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "layer": "1",
+    "maxspeed": "120",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 788950659,
+  "center": {
+    "lat": 36.8367839,
+    "lon": 127.1527362
+  },
+  "tags": {
+    "landuse": "residential",
+    "name": "유보라천안두정역아파트",
+    "name:ko": "유보라천안두정역아파트",
+    "opening_date": "2025-06-01",
+    "residential": "apartments"
+  }
+},
+{
+  "type": "way",
+  "id": 812688422,
+  "center": {
+    "lat": 36.8372567,
+    "lon": 127.1493129
+  },
+  "tags": {
+    "leisure": "park",
+    "name": "늘푸른공원"
+  }
+},
+{
+  "type": "way",
+  "id": 860895785,
+  "center": {
+    "lat": 36.8532002,
+    "lon": 127.1375141
+  },
+  "tags": {
+    "highway": "secondary",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 860895786,
+  "center": {
+    "lat": 36.8530703,
+    "lon": 127.1374393
+  },
+  "tags": {
+    "highway": "secondary",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 867172109,
+  "center": {
+    "lat": 36.8422076,
+    "lon": 127.1536083
+  },
+  "tags": {
+    "waterway": "stream"
+  }
+},
+{
+  "type": "way",
+  "id": 867172110,
+  "center": {
+    "lat": 36.8413022,
+    "lon": 127.1521972
+  },
+  "tags": {
+    "layer": "-1",
+    "tunnel": "culvert",
+    "waterway": "stream"
+  }
+},
+{
+  "type": "way",
+  "id": 867172137,
+  "center": {
+    "lat": 36.8467005,
+    "lon": 127.1392245
+  },
+  "tags": {
+    "highway": "secondary",
+    "lanes": "2",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路"
+  }
+},
+{
+  "type": "way",
+  "id": 867172138,
+  "center": {
+    "lat": 36.8498248,
+    "lon": 127.1401168
+  },
+  "tags": {
+    "bridge": "yes",
+    "highway": "secondary",
+    "layer": "1",
+    "name": "업성수변로",
+    "name:en": "Eopseongsubyeon-ro",
+    "name:ja": "業成水辺路",
+    "name:ko": "업성수변로",
+    "name:ko-Hani": "業成水邊路",
+    "name:zh": "業成水邊路",
+    "name:zh-Hans": "业成水边路",
+    "name:zh-Hant": "業成水邊路",
+    "oneway": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 923027818,
+  "center": {
+    "lat": 36.8483750,
+    "lon": 127.1491928
+  },
+  "tags": {
+    "leisure": "park"
+  }
+},
+{
+  "type": "way",
+  "id": 932866834,
+  "center": {
+    "lat": 36.8418665,
+    "lon": 127.1478664
+  },
+  "tags": {
+    "alt_name": "경부제1본선",
+    "alt_name:ko": "경부제1본선",
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "name": "경부선",
+    "name:de": "Gyeongbu-Linie",
+    "name:en": "Gyeongbu Line",
+    "name:ja": "京釜線",
+    "name:ko": "경부선",
+    "name:ko-Hani": "京釜線",
+    "name:ko-Latn": "Gyeongbuseon",
+    "name:zh": "京釜線",
+    "name:zh-Hans": "京釜线",
+    "name:zh-Hant": "京釜線",
+    "oneway": "yes",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:ats": "yes",
+    "railway:ctc": "yes",
+    "railway:etcs": "1",
+    "railway:radio": "lte-r",
+    "ref": "302",
+    "source": "Railroad4.0.7.kmz",
+    "usage": "main",
+    "voltage": "25000",
+    "workrules": "KR:RSA"
+  }
+},
+{
+  "type": "way",
+  "id": 932866835,
+  "center": {
+    "lat": 36.8394056,
+    "lon": 127.1482299
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:etcs": "1",
+    "service": "crossover",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 997856889,
+  "center": {
+    "lat": 36.8508594,
+    "lon": 127.1511889
+  },
+  "tags": {
+    "leisure": "park",
+    "surface": "paving_stones"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409890,
+  "center": {
+    "lat": 36.8465568,
+    "lon": 127.1482312
+  },
+  "tags": {
+    "highway": "tertiary",
+    "name": "부성19로",
+    "name:en": "Buseong 19-ro",
+    "name:ko": "부성19로"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409893,
+  "center": {
+    "lat": 36.8468406,
+    "lon": 127.1502447
+  },
+  "tags": {
+    "highway": "tertiary",
+    "name": "부성19로",
+    "name:en": "Buseong 19-ro",
+    "name:ko": "부성19로"
+  }
+},
+{
+  "type": "way",
+  "id": 1024409900,
+  "center": {
+    "lat": 36.8427078,
+    "lon": 127.1529437
+  },
+  "tags": {
+    "highway": "primary",
+    "lanes": "3",
+    "maxspeed": "60",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+},
+{
+  "type": "way",
+  "id": 1205424182,
+  "center": {
+    "lat": 36.8394205,
+    "lon": 127.1483597
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:etcs": "1",
+    "service": "siding",
+    "source": "Railroad4.0.7.kmz",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 1205424183,
+  "center": {
+    "lat": 36.8388935,
+    "lon": 127.1484618
+  },
+  "tags": {
+    "electrified": "contact_line",
+    "frequency": "60",
+    "gauge": "1435",
+    "maxspeed": "140",
+    "operator": "한국철도공사",
+    "operator:en": "Korea Railroad Corporation",
+    "operator:ko": "한국철도공사",
+    "operator:short": "KORAIL",
+    "operator:type": "public",
+    "operator:wikidata": "Q18169",
+    "operator:wikipedia": "en:Korail",
+    "railway": "rail",
+    "railway:etcs": "1",
+    "service": "siding",
+    "source": "Railroad4.0.7.kmz",
+    "voltage": "25000"
+  }
+},
+{
+  "type": "way",
+  "id": 1336461486,
+  "center": {
+    "lat": 36.8460326,
+    "lon": 127.1540514
+  },
+  "tags": {
+    "highway": "primary",
+    "lanes": "3",
+    "maxspeed": "50",
+    "name": "천안대로",
+    "name:en": "Cheonan-daero",
+    "name:ja": "天安大路",
+    "name:ko": "천안대로",
+    "name:ko-Hani": "天安大路",
+    "name:zh": "天安大路",
+    "name:zh-Hans": "天安大路",
+    "name:zh-Hant": "天安大路",
+    "oneway": "yes",
+    "ref": "1",
+    "surface": "asphalt"
+  }
+}
+
+  ]
+}
