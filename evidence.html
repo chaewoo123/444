@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>근거값 기록부</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body { margin: 0; background: #f4f6fa; color: #222; font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif; font-size: 14px; line-height: 1.5; }
+  main { max-width: 760px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-size: 20px; margin: 0 0 2px; color: #1c3d6e; }
+  h2 { font-size: 15px; margin: 0 0 8px; color: #1c3d6e; }
+  .sub { color: #666; font-size: 12px; margin: 0 0 16px; }
+  .box { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.12); padding: 14px 16px; margin-bottom: 14px; }
+  form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 10px; }
+  form label { display: flex; flex-direction: column; font-size: 12px; font-weight: 600; color: #1c3d6e; gap: 3px; }
+  form .wide { grid-column: 1 / -1; }
+  input { font: inherit; padding: 6px 8px; border: 1px solid #bbb; border-radius: 6px; min-width: 0; }
+  .btn { font: inherit; padding: 6px 14px; border: 1px solid #1c3d6e; background: #1c3d6e; color: #fff; border-radius: 6px; cursor: pointer; justify-self: start; }
+  .btn:disabled { opacity: .5; cursor: progress; }
+  .status { font-size: 12px; color: #555; min-height: 1em; margin-top: 6px; }
+  .status.err { color: #c1121f; }
+  .cards { display: grid; gap: 8px; }
+  .card { border: 1px solid #d5deea; border-radius: 6px; padding: 8px 10px; background: #fff; }
+  .card h4 { margin: 0; font-size: 12px; color: #1c3d6e; }
+  .card .val { font-size: 22px; font-weight: 700; }
+  .card .unit { font-size: 12px; color: #444; margin-left: 4px; }
+  .card .src { display: inline-block; font-size: 11px; background: #e8eef7; color: #1c3d6e; border-radius: 4px; padding: 1px 6px; margin-top: 2px; }
+  .card .date { font-size: 11px; color: #666; margin-top: 2px; }
+  .empty { color: #777; font-size: 13px; }
+  a { color: #1c3d6e; }
+  @media (max-width: 560px) { form { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>근거값 기록부</h1>
+  <p class="sub">Supabase <code>evidence</code> 표 · 값·단위·출처·조회일 네 칸이 모두 있어야 저장 · <a href="./">지도로 돌아가기</a></p>
+
+  <section class="box">
+    <h2>새 근거값 저장</h2>
+    <form id="f">
+      <label class="wide">항목 <input name="label" required maxlength="100" placeholder="용적률 · 준주거지역"></label>
+      <label>값 <input name="value" type="number" step="any" required placeholder="400"></label>
+      <label>단위 <input name="unit" required maxlength="30" placeholder="퍼센트 이하"></label>
+      <label class="wide">출처 <input name="source" required minlength="5" maxlength="300" placeholder="「화성시 도시계획 조례」 제57조제1항제6호 · 시행 2026-03-10"></label>
+      <label>조회일 <input name="retrieved_on" type="date" required></label>
+      <div class="wide"><button class="btn" type="submit">저장</button><div class="status" id="formStatus"></div></div>
+    </form>
+  </section>
+
+  <section class="box">
+    <h2>저장된 근거값</h2>
+    <div class="status" id="listStatus"></div>
+    <div class="cards" id="list"></div>
+  </section>
+</main>
+<script>
+// Supabase 대시보드 > Connect(또는 Project Settings > API Keys)에서 복사
+// 공개 키(sb_publishable_…)만 넣는다. 비밀 키(sb_secret_…)는 RLS 를 무시하므로 절대 넣지 않음
+const SUPABASE_URL = "https://neepiukpewiknxguoqcn.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_n-qY3UCzFrRGzEKcCsSzTQ_aSBg8TiD";
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
+const form = document.getElementById("f");
+const listEl = document.getElementById("list");
+const formStatus = document.getElementById("formStatus");
+const listStatus = document.getElementById("listStatus");
+function setStatus(el, msg, isErr = false) { el.textContent = msg; el.classList.toggle("err", isErr); }
+
+const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+form.retrieved_on.value = today;
+form.retrieved_on.max = today;
+
+const configured = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_PUBLISHABLE_KEY.includes("YOUR-KEY");
+const db = configured ? supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+
+async function loadList() {
+  if (!db) return setStatus(listStatus, "evidence.html 위쪽 SUPABASE_URL·SUPABASE_PUBLISHABLE_KEY 를 먼저 채워 주세요.", true);
+  setStatus(listStatus, "불러오는 중…");
+  const { data, error } = await db.from("evidence")
+    .select("id, label, value, unit, source, retrieved_on")
+    .order("created_at", { ascending: false });
+  if (error) return setStatus(listStatus, `불러오기 실패: ${error.message}`, true);
+  setStatus(listStatus, `${data.length}건`);
+  listEl.innerHTML = data.length ? data.map(r => `<div class="card"><h4>${esc(r.label)}</h4>
+      <span class="val">${esc(Number(r.value).toLocaleString("ko-KR"))}</span><span class="unit">${esc(r.unit)}</span>
+      <div><span class="src">${esc(r.source)}</span></div><div class="date">조회일 ${esc(r.retrieved_on)}</div></div>`).join("")
+    : `<p class="empty">아직 저장된 행이 없습니다.</p>`;
+}
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!db) return setStatus(formStatus, "Supabase 연결 정보가 비어 있습니다.", true);
+  const fd = new FormData(form);
+  const row = {
+    label: fd.get("label").trim(),
+    value: Number(fd.get("value")),
+    unit: fd.get("unit").trim(),
+    source: fd.get("source").trim(),
+    retrieved_on: fd.get("retrieved_on"),
+  };
+  const btn = form.querySelector("button");
+  btn.disabled = true;
+  setStatus(formStatus, "저장 중…");
+  const { error } = await db.from("evidence").insert(row);
+  btn.disabled = false;
+  if (error) return setStatus(formStatus, `저장 실패: ${error.message}`, true);
+  setStatus(formStatus, "저장했습니다. 새로고침해도 목록에 남아 있어야 합니다.");
+  form.reset();
+  form.retrieved_on.value = today;
+  loadList();
+});
+
+loadList();
+</script>
+</body>
+</html>

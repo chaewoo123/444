@@ -3,6 +3,8 @@
 !/.gitignore
 !/README.md
 !/index.html
+!/evidence.html
+!/supabase/
 !/vercel.json
 !/api/
 !/data/
