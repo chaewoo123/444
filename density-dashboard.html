@@ -6,11 +6,14 @@
 <title>권역 건축밀도 · 가용공간 대시보드</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/layout.css">
+<script src="js/layout.js" defer></script>
 <style>
   :root{
-    --paper:#f4f3f0; --surface:#ffffff; --ink:#0a0a0a; --sub:#75726b;
-    --line:rgba(10,10,10,.11); --line-soft:rgba(10,10,10,.06); --fill:#edebe6;
-    --clay:#a63d2f; --ochre:#d9a441;
+    /* 공통 테마(css/tokens.css)에 연결 */
+    --paper:var(--color-bg); --surface:var(--color-surface); --ink:var(--color-ink); --sub:var(--color-sub);
+    --line:var(--color-line-soft); --line-soft:rgba(17,18,20,.06); --fill:#ede8e3;
+    --clay:var(--color-accent); --ochre:#d9a441;
     font-family:var(--font-sans);
   }
   *{ box-sizing:border-box; }
@@ -20,7 +23,7 @@
     padding:30px 32px 26px; background:var(--paper); border-bottom:1px solid var(--line);
     display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;
   }
-  header h1{ font-size:30px; margin:0; font-weight:500; letter-spacing:-.035em; line-height:1.05; }
+  header h1{ font-family:var(--font-serif); font-size:34px; margin:0; font-weight:500; letter-spacing:-.035em; line-height:1.05; }
   header p{ margin:10px 0 0; font-size:13px; color:var(--sub); max-width:64ch; line-height:1.5; }
   header .eyebrow-top{ font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--sub); display:block; margin-bottom:12px; }
   header .src{ font-size:11.5px; color:var(--sub); border:1px solid var(--line); border-radius:999px; padding:7px 14px; white-space:nowrap; }
@@ -28,7 +31,7 @@
   .layout{ display:grid; grid-template-columns:304px 1fr; gap:24px; padding:24px 32px 8px; align-items:start; max-width:1460px; margin:0 auto; }
   .layout > *{ min-width:0; } /* grid items default to min-width:auto — the nowrap table would otherwise blow the column out */
   @media (max-width:900px){ .layout{ grid-template-columns:1fr; padding:20px; } }
-  .panel{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:22px; }
+  .panel{ background:var(--surface); border:1px solid var(--color-line); border-radius:var(--radius); padding:22px; }
 
   .controls{ position:sticky; top:24px; display:flex; flex-direction:column; gap:16px; }
   .field label{ display:block; font-size:10px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--sub); margin-bottom:8px; }

@@ -1,0 +1,105 @@
+/* 공통 레이아웃 — 상단 헤더·메뉴
+   사용: <link rel="stylesheet" href="css/layout.css"> + <script src="js/layout.js" defer></script>
+   (css/tokens.css 다음에 불러온다) */
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 페이지마다 header·nav 요소 스타일이 따로 있어서 겹치지 않게 전용 클래스만 쓴다 */
+.gs-header {
+  position: relative;
+  z-index: 1000; /* 지도 위 */
+  height: var(--header-h);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 32px;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-line);
+  font-family: var(--font-sans);
+}
+
+.gs-brand {
+  font-size: 20px;
+  font-weight: var(--weight-regular);
+  letter-spacing: -.01em;
+  color: var(--color-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.gs-header nav {
+  min-width: 0; /* 좁은 화면에서 메뉴가 페이지 폭을 밀어내지 않게 */
+}
+
+.gs-menu {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gs-menu a {
+  position: relative;
+  display: block;
+  padding: 6px 0;
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  color: var(--color-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.gs-menu a:hover { opacity: .6; }
+
+/* 현재 페이지: 글자 아래 주황 점 */
+.gs-menu a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* 검정 버튼 (게시판) */
+.gs-menu a.gs-cta {
+  margin-left: 12px;
+  padding: 10px 28px;
+  border-radius: var(--radius);
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+}
+.gs-menu a.gs-cta:hover { opacity: .85; }
+.gs-menu a.gs-cta[aria-disabled="true"] { cursor: default; }
+.gs-menu a.gs-cta[aria-current="page"]::after { bottom: -14px; }
+
+/* 제목은 명조 */
+.gs-serif,
+main h1,
+main h2 {
+  font-family: var(--font-serif);
+  font-weight: var(--weight-medium);
+  letter-spacing: -.01em;
+}
+
+/* 좁은 화면: 메뉴를 가로로 밀어서 보기 */
+@media (max-width: 720px) {
+  .gs-header { padding: 0 16px; gap: 12px; }
+  .gs-brand { font-size: 17px; }
+  .gs-menu { gap: 18px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .gs-menu::-webkit-scrollbar { display: none; }
+  .gs-menu a { font-size: 14px; }
+  .gs-menu a.gs-cta { margin-left: 0; padding: 8px 16px; }
+  .gs-menu a[aria-current="page"]::after { bottom: -4px; width: 6px; height: 6px; margin-left: -3px; }
+}
