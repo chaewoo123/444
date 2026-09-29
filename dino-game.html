@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>공룡 게임</title>
+<style>
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #f7f7f7;
+    font-family: sans-serif;
+  }
+  #game {
+    background: #fff;
+    border: 1px solid #ccc;
+  }
+  #info {
+    margin-top: 12px;
+    color: #535353;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+  <canvas id="game" width="600" height="200"></canvas>
+  <div id="info">스페이스바 / 클릭으로 점프 — 장애물을 피하세요</div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const GROUND_Y = 160;
+
+const dino = {
+  x: 40,
+  y: GROUND_Y,
+  width: 30,
+  height: 30,
+  vy: 0,
+  jumping: false,
+};
+
+const GRAVITY = 0.6;
+const JUMP_FORCE = -11;
+
+let obstacles = [];
+let frame = 0;
+let speed = 6;
+let score = 0;
+let gameOver = false;
+
+function spawnObstacle() {
+  obstacles.push({
+    x: canvas.width,
+    y: GROUND_Y,
+    width: 15,
+    height: 30,
+  });
+}
+
+function jump() {
+  if (!dino.jumping && !gameOver) {
+    dino.vy = JUMP_FORCE;
+    dino.jumping = true;
+  }
+  if (gameOver) {
+    resetGame();
+  }
+}
+
+function resetGame() {
+  obstacles = [];
+  frame = 0;
+  speed = 6;
+  score = 0;
+  gameOver = false;
+  dino.y = GROUND_Y;
+  dino.vy = 0;
+  dino.jumping = false;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
+    e.preventDefault();
+    jump();
+  }
+});
+canvas.addEventListener('mousedown', jump);
+
+function update() {
+  if (gameOver) return;
+
+  frame++;
+  score++;
+
+  dino.vy += GRAVITY;
+  dino.y += dino.vy;
+  if (dino.y > GROUND_Y) {
+    dino.y = GROUND_Y;
+    dino.vy = 0;
+    dino.jumping = false;
+  }
+
+  if (frame % 90 === 0) {
+    spawnObstacle();
+  }
+
+  obstacles.forEach((o) => (o.x -= speed));
+  obstacles = obstacles.filter((o) => o.x + o.width > 0);
+
+  for (const o of obstacles) {
+    const hit =
+      dino.x < o.x + o.width &&
+      dino.x + dino.width > o.x &&
+      dino.y < o.y + o.height &&
+      dino.y + dino.height > o.y;
+    if (hit) {
+      gameOver = true;
+    }
+  }
+
+  if (frame % 500 === 0) {
+    speed += 0.5;
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.strokeStyle = '#535353';
+  ctx.beginPath();
+  ctx.moveTo(0, GROUND_Y + 30);
+  ctx.lineTo(canvas.width, GROUND_Y + 30);
+  ctx.stroke();
+
+  ctx.fillStyle = '#535353';
+  ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
+
+  obstacles.forEach((o) => ctx.fillRect(o.x, o.y, o.width, o.height));
+
+  ctx.fillStyle = '#535353';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('SCORE ' + score, canvas.width - 120, 20);
+
+  if (gameOver) {
+    ctx.fillStyle = '#535353';
+    ctx.font = '24px sans-serif';
+    ctx.fillText('GAME OVER', canvas.width / 2 - 60, 80);
+    ctx.font = '14px sans-serif';
+    ctx.fillText('스페이스바 / 클릭으로 재시작', canvas.width / 2 - 80, 105);
+  }
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>
