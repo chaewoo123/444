@@ -8,3 +8,9 @@
 !/vercel.json
 !/api/
 !/data/
+# 팀 작업용 (CONTRIBUTING.md 참고)
+!/CONTRIBUTING.md
+!/board.html
+!/css/
+!/js/
+!/assets/
