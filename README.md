@@ -24,3 +24,5 @@ hi
 | [`design/components`](https://github.com/chaewoo123/444/tree/design/components) | 버튼 · 카드 · 표 · 입력칸 스타일 | 세진 | #14 |
 
 통합: [`develop`](https://github.com/chaewoo123/444/tree/develop) → 배포: [`main`](https://github.com/chaewoo123/444/tree/main)
+
+<!-- restore-practice: temporary change -->
