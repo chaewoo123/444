@@ -2,51 +2,48 @@
 
 지역을 고르면 그 지역의 **용적률·건폐율**과 **CBD·부도심**을 함께 보고, 그 지역에 대해 글을 남길 수 있는 **게시판**을 만든다.
 
-## 1. 역할 (4명)
+## 1. 역할과 브랜치 (4명 · 사람당 브랜치 1개)
 
-| 역할 | 담당 | 맡는 파일·폴더 | 브랜치 앞머리 |
+| 담당 | 역할 | 맡는 파일·폴더 | 브랜치 |
 |---|---|---|---|
-| **Backend** (API · DB) | 채우 | `api/` · `supabase/` · `data/` | `chaewoo/` |
-| **Frontend** (게시판) | 제준 | `board.html` · `js/board/` | `jejun/` |
-| **GIS** (지도 · 분석) | 재훈 | `index.html` · `density-dashboard.html` · `js/map/` | `jaehoon/` |
-| **Design** (UI · 통합) | 세진 (팀장) | `css/` · `assets/` · `README.md` | `sejin/` |
+| 채우 | **Backend** (API · DB) | `api/` · `supabase/` · `data/` | `chaewoo` |
+| 제준 | **Frontend** (게시판) | `board.html` · `js/board/` | `jejun` |
+| 재훈 | **GIS** (지도 · 분석) | `index.html` · `density-dashboard.html` · `js/map/` | `jaehoon` |
+| 세진 (팀장) | **Design** (UI · 통합) | `css/` · `assets/` · `README.md` | `sejin` |
 
+- 각자 **자기 이름 브랜치 하나에서만** 작업한다.
 - 팀장(세진)은 PR 확인과 `develop` → `main` 배포도 맡는다.
 - **맡은 파일만 고친다.** 남의 파일을 고쳐야 하면 그 담당자에게 먼저 말하고, PR에 담당자를 리뷰어로 넣는다.
 - `index.html`, `density-dashboard.html`은 한 파일이 커서 두 명이 동시에 고치면 충돌이 난다. GIS 담당만 고친다.
 
-## 2. 기능 브랜치
+## 2. 할 일 (GitHub Issues)
 
-| 역할 | 브랜치 | 할 일 |
-|---|---|---|
-| Backend (채우) | `chaewoo/backend-board-schema` | 게시글·댓글 표와 RLS 정책 (`supabase/03_board.sql`) |
-| | `chaewoo/backend-ordinance-api` | 지역별 조례 용적률·건폐율 조회 API (`api/ordinance.js`) — 지금은 천안 CSV만 있음 |
-| | `chaewoo/backend-region-api` | 지역 검색·경계·통계 API 보강 (`api/sgis.js`) |
-| Frontend (제준) | `jejun/frontend-board-list` | 글 목록 · 검색 · 지역 필터 · 페이지 넘김 |
-| | `jejun/frontend-board-post` | 글쓰기 · 글 보기 · 수정 · 삭제 |
-| | `jejun/frontend-board-comment` | 댓글 |
-| | `jejun/frontend-region-card` | 글에 붙인 지역의 용적률 · CBD 요약 카드 |
-| GIS (재훈) | `jaehoon/gis-far-lookup` | 지역을 고르면 용도지역별 용적률·건폐율 표시 |
-| | `jaehoon/gis-cbd-detect` | 인구·사업체 밀도로 CBD·부도심 추정해 지도에 표시 |
-| | `jaehoon/gis-board-link` | 지도에서 고른 지역으로 게시판 열기 / 글에서 지도 열기 |
-| Design (세진) | `sejin/design-tokens` | 색 · 글꼴 · 간격 공통 CSS (`css/tokens.css`) |
-| | `sejin/design-layout` | 공통 헤더 · 메뉴 · 모바일 화면 |
-| | `sejin/design-components` | 버튼 · 카드 · 표 · 입력칸 공통 스타일 |
+기능 하나 = 이슈 하나. [Issues](../../issues) 탭에서 담당자 라벨로 걸러 보면 자기 할 일만 보인다.
 
-새 기능이 생기면 `이름/역할-기능` 형식으로 브랜치를 더 만든다 (예: `jejun/frontend-board-like`). 이름을 앞에 두면 GitHub 브랜치 탭에서 사람별로 모여 보인다. 영어 소문자와 `-`만 쓴다.
+| 담당 | 이슈 |
+|---|---|
+| 채우 | #2 게시글·댓글 표와 RLS 정책 · #3 조례 용적률·건폐율 조회 API · #4 지역 검색·경계·통계 API 보강 |
+| 제준 | #5 글 목록·검색·필터 · #6 글쓰기·보기·수정·삭제 · #7 댓글 · #8 지역 요약 카드 |
+| 재훈 | #9 용적률·건폐율 지도 표시 · #10 CBD·부도심 추정 · #11 지도 ↔ 게시판 연결 |
+| 세진 | #12 디자인 토큰 · #13 공통 헤더·메뉴·모바일 · #14 공통 컴포넌트 스타일 |
+
+- 새 할 일이 생기면 이슈를 만들고 자기 이름 라벨을 붙인다.
+- 커밋 메시지에 이슈 번호를 적으면 이슈에 기록이 남는다 (예: `게시글 목록 화면 추가 #5`).
+- PR 본문에 `Closes #5`라고 적으면 합쳐질 때 이슈가 자동으로 닫힌다.
 
 ## 3. 브랜치 구조
 
 ```
 main        ← 배포본. 직접 push 금지, develop 에서만 합침
-└─ develop  ← 통합본. 기능 브랜치는 여기로 PR
-   ├─ chaewoo/backend-…   (채우)
-   ├─ jejun/frontend-…    (제준)
-   ├─ jaehoon/gis-…       (재훈)
-   └─ sejin/design-…      (세진)
+└─ develop  ← 통합본. 각자 브랜치는 여기로 PR
+   ├─ chaewoo   (채우 · Backend)
+   ├─ jejun     (제준 · Frontend)
+   ├─ jaehoon   (재훈 · GIS)
+   └─ sejin     (세진 · Design)
 ```
 
-- 기능 브랜치는 **항상 `develop`에서** 만들고 **`develop`으로** PR을 올린다.
+- 기능 하나가 끝날 때마다 자기 브랜치 → **`develop`** 으로 PR을 올린다.
+- PR이 합쳐진 뒤에도 같은 브랜치를 계속 쓴다. 다음 작업 전에 `develop`을 받아 온다.
 - `develop`이 안정되면 팀장이 `develop` → `main` PR로 배포한다.
 - `week3`은 과제 제출본이라 건드리지 않는다.
 
@@ -56,22 +53,18 @@ main        ← 배포본. 직접 push 금지, develop 에서만 합침
 # 처음 한 번
 git clone https://github.com/chaewoo123/444.git
 cd 444
+git switch jejun                 # 자기 이름 브랜치
 
-# 작업 시작 — 내 기능 브랜치로 이동
-git fetch origin
-git switch jejun/frontend-board-list          # 이미 있는 브랜치
-# git switch -c jaehoon/gis-new-thing origin/develop   # 새 브랜치를 만들 때
-
-# 작업 전 develop 최신 내용 받기
+# 작업 시작할 때마다 — develop 최신 내용 받기
 git pull origin develop
 
 # 저장
 git add 고친파일
-git commit -m "게시글 목록에 지역 필터 추가"
-git push origin jejun/frontend-board-list
+git commit -m "게시글 목록 화면 추가 #5"
+git push origin jejun
 ```
 
-그다음 GitHub에서 **Pull request → base: `develop`** 으로 올리고, 한 명 이상 확인받은 뒤 합친다.
+그다음 GitHub에서 **Pull request → base: `develop` ← compare: 내 브랜치** 로 올리고, 한 명 이상 확인받은 뒤 합친다.
 
 ## 5. 새 파일을 만들 때
 
