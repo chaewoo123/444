@@ -27,14 +27,18 @@
   --leading-normal: 1.6; /* 본문 */
 }
 
-/* 이 파일을 불러오기만 하면 페이지 전체 글꼴이 바뀐다 */
+/* 이 파일을 불러오기만 하면 페이지 전체 글꼴이 바뀐다
+   (글자 크기·줄 간격은 페이지마다 달라서 여기서 강제하지 않는다) */
 body {
   font-family: var(--font-sans);
-  font-size: var(--text-md);
-  line-height: var(--leading-normal);
 }
 
 /* 용적률·면적 같은 숫자는 폭을 맞춰 표에서 자리가 흔들리지 않게 */
 table, .num {
   font-variant-numeric: tabular-nums;
+}
+
+/* 지도(Leaflet) 팝업·범례도 같은 글꼴로 */
+body .leaflet-container {
+  font-family: var(--font-sans);
 }
