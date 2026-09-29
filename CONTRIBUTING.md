@@ -4,12 +4,12 @@
 
 ## 1. 역할 (4명)
 
-| 역할 | 담당 | 맡는 파일·폴더 | 브랜치 접두어 |
+| 역할 | 담당 | 맡는 파일·폴더 | 브랜치 앞머리 |
 |---|---|---|---|
-| **Backend** (API · DB) | 채우 | `api/` · `supabase/` · `data/` | `backend/` |
-| **Frontend** (게시판) | 제준 | `board.html` · `js/board/` | `frontend/` |
-| **GIS** (지도 · 분석) | 재훈 | `index.html` · `density-dashboard.html` · `js/map/` | `gis/` |
-| **Design** (UI · 통합) | 세진 (팀장) | `css/` · `assets/` · `README.md` | `design/` |
+| **Backend** (API · DB) | 채우 | `api/` · `supabase/` · `data/` | `chaewoo/` |
+| **Frontend** (게시판) | 제준 | `board.html` · `js/board/` | `jejun/` |
+| **GIS** (지도 · 분석) | 재훈 | `index.html` · `density-dashboard.html` · `js/map/` | `jaehoon/` |
+| **Design** (UI · 통합) | 세진 (팀장) | `css/` · `assets/` · `README.md` | `sejin/` |
 
 - 팀장(세진)은 PR 확인과 `develop` → `main` 배포도 맡는다.
 - **맡은 파일만 고친다.** 남의 파일을 고쳐야 하면 그 담당자에게 먼저 말하고, PR에 담당자를 리뷰어로 넣는다.
@@ -19,31 +19,31 @@
 
 | 역할 | 브랜치 | 할 일 |
 |---|---|---|
-| Backend (채우) | `backend/board-schema` | 게시글·댓글 표와 RLS 정책 (`supabase/03_board.sql`) |
-| | `backend/ordinance-api` | 지역별 조례 용적률·건폐율 조회 API (`api/ordinance.js`) — 지금은 천안 CSV만 있음 |
-| | `backend/region-api` | 지역 검색·경계·통계 API 보강 (`api/sgis.js`) |
-| Frontend (제준) | `frontend/board-list` | 글 목록 · 검색 · 지역 필터 · 페이지 넘김 |
-| | `frontend/board-post` | 글쓰기 · 글 보기 · 수정 · 삭제 |
-| | `frontend/board-comment` | 댓글 |
-| | `frontend/region-card` | 글에 붙인 지역의 용적률 · CBD 요약 카드 |
-| GIS (재훈) | `gis/far-lookup` | 지역을 고르면 용도지역별 용적률·건폐율 표시 |
-| | `gis/cbd-detect` | 인구·사업체 밀도로 CBD·부도심 추정해 지도에 표시 |
-| | `gis/board-link` | 지도에서 고른 지역으로 게시판 열기 / 글에서 지도 열기 |
-| Design (세진) | `design/tokens` | 색 · 글꼴 · 간격 공통 CSS (`css/tokens.css`) |
-| | `design/layout` | 공통 헤더 · 메뉴 · 모바일 화면 |
-| | `design/components` | 버튼 · 카드 · 표 · 입력칸 공통 스타일 |
+| Backend (채우) | `chaewoo/backend-board-schema` | 게시글·댓글 표와 RLS 정책 (`supabase/03_board.sql`) |
+| | `chaewoo/backend-ordinance-api` | 지역별 조례 용적률·건폐율 조회 API (`api/ordinance.js`) — 지금은 천안 CSV만 있음 |
+| | `chaewoo/backend-region-api` | 지역 검색·경계·통계 API 보강 (`api/sgis.js`) |
+| Frontend (제준) | `jejun/frontend-board-list` | 글 목록 · 검색 · 지역 필터 · 페이지 넘김 |
+| | `jejun/frontend-board-post` | 글쓰기 · 글 보기 · 수정 · 삭제 |
+| | `jejun/frontend-board-comment` | 댓글 |
+| | `jejun/frontend-region-card` | 글에 붙인 지역의 용적률 · CBD 요약 카드 |
+| GIS (재훈) | `jaehoon/gis-far-lookup` | 지역을 고르면 용도지역별 용적률·건폐율 표시 |
+| | `jaehoon/gis-cbd-detect` | 인구·사업체 밀도로 CBD·부도심 추정해 지도에 표시 |
+| | `jaehoon/gis-board-link` | 지도에서 고른 지역으로 게시판 열기 / 글에서 지도 열기 |
+| Design (세진) | `sejin/design-tokens` | 색 · 글꼴 · 간격 공통 CSS (`css/tokens.css`) |
+| | `sejin/design-layout` | 공통 헤더 · 메뉴 · 모바일 화면 |
+| | `sejin/design-components` | 버튼 · 카드 · 표 · 입력칸 공통 스타일 |
 
-새 기능이 생기면 `역할/기능-이름` 형식으로 브랜치를 더 만든다. 영어 소문자와 `-`만 쓴다.
+새 기능이 생기면 `이름/역할-기능` 형식으로 브랜치를 더 만든다 (예: `jejun/frontend-board-like`). 이름을 앞에 두면 GitHub 브랜치 탭에서 사람별로 모여 보인다. 영어 소문자와 `-`만 쓴다.
 
 ## 3. 브랜치 구조
 
 ```
 main        ← 배포본. 직접 push 금지, develop 에서만 합침
 └─ develop  ← 통합본. 기능 브랜치는 여기로 PR
-   ├─ backend/…
-   ├─ frontend/…
-   ├─ gis/…
-   └─ design/…
+   ├─ chaewoo/backend-…   (채우)
+   ├─ jejun/frontend-…    (제준)
+   ├─ jaehoon/gis-…       (재훈)
+   └─ sejin/design-…      (세진)
 ```
 
 - 기능 브랜치는 **항상 `develop`에서** 만들고 **`develop`으로** PR을 올린다.
@@ -59,8 +59,8 @@ cd 444
 
 # 작업 시작 — 내 기능 브랜치로 이동
 git fetch origin
-git switch frontend/board-list          # 이미 있는 브랜치
-# git switch -c gis/new-thing origin/develop   # 새 브랜치를 만들 때
+git switch jejun/frontend-board-list          # 이미 있는 브랜치
+# git switch -c jaehoon/gis-new-thing origin/develop   # 새 브랜치를 만들 때
 
 # 작업 전 develop 최신 내용 받기
 git pull origin develop
@@ -68,7 +68,7 @@ git pull origin develop
 # 저장
 git add 고친파일
 git commit -m "게시글 목록에 지역 필터 추가"
-git push origin frontend/board-list
+git push origin jejun/frontend-board-list
 ```
 
 그다음 GitHub에서 **Pull request → base: `develop`** 으로 올리고, 한 명 이상 확인받은 뒤 합친다.
