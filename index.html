@@ -5,57 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>도시구조 이론 지도</title>
 <link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/layout.css">
+<script src="js/layout.js" defer></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.2/proj4.min.js"></script>
 <style>
-  html, body { height: 100%; margin: 0; font-family: var(--font-sans); }
-  #map { position: absolute; inset: 0; }
+  html, body { height: 100%; margin: 0; font-family: var(--font-sans); background: var(--color-bg); }
+  #map { position: absolute; inset: var(--header-h) 0 0 0; background: var(--color-bg); }
   body.loading #map { cursor: progress; }
-  .panel { background: #fff; padding: 10px 12px; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font-size: 13px; line-height: 1.5; max-width: 320px; max-height: calc(100vh - 140px); overflow-y: auto; box-sizing: border-box; }
+  .panel { background: var(--color-surface); color: var(--color-ink); padding: 12px 14px; border: 1px solid var(--color-line); border-radius: var(--radius); box-shadow: none; font-size: 13px; line-height: 1.5; max-width: 320px; max-height: calc(100vh - 140px); overflow-y: auto; box-sizing: border-box; }
   .panel summary { cursor: pointer; font-weight: 700; font-size: 14px; }
   .panel label { display: block; cursor: pointer; }
-  .panel hr { border: none; border-top: 1px solid #ddd; margin: 6px 0; }
+  .panel hr { border: none; border-top: 1px solid var(--color-line-soft); margin: 6px 0; }
   .panel p { margin: 6px 0; }
-  .panel input[type=text], .panel select { font: inherit; padding: 4px 6px; border: 1px solid #bbb; border-radius: 6px; background: #fff; min-width: 0; box-sizing: border-box; }
-  .panel select:disabled { color: #999; }
+  .panel input[type=text], .panel select { font: inherit; padding: 4px 6px; border: 1px solid var(--color-line); border-radius: var(--radius); background: var(--color-bg); color: var(--color-ink); min-width: 0; box-sizing: border-box; }
+  .panel select:disabled { color: var(--color-sub); }
   .row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
   .row > * { flex: 1 1 110px; }
   .row > .btn { flex: 0 0 auto; }
-  .btn { font: inherit; padding: 4px 10px; border: 1px solid #1c3d6e; background: #1c3d6e; color: #fff; border-radius: 6px; cursor: pointer; white-space: nowrap; }
-  .btn.ghost { background: #fff; color: #1c3d6e; }
-  .btn.on { background: #e76f51; border-color: #e76f51; color: #fff; }
-  .nav { display: flex; flex-wrap: wrap; gap: 4px; background: #fff; padding: 4px; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); max-width: calc(100vw - 260px); }
-  .nav button { font: inherit; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: 6px; border: none; background: none; color: #1c3d6e; cursor: pointer; white-space: nowrap; }
-  .nav button:hover { background: #e8eef7; }
-  .nav button.on { background: #1c3d6e; color: #fff; }
-  .results { margin-top: 6px; max-height: 200px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; }
-  .results button { display: block; width: 100%; text-align: left; font: inherit; padding: 5px 8px; border: none; border-bottom: 1px solid #eee; background: #fff; cursor: pointer; }
-  .results button:hover { background: #e8eef7; }
-  .results small { color: #666; display: block; line-height: 1.3; }
-  .status { font-size: 12px; color: #555; margin-top: 6px; min-height: 1em; }
-  .status.err { color: #c1121f; }
+  .btn { font: inherit; font-weight: 500; padding: 5px 12px; border: 1px solid var(--color-ink); background: var(--color-ink); color: var(--color-on-ink); border-radius: var(--radius); cursor: pointer; white-space: nowrap; }
+  .btn.ghost { background: transparent; color: var(--color-ink); }
+  .btn.on { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-ink); }
+  .nav { display: flex; flex-wrap: wrap; gap: 4px; background: var(--color-surface); padding: 4px; border: 1px solid var(--color-line); border-radius: var(--radius); box-shadow: none; max-width: calc(100vw - 260px); }
+  .nav button { font: inherit; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: var(--radius); border: none; background: none; color: var(--color-ink); cursor: pointer; white-space: nowrap; }
+  .nav button:hover { background: var(--color-hover); }
+  .nav button.on { background: var(--color-ink); color: var(--color-on-ink); }
+  .results { margin-top: 6px; max-height: 200px; overflow-y: auto; border: 1px solid var(--color-line-soft); border-radius: var(--radius); }
+  .results button { display: block; width: 100%; text-align: left; font: inherit; padding: 5px 8px; border: none; border-bottom: 1px solid var(--color-line-soft); background: transparent; color: var(--color-ink); cursor: pointer; }
+  .results button:hover { background: var(--color-hover); }
+  .results small { color: var(--color-sub); display: block; line-height: 1.3; }
+  .status { font-size: 12px; color: var(--color-sub); margin-top: 6px; min-height: 1em; }
+  .status.err { color: var(--color-error); }
   .legend i, .zones i { display: inline-block; width: 14px; height: 12px; margin-right: 6px; vertical-align: middle; border-radius: 2px; }
   .zones div { margin: 4px 0; }
-  .zones small { display: block; margin-left: 20px; color: #555; line-height: 1.35; }
+  .zones small { display: block; margin-left: 20px; color: var(--color-sub); line-height: 1.35; }
   .sum-wrap { overflow-x: auto; }
   table.sum { border-collapse: collapse; font-size: 12px; margin-top: 4px; width: 100%; }
-  table.sum th, table.sum td { padding: 3px 4px; text-align: right; border-bottom: 1px solid #eee; white-space: nowrap; }
+  table.sum th, table.sum td { padding: 3px 4px; text-align: right; border-bottom: 1px solid var(--color-line-soft); white-space: nowrap; }
   table.sum th:first-child, table.sum td:first-child { text-align: left; white-space: normal; min-width: 90px; }
-  .note { color: #666; font-size: 11px; line-height: 1.4; }
+  .note { color: var(--color-sub); font-size: 11px; line-height: 1.4; }
   input[type=range] { width: 100%; }
   .grid-label, .zone-label { border: none; box-shadow: none; }
   .grid-label { background: none; color: #333; font-size: 10px; font-weight: 600; }
   .zone-label { background: rgba(255,255,255,.88); color: #222; font-size: 11px; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
   .grid-label::before, .zone-label::before { display: none; }
   .cards { display: grid; gap: 6px; margin-top: 6px; }
-  .card { border: 1px solid #d5deea; border-radius: 6px; padding: 6px 8px; }
-  .card.wait { border-style: dashed; color: #777; }
-  .card h4 { margin: 0; font-size: 12px; color: #1c3d6e; }
-  .card .val { font-size: 20px; font-weight: 700; }
-  .card .unit { font-size: 12px; color: #444; margin-left: 4px; }
-  .card .src { display: inline-block; font-size: 11px; background: #e8eef7; color: #1c3d6e; border-radius: 4px; padding: 1px 5px; margin-top: 2px; }
-  .card .date, .card .memo { font-size: 11px; color: #666; margin-top: 2px; line-height: 1.35; }
+  .card { border: 1px solid var(--color-line-soft); border-radius: var(--radius); padding: 6px 8px; }
+  .card.wait { border-style: dashed; color: var(--color-sub); }
+  .card h4 { margin: 0; font-size: 12px; color: var(--color-sub); }
+  .card .val { font-family: var(--font-serif); font-size: 22px; font-weight: 500; }
+  .card .unit { font-size: 12px; color: var(--color-sub); margin-left: 4px; }
+  .card .src { display: inline-block; font-size: 11px; border: 1px solid var(--color-line); color: var(--color-ink); border-radius: 999px; padding: 1px 7px; margin-top: 2px; }
+  .card .date, .card .memo { font-size: 11px; color: var(--color-sub); margin-top: 2px; line-height: 1.35; }
   .pin { width: 12px; height: 12px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.45), 0 1px 4px rgba(0,0,0,.45); cursor: grab; }
   @media (max-width: 600px) {
     .panel { max-width: calc(100vw - 170px); font-size: 12px; padding: 8px; }
@@ -167,9 +169,12 @@ let addMode = false;
 
 // ---------- 지도 ----------
 const map = L.map("map", { zoomControl: false }).setView([36.4, 127.8], 7);
-L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
-  maxZoom: 19, attribution: "Tiles &copy; Esri | 자료: SGIS(국가데이터처)"
+// 밝은 회색 바탕 + 지명 (테마: 미색 종이 위 검정 선)
+const ESRI_GRAY = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_";
+L.tileLayer(ESRI_GRAY + "Base/MapServer/tile/{z}/{y}/{x}", {
+  maxZoom: 19, maxNativeZoom: 16, attribution: "Tiles &copy; Esri | 자료: SGIS(국가데이터처)"
 }).addTo(map);
+L.tileLayer(ESRI_GRAY + "Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, maxNativeZoom: 16 }).addTo(map);
 
 const COLORS = ["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"];
 let breaksNow = [];
@@ -177,7 +182,7 @@ const colorFor = (val, b) => { if (!Number.isFinite(val)) return "#d0d0d0"; let 
 
 const areaLayer = L.geoJSON(null, {
   style: f => ({
-    color: "#1c3d6e", weight: state.data?.level === "emd" ? 1 : 1.5,
+    color: "#111214", weight: state.data?.level === "emd" ? 1 : 1.5,
     fillOpacity: state.theory === "none" ? 0.65 : 0.5,
     fillColor: colorFor(state.data?.stats[f.properties.code]?.[state.metric], breaksNow),
   }),
