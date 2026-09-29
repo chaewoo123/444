@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>블록깨기</title>
+<style>
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #1c3d6e;
+    font-family: sans-serif;
+  }
+  #game {
+    background: #0e1f38;
+    border: 1px solid #ccc;
+  }
+  #info {
+    margin-top: 12px;
+    color: #e8eef7;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+  <canvas id="game" width="480" height="360"></canvas>
+  <div id="info">← → 또는 마우스 이동으로 패들 조작 — 10스테이지 클리어에 도전하세요</div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+const PADDLE_WIDTH = 70;
+const PADDLE_HEIGHT = 10;
+const BALL_RADIUS = 6;
+const BALL_BASE_SPEED = 1;
+
+const COLS = 10;
+const BRICK_WIDTH = 40;
+const BRICK_HEIGHT = 14;
+const BRICK_GAP = 4;
+const BRICK_TOP = 36;
+const BRICK_LEFT = (canvas.width - (COLS * (BRICK_WIDTH + BRICK_GAP) - BRICK_GAP)) / 2;
+const COLORS = ['#e76f51', '#f4a261', '#e9c46a', '#2a9d8f', '#264653'];
+
+const STAGE_ROWS = [3, 4, 4, 5, 5, 6, 6, 7, 7, 8];
+const ITEM_DROP_CHANCE = 0.15;
+const ITEM_SPEED = 1.5;
+const ITEM_SIZE = 12;
+
+// 스테이지마다 다른 블록 배치 모양
+function isBrickCell(stage, r, c, rows) {
+  switch (stage) {
+    case 0: // 사각형
+      return true;
+    case 1: // 체크무늬
+      return (r + c) % 2 === 0;
+    case 2: { // 다이아몬드
+      const dx = Math.abs(c - (COLS - 1) / 2) / ((COLS - 1) / 2);
+      const dy = Math.abs(r - (rows - 1) / 2) / ((rows - 1) / 2 || 1);
+      return dx + dy <= 1.15;
+    }
+    case 3: // 역삼각형 (아래로 갈수록 좁아짐)
+      return c >= r && c <= COLS - 1 - r;
+    case 4: { // 삼각형 (아래로 갈수록 넓어짐)
+      const inv = rows - 1 - r;
+      return c >= inv && c <= COLS - 1 - inv;
+    }
+    case 5: // 테두리만 (속이 빈 사각형)
+      return r === 0 || r === rows - 1 || c === 0 || c === COLS - 1;
+    case 6: { // 십자 모양
+      const midRow = Math.abs(r - (rows - 1) / 2) <= 1;
+      const midCol = Math.abs(c - (COLS - 1) / 2) <= 1;
+      return midRow || midCol;
+    }
+    case 7: { // X 모양
+      const rr = r / (rows - 1 || 1);
+      const cc = c / (COLS - 1);
+      return Math.abs(cc - rr) < 0.2 || Math.abs(cc + rr - 1) < 0.2;
+    }
+    case 8: // 듬성듬성 구멍난 벽돌담
+      return !(r % 3 === 1 && c % 4 === 2);
+    default: // 마지막 스테이지: 빽빽하게 전부
+      return true;
+  }
+}
+
+let paddle, balls, items, bricks, score, lives, stage, gameOver, win, leftDown, rightDown;
+
+function buildBricks() {
+  const rows = STAGE_ROWS[stage];
+  bricks = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (!isBrickCell(stage, r, c, rows)) continue;
+      bricks.push({
+        x: BRICK_LEFT + c * (BRICK_WIDTH + BRICK_GAP),
+        y: BRICK_TOP + r * (BRICK_HEIGHT + BRICK_GAP),
+        alive: true,
+        color: COLORS[r % COLORS.length],
+      });
+    }
+  }
+}
+
+function spawnBall() {
+  return {
+    x: canvas.width / 2,
+    y: canvas.height - 40,
+    vx: BALL_BASE_SPEED,
+    vy: -BALL_BASE_SPEED,
+  };
+}
+
+function init() {
+  paddle = {
+    x: canvas.width / 2 - PADDLE_WIDTH / 2,
+    targetX: canvas.width / 2 - PADDLE_WIDTH / 2,
+    y: canvas.height - 24,
+    speed: 5,
+  };
+  stage = 0;
+  balls = [spawnBall()];
+  items = [];
+  buildBricks();
+  score = 0;
+  lives = 3;
+  gameOver = false;
+  win = false;
+}
+
+init();
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') { leftDown = true; e.preventDefault(); }
+  if (e.key === 'ArrowRight') { rightDown = true; e.preventDefault(); }
+  if ((gameOver || win) && e.key === ' ') init();
+});
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowLeft') leftDown = false;
+  if (e.key === 'ArrowRight') rightDown = false;
+});
+canvas.addEventListener('mousedown', () => { if (gameOver || win) init(); });
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  paddle.targetX = Math.max(0, Math.min(canvas.width - PADDLE_WIDTH, mx - PADDLE_WIDTH / 2));
+});
+
+function nextStage() {
+  if (stage < STAGE_ROWS.length - 1) {
+    stage++;
+    buildBricks();
+    balls = [spawnBall()];
+    items = [];
+  } else {
+    win = true;
+  }
+}
+
+function update() {
+  if (gameOver || win) return;
+
+  if (leftDown) paddle.targetX -= paddle.speed;
+  if (rightDown) paddle.targetX += paddle.speed;
+  paddle.targetX = Math.max(0, Math.min(canvas.width - PADDLE_WIDTH, paddle.targetX));
+  paddle.x += (paddle.targetX - paddle.x) * 0.25;
+
+  for (const ball of balls) {
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    if (ball.x < BALL_RADIUS || ball.x > canvas.width - BALL_RADIUS) ball.vx *= -1;
+    if (ball.y < BALL_RADIUS) ball.vy *= -1;
+
+    if (
+      ball.y + BALL_RADIUS > paddle.y &&
+      ball.y - BALL_RADIUS < paddle.y + PADDLE_HEIGHT &&
+      ball.x > paddle.x &&
+      ball.x < paddle.x + PADDLE_WIDTH
+    ) {
+      ball.vy = -Math.abs(ball.vy);
+      const hitPos = (ball.x - (paddle.x + PADDLE_WIDTH / 2)) / (PADDLE_WIDTH / 2);
+      ball.vx = hitPos * 1.6;
+    }
+
+    for (const b of bricks) {
+      if (!b.alive) continue;
+      if (
+        ball.x + BALL_RADIUS > b.x &&
+        ball.x - BALL_RADIUS < b.x + BRICK_WIDTH &&
+        ball.y + BALL_RADIUS > b.y &&
+        ball.y - BALL_RADIUS < b.y + BRICK_HEIGHT
+      ) {
+        b.alive = false;
+        ball.vy *= -1;
+        score += 10;
+
+        const itemsAllowed = stage >= 1; // 스테이지 2부터
+        if (itemsAllowed && items.length === 0 && Math.random() < ITEM_DROP_CHANCE) {
+          const type = Math.random() < 0.25 ? 'life' : 'ball';
+          items.push({ x: b.x + BRICK_WIDTH / 2, y: b.y + BRICK_HEIGHT / 2, vy: ITEM_SPEED, type });
+        }
+      }
+    }
+  }
+
+  balls = balls.filter((ball) => ball.y <= canvas.height + BALL_RADIUS);
+  if (balls.length === 0) {
+    lives--;
+    if (lives <= 0) {
+      gameOver = true;
+    } else {
+      balls = [spawnBall()];
+    }
+  }
+
+  for (const item of items) {
+    item.y += item.vy;
+    if (
+      !item.caught &&
+      item.y + ITEM_SIZE / 2 > paddle.y &&
+      item.y - ITEM_SIZE / 2 < paddle.y + PADDLE_HEIGHT &&
+      item.x > paddle.x &&
+      item.x < paddle.x + PADDLE_WIDTH
+    ) {
+      item.caught = true;
+      if (item.type === 'life') {
+        lives = Math.min(lives + 1, 5);
+      } else {
+        const base = balls[0] || spawnBall();
+        balls.push({
+          x: paddle.x + PADDLE_WIDTH / 2,
+          y: paddle.y - BALL_RADIUS,
+          vx: (Math.random() - 0.5) * 2 * BALL_BASE_SPEED,
+          vy: -Math.abs(base.vy || BALL_BASE_SPEED),
+        });
+      }
+    }
+  }
+  items = items.filter((item) => !item.caught && item.y < canvas.height);
+
+  if (bricks.every((b) => !b.alive)) {
+    nextStage();
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#e8eef7';
+  ctx.fillRect(paddle.x, paddle.y, PADDLE_WIDTH, PADDLE_HEIGHT);
+
+  for (const ball of balls) {
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2);
+    ctx.fillStyle = '#e76f51';
+    ctx.fill();
+  }
+
+  for (const b of bricks) {
+    if (!b.alive) continue;
+    ctx.fillStyle = b.color;
+    ctx.fillRect(b.x, b.y, BRICK_WIDTH, BRICK_HEIGHT);
+  }
+
+  for (const item of items) {
+    ctx.fillStyle = item.type === 'life' ? '#e76f51' : '#f4d35e';
+    ctx.beginPath();
+    ctx.arc(item.x, item.y, ITEM_SIZE / 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1c3d6e';
+    ctx.font = '10px sans-serif';
+    ctx.fillText(item.type === 'life' ? '♥' : '+', item.x - 3, item.y + 3);
+  }
+
+  ctx.fillStyle = '#e8eef7';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('SCORE ' + score, 10, 20);
+  ctx.fillText('STAGE ' + (stage + 1) + '/' + STAGE_ROWS.length, canvas.width / 2 - 40, 20);
+  ctx.fillText('LIVES ' + lives, canvas.width - 70, 20);
+
+  if (gameOver) {
+    ctx.font = '24px sans-serif';
+    ctx.fillText('GAME OVER', canvas.width / 2 - 60, canvas.height / 2);
+    ctx.font = '14px sans-serif';
+    ctx.fillText('스페이스바 / 클릭으로 재시작', canvas.width / 2 - 80, canvas.height / 2 + 24);
+  } else if (win) {
+    ctx.font = '24px sans-serif';
+    ctx.fillText('ALL CLEAR!', canvas.width / 2 - 55, canvas.height / 2);
+    ctx.font = '14px sans-serif';
+    ctx.fillText('스페이스바 / 클릭으로 재시작', canvas.width / 2 - 80, canvas.height / 2 + 24);
+  }
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>

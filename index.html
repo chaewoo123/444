@@ -727,6 +727,22 @@ $("#year").onchange = e => { state.year = e.target.value; loadRegion(state.adm, 
       window.open("dino-game.html", "_blank");
     }
   });
+
+  // 이스터에그: 방향키를 좌→우→상→하 순서로 입력하면 블록깨기 게임(breakout.html)을 새 탭으로 연다.
+  const ARROW_SEQUENCE = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+  let arrowProgress = 0;
+  document.addEventListener("keydown", (e) => {
+    if (!ARROW_SEQUENCE.includes(e.key) || e.repeat) return;
+    if (e.key === ARROW_SEQUENCE[arrowProgress]) {
+      arrowProgress++;
+      if (arrowProgress === ARROW_SEQUENCE.length) {
+        arrowProgress = 0;
+        window.open("breakout.html", "_blank");
+      }
+    } else {
+      arrowProgress = e.key === ARROW_SEQUENCE[0] ? 1 : 0;
+    }
+  });
 })();
 </script>
 </body>
