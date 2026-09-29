@@ -6,12 +6,12 @@
 
 | 역할 | 담당 | 맡는 파일·폴더 | 브랜치 접두어 |
 |---|---|---|---|
-| **Backend** (API · DB) | | `api/` · `supabase/` · `data/` | `backend/` |
-| **Frontend** (게시판) | | `board.html` · `js/board/` | `frontend/` |
-| **GIS** (지도 · 분석) | | `index.html` · `density-dashboard.html` · `js/map/` | `gis/` |
-| **Design** (UI · 통합) | | `css/` · `assets/` · `README.md` | `design/` |
+| **Backend** (API · DB) | 채우 | `api/` · `supabase/` · `data/` | `backend/` |
+| **Frontend** (게시판) | 제준 | `board.html` · `js/board/` | `frontend/` |
+| **GIS** (지도 · 분석) | 재훈 | `index.html` · `density-dashboard.html` · `js/map/` | `gis/` |
+| **Design** (UI · 통합) | 세진 (팀장) | `css/` · `assets/` · `README.md` | `design/` |
 
-- 담당 칸에 이름과 GitHub 아이디를 적는다.
+- 팀장(세진)은 PR 확인과 `develop` → `main` 배포도 맡는다.
 - **맡은 파일만 고친다.** 남의 파일을 고쳐야 하면 그 담당자에게 먼저 말하고, PR에 담당자를 리뷰어로 넣는다.
 - `index.html`, `density-dashboard.html`은 한 파일이 커서 두 명이 동시에 고치면 충돌이 난다. GIS 담당만 고친다.
 
@@ -19,17 +19,17 @@
 
 | 역할 | 브랜치 | 할 일 |
 |---|---|---|
-| Backend | `backend/board-schema` | 게시글·댓글 표와 RLS 정책 (`supabase/03_board.sql`) |
+| Backend (채우) | `backend/board-schema` | 게시글·댓글 표와 RLS 정책 (`supabase/03_board.sql`) |
 | | `backend/ordinance-api` | 지역별 조례 용적률·건폐율 조회 API (`api/ordinance.js`) — 지금은 천안 CSV만 있음 |
 | | `backend/region-api` | 지역 검색·경계·통계 API 보강 (`api/sgis.js`) |
-| Frontend | `frontend/board-list` | 글 목록 · 검색 · 지역 필터 · 페이지 넘김 |
+| Frontend (제준) | `frontend/board-list` | 글 목록 · 검색 · 지역 필터 · 페이지 넘김 |
 | | `frontend/board-post` | 글쓰기 · 글 보기 · 수정 · 삭제 |
 | | `frontend/board-comment` | 댓글 |
 | | `frontend/region-card` | 글에 붙인 지역의 용적률 · CBD 요약 카드 |
-| GIS | `gis/far-lookup` | 지역을 고르면 용도지역별 용적률·건폐율 표시 |
+| GIS (재훈) | `gis/far-lookup` | 지역을 고르면 용도지역별 용적률·건폐율 표시 |
 | | `gis/cbd-detect` | 인구·사업체 밀도로 CBD·부도심 추정해 지도에 표시 |
 | | `gis/board-link` | 지도에서 고른 지역으로 게시판 열기 / 글에서 지도 열기 |
-| Design | `design/tokens` | 색 · 글꼴 · 간격 공통 CSS (`css/tokens.css`) |
+| Design (세진) | `design/tokens` | 색 · 글꼴 · 간격 공통 CSS (`css/tokens.css`) |
 | | `design/layout` | 공통 헤더 · 메뉴 · 모바일 화면 |
 | | `design/components` | 버튼 · 카드 · 표 · 입력칸 공통 스타일 |
 
