@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>갤러그</title>
+<style>
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #05070f;
+    font-family: sans-serif;
+  }
+  #game {
+    background: #0a0e1a;
+    border: 1px solid #444;
+  }
+  #info {
+    margin-top: 12px;
+    color: #cfd8ea;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+  <canvas id="game" width="480" height="480"></canvas>
+  <div id="info">← → 로 이동, 스페이스바로 발사 — 10스테이지에 도전하세요</div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+const PLAYER_WIDTH = 28;
+const PLAYER_HEIGHT = 18;
+const BULLET_SPEED = 5;
+const ENEMY_BULLET_SPEED = 1.8;
+const MAX_BULLET_COUNT = 4;
+const ITEM_DROP_CHANCE = 0.15;
+const ITEM_SPEED = 0.8;
+const ITEM_SIZE = 14;
+const ITEM_CATCH_MARGIN = 10;
+
+const ENEMY_ROWS = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7];
+const ENEMY_COLS = 8;
+const ENEMY_WIDTH = 30;
+const ENEMY_HEIGHT = 20;
+const ENEMY_GAP = 10;
+const ENEMY_TOP = 40;
+const ENEMY_LEFT = (canvas.width - (ENEMY_COLS * (ENEMY_WIDTH + ENEMY_GAP) - ENEMY_GAP)) / 2;
+const COLORS = ['#e76f51', '#f4a261', '#e9c46a', '#2a9d8f', '#264653', '#9b5de5', '#00bbf9'];
+const SHAPES = ['square', 'circle', 'triangle', 'diamond', 'invader'];
+
+const WINGMAN_WIDTH = 18;
+const WINGMAN_HEIGHT = 14;
+const WINGMAN_OFFSET = 30;
+
+let player, bullets, enemyBullets, enemies, items, wingmen;
+let enemyDir, enemySpeed, stage, score, lives, bulletCount, gameOver, win, leftDown, rightDown, fireCooldown;
+
+// 스테이지마다 다른 적 대형
+function isEnemyCell(stage, r, c, rows) {
+  switch (stage) {
+    case 0: // 사각형
+      return true;
+    case 1: // 체크무늬
+      return (r + c) % 2 === 0;
+    case 2: { // 다이아몬드
+      const dx = Math.abs(c - (ENEMY_COLS - 1) / 2) / ((ENEMY_COLS - 1) / 2);
+      const dy = Math.abs(r - (rows - 1) / 2) / ((rows - 1) / 2 || 1);
+      return dx + dy <= 1.15;
+    }
+    case 3: // 역삼각형
+      return c >= r && c <= ENEMY_COLS - 1 - r;
+    case 4: { // 삼각형
+      const inv = rows - 1 - r;
+      return c >= inv && c <= ENEMY_COLS - 1 - inv;
+    }
+    case 5: // 테두리만
+      return r === 0 || r === rows - 1 || c === 0 || c === ENEMY_COLS - 1;
+    case 6: { // 십자 모양
+      const midRow = Math.abs(r - (rows - 1) / 2) <= 1;
+      const midCol = Math.abs(c - (ENEMY_COLS - 1) / 2) <= 1;
+      return midRow || midCol;
+    }
+    case 7: { // X 모양
+      const rr = r / (rows - 1 || 1);
+      const cc = c / (ENEMY_COLS - 1);
+      return Math.abs(cc - rr) < 0.25 || Math.abs(cc + rr - 1) < 0.25;
+    }
+    case 8: // 듬성듬성 구멍
+      return !(r % 2 === 1 && c % 3 === 1);
+    default: // 마지막 스테이지: 빽빽하게 전부
+      return true;
+  }
+}
+
+function buildEnemies() {
+  const rows = ENEMY_ROWS[stage];
+  enemies = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < ENEMY_COLS; c++) {
+      if (!isEnemyCell(stage, r, c, rows)) continue;
+      enemies.push({
+        x: ENEMY_LEFT + c * (ENEMY_WIDTH + ENEMY_GAP),
+        y: ENEMY_TOP + r * (ENEMY_HEIGHT + ENEMY_GAP),
+        alive: true,
+        color: COLORS[r % COLORS.length],
+        shape: SHAPES[r % SHAPES.length],
+      });
+    }
+  }
+  enemyDir = 1;
+  enemySpeed = 0.6 + stage * 0.15;
+}
+
+function init() {
+  player = {
+    x: canvas.width / 2 - PLAYER_WIDTH / 2,
+    targetX: canvas.width / 2 - PLAYER_WIDTH / 2,
+    y: canvas.height - 34,
+    speed: 5,
+  };
+  bullets = [];
+  enemyBullets = [];
+  items = [];
+  wingmen = [];
+  stage = 0;
+  score = 0;
+  lives = 3;
+  bulletCount = 1;
+  fireCooldown = 0;
+  gameOver = false;
+  win = false;
+  buildEnemies();
+}
+
+init();
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') { leftDown = true; e.preventDefault(); }
+  if (e.key === 'ArrowRight') { rightDown = true; e.preventDefault(); }
+  if (e.key === ' ') {
+    e.preventDefault();
+    if (gameOver || win) init();
+    else tryFire();
+  }
+});
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowLeft') leftDown = false;
+  if (e.key === 'ArrowRight') rightDown = false;
+});
+canvas.addEventListener('mousedown', () => { if (gameOver || win) init(); });
+
+const DIAGONAL_STEP = 1.4;
+
+function tryFire() {
+  if (fireCooldown > 0) return;
+  fireCooldown = 12;
+  const cx = player.x + PLAYER_WIDTH / 2;
+  bullets.push({ x: cx, y: player.y, vx: 0, vy: -BULLET_SPEED });
+  for (let i = 1; i < bulletCount; i++) {
+    const side = i % 2 === 1 ? -1 : 1;
+    const pair = Math.ceil(i / 2);
+    bullets.push({ x: cx, y: player.y, vx: side * pair * DIAGONAL_STEP, vy: -BULLET_SPEED });
+  }
+  for (const w of wingmen) {
+    if (!w.alive) continue;
+    bullets.push({ x: w.x + WINGMAN_WIDTH / 2, y: w.y, vx: 0, vy: -BULLET_SPEED });
+  }
+}
+
+function nextStage() {
+  if (stage < ENEMY_ROWS.length - 1) {
+    stage++;
+    bullets = [];
+    enemyBullets = [];
+    items = [];
+    buildEnemies();
+  } else {
+    win = true;
+  }
+}
+
+function update() {
+  if (gameOver || win) return;
+
+  if (fireCooldown > 0) fireCooldown--;
+
+  if (leftDown) player.targetX -= player.speed;
+  if (rightDown) player.targetX += player.speed;
+  player.targetX = Math.max(0, Math.min(canvas.width - PLAYER_WIDTH, player.targetX));
+  player.x += (player.targetX - player.x) * 0.3;
+
+  for (const w of wingmen) {
+    w.x = w.side === 'left'
+      ? player.x - WINGMAN_OFFSET
+      : player.x + PLAYER_WIDTH + WINGMAN_OFFSET - WINGMAN_WIDTH;
+    w.y = player.y + 2;
+  }
+
+  bullets.forEach((b) => { b.x += b.vx; b.y += b.vy; });
+  bullets = bullets.filter((b) => b.y > -10 && b.x > -10 && b.x < canvas.width + 10);
+
+  enemyBullets.forEach((b) => (b.y += ENEMY_BULLET_SPEED));
+  enemyBullets = enemyBullets.filter((b) => b.y < canvas.height + 10);
+
+  const alive = enemies.filter((en) => en.alive);
+  let hitEdge = false;
+  for (const en of alive) {
+    en.x += enemySpeed * enemyDir;
+    if (en.x < 4 || en.x + ENEMY_WIDTH > canvas.width - 4) hitEdge = true;
+  }
+  if (hitEdge) {
+    enemyDir *= -1;
+    for (const en of alive) en.y += 12;
+  }
+
+  const maxEnemyBullets = 2 + Math.floor(stage / 3);
+  for (const en of alive) {
+    if (en.y + ENEMY_HEIGHT >= player.y) {
+      gameOver = true;
+    }
+    if (enemyBullets.length < maxEnemyBullets && Math.random() < 0.0003 + stage * 0.00012) {
+      enemyBullets.push({ x: en.x + ENEMY_WIDTH / 2, y: en.y + ENEMY_HEIGHT });
+    }
+  }
+
+  for (const b of bullets) {
+    for (const en of alive) {
+      if (!en.alive) continue;
+      if (
+        b.x > en.x &&
+        b.x < en.x + ENEMY_WIDTH &&
+        b.y > en.y &&
+        b.y < en.y + ENEMY_HEIGHT
+      ) {
+        en.alive = false;
+        b.hit = true;
+        score += 10;
+        if (items.length === 0 && Math.random() < ITEM_DROP_CHANCE) {
+          const type = Math.random() < 0.25 ? 'life' : 'bullet';
+          items.push({ x: en.x + ENEMY_WIDTH / 2, y: en.y + ENEMY_HEIGHT / 2, vy: ITEM_SPEED, type });
+        }
+      }
+    }
+  }
+  bullets = bullets.filter((b) => !b.hit);
+
+  for (const b of enemyBullets) {
+    let blocked = false;
+    for (const w of wingmen) {
+      if (!w.alive) continue;
+      if (
+        b.x > w.x &&
+        b.x < w.x + WINGMAN_WIDTH &&
+        b.y > w.y &&
+        b.y < w.y + WINGMAN_HEIGHT
+      ) {
+        w.alive = false;
+        b.hit = true;
+        blocked = true;
+        break;
+      }
+    }
+    if (blocked) continue;
+    if (
+      b.x > player.x &&
+      b.x < player.x + PLAYER_WIDTH &&
+      b.y > player.y &&
+      b.y < player.y + PLAYER_HEIGHT
+    ) {
+      b.hit = true;
+      lives--;
+      if (lives <= 0) gameOver = true;
+    }
+  }
+  enemyBullets = enemyBullets.filter((b) => !b.hit);
+  wingmen = wingmen.filter((w) => w.alive);
+
+  for (const item of items) {
+    item.y += item.vy;
+    if (
+      !item.caught &&
+      item.y + ITEM_SIZE / 2 > player.y &&
+      item.y - ITEM_SIZE / 2 < player.y + PLAYER_HEIGHT &&
+      item.x > player.x - ITEM_CATCH_MARGIN &&
+      item.x < player.x + PLAYER_WIDTH + ITEM_CATCH_MARGIN
+    ) {
+      item.caught = true;
+      if (item.type === 'life') {
+        lives = Math.min(lives + 1, 5);
+      } else if (bulletCount < MAX_BULLET_COUNT) {
+        bulletCount++;
+      } else {
+        const sides = wingmen.map((w) => w.side);
+        const side = !sides.includes('left') ? 'left' : !sides.includes('right') ? 'right' : null;
+        if (side) wingmen.push({ side, alive: true, x: player.x, y: player.y });
+      }
+    }
+  }
+  items = items.filter((item) => !item.caught && item.y < canvas.height);
+
+  if (enemies.every((en) => !en.alive)) {
+    nextStage();
+  }
+}
+
+function drawEnemy(en) {
+  const cx = en.x + ENEMY_WIDTH / 2;
+  const cy = en.y + ENEMY_HEIGHT / 2;
+  ctx.fillStyle = en.color;
+  switch (en.shape) {
+    case 'circle':
+      ctx.beginPath();
+      ctx.arc(cx, cy, ENEMY_WIDTH / 2, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case 'triangle':
+      ctx.beginPath();
+      ctx.moveTo(cx, en.y);
+      ctx.lineTo(en.x, en.y + ENEMY_HEIGHT);
+      ctx.lineTo(en.x + ENEMY_WIDTH, en.y + ENEMY_HEIGHT);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case 'diamond':
+      ctx.beginPath();
+      ctx.moveTo(cx, en.y);
+      ctx.lineTo(en.x + ENEMY_WIDTH, cy);
+      ctx.lineTo(cx, en.y + ENEMY_HEIGHT);
+      ctx.lineTo(en.x, cy);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case 'invader':
+      ctx.fillRect(en.x + 4, en.y, ENEMY_WIDTH - 8, ENEMY_HEIGHT - 6);
+      ctx.fillRect(en.x, en.y + 6, 6, 6);
+      ctx.fillRect(en.x + ENEMY_WIDTH - 6, en.y + 6, 6, 6);
+      ctx.fillRect(en.x + 6, en.y + ENEMY_HEIGHT - 6, 5, 6);
+      ctx.fillRect(en.x + ENEMY_WIDTH - 11, en.y + ENEMY_HEIGHT - 6, 5, 6);
+      break;
+    default: // square
+      ctx.fillRect(en.x, en.y, ENEMY_WIDTH, ENEMY_HEIGHT);
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#00bbf9';
+  ctx.beginPath();
+  ctx.moveTo(player.x + PLAYER_WIDTH / 2, player.y);
+  ctx.lineTo(player.x, player.y + PLAYER_HEIGHT);
+  ctx.lineTo(player.x + PLAYER_WIDTH, player.y + PLAYER_HEIGHT);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = '#7fd8ff';
+  for (const w of wingmen) {
+    ctx.beginPath();
+    ctx.moveTo(w.x + WINGMAN_WIDTH / 2, w.y);
+    ctx.lineTo(w.x, w.y + WINGMAN_HEIGHT);
+    ctx.lineTo(w.x + WINGMAN_WIDTH, w.y + WINGMAN_HEIGHT);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.fillStyle = '#f4f4f4';
+  for (const b of bullets) {
+    ctx.fillRect(b.x - 2, b.y - 8, 4, 8);
+  }
+
+  ctx.fillStyle = '#ff5d5d';
+  for (const b of enemyBullets) {
+    ctx.fillRect(b.x - 2, b.y, 4, 8);
+  }
+
+  for (const en of enemies) {
+    if (!en.alive) continue;
+    drawEnemy(en);
+  }
+
+  for (const item of items) {
+    ctx.fillStyle = item.type === 'life' ? '#e76f51' : '#f4d35e';
+    ctx.beginPath();
+    ctx.arc(item.x, item.y, ITEM_SIZE / 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1c3d6e';
+    ctx.font = '10px sans-serif';
+    ctx.fillText(item.type === 'life' ? '♥' : '+', item.x - 3, item.y + 3);
+  }
+
+  ctx.fillStyle = '#cfd8ea';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('SCORE ' + score, 10, 20);
+  ctx.fillText('STAGE ' + (stage + 1) + '/' + ENEMY_ROWS.length, canvas.width / 2 - 40, 20);
+  ctx.fillText('LIVES ' + lives, canvas.width - 70, 20);
+  ctx.fillText('BULLET x' + bulletCount, 10, canvas.height - 8);
+
+  if (gameOver) {
+    ctx.font = '24px sans-serif';
+    ctx.fillText('GAME OVER', canvas.width / 2 - 60, canvas.height / 2);
+    ctx.font = '14px sans-serif';
+    ctx.fillText('스페이스바 / 클릭으로 재시작', canvas.width / 2 - 80, canvas.height / 2 + 24);
+  } else if (win) {
+    ctx.font = '24px sans-serif';
+    ctx.fillText('ALL CLEAR!', canvas.width / 2 - 55, canvas.height / 2);
+    ctx.font = '14px sans-serif';
+    ctx.fillText('스페이스바 / 클릭으로 재시작', canvas.width / 2 - 80, canvas.height / 2 + 24);
+  }
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>

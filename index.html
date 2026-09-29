@@ -743,6 +743,20 @@ $("#year").onchange = e => { state.year = e.target.value; loadRegion(state.adm, 
       arrowProgress = e.key === ARROW_SEQUENCE[0] ? 1 : 0;
     }
   });
+
+  // 이스터에그: Tab 3연속 입력 시 갤러그 게임(galaga.html)을 새 탭으로 연다.
+  let tabTimes = [];
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab" || e.repeat) return;
+    e.preventDefault();
+    const now = Date.now();
+    tabTimes = tabTimes.filter((t) => now - t < 1500);
+    tabTimes.push(now);
+    if (tabTimes.length >= 3) {
+      tabTimes = [];
+      window.open("galaga.html", "_blank");
+    }
+  });
 })();
 </script>
 </body>
