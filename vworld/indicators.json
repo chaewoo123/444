@@ -1,0 +1,9 @@
+{
+  "_설명": "지표 대시보드에서 팀이 직접 확보한 값을 적는 곳. 키는 법정동·리 코드 10자리(PNU 앞 10자리). 비워 두면 자동 값(있으면) 또는 '대기'로 표시. 값을 적을 때 출처·조회일을 반드시 함께 적을 것.",
+  "4413111900": {
+    "site": "충청남도 천안시 동남구 안서동",
+    "climate": { "meanTempC": null, "meanPrecipMm": null, "period": "", "source": "", "date": "" },
+    "popDensity": { "value": null, "unit": "명/km²", "source": "", "date": "" },
+    "targetPopulation": null
+  }
+}
