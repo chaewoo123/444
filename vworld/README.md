@@ -34,6 +34,17 @@ node --env-file=.env analyze.mjs "충청남도 천안시 동남구 상명대길 
 | `indicator6.csv` | 지표 ⑥ 상세 (과제 ②) |
 | `parcels.csv` | 필지별 점수 |
 
+## 팀 공유 (Vercel)
+
+`reports/`에 넣은 보고서는 Vercel 미리보기 주소의 `/vworld/reports/`에서 열린다(이 브랜치에 push할 때마다 자동 배포).
+
+```
+node publish.mjs        # out/의 '코드_이름' 폴더 보고서·csv를 reports/로 모으고 목록 페이지 생성
+git add reports && git commit -m "보고서 갱신" && git push
+```
+
+Vercel에서는 보고서를 보기만 한다. 주소 검색(`server.mjs`)은 인증키가 필요해서 각자 PC에서 실행.
+
 ## 바꿀 수 있는 것
 
 - `criteria.json` — 요건 문장·임계값·가중치. **가중치는 승인 후** `approval`을 채우고 다시 실행.

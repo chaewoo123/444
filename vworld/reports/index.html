@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>대상지 적합도 보고서</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2433; --muted:#5f6b7a; --line:#e3e7ee; --brand:#0b4a8f; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 "Pretendard","Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif; }
+  header { background:var(--brand); color:#fff; padding:28px 16px 22px; }
+  .wrap { max-width:960px; margin:0 auto; }
+  header small { opacity:.8; } header h1 { margin:6px 0 4px; font-size:24px; } header p { margin:0; opacity:.9; font-size:14px; }
+  main { padding:20px 16px 48px; display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
+  .top { display:flex; justify-content:space-between; gap:8px; align-items:baseline; }
+  h2 { margin:0; font-size:17px; } h2 a { color:inherit; text-decoration:none; } h2 a:hover { text-decoration:underline; }
+  .code { color:var(--muted); font-size:12px; font-variant-numeric:tabular-nums; }
+  .ranks { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin:12px 0 8px; }
+  .r { border:1px solid var(--line); border-radius:8px; padding:6px 8px; font-size:13px; color:var(--muted); }
+  .r b { display:block; color:var(--ink); font-size:20px; font-variant-numeric:tabular-nums; }
+  .r.first { border-color:var(--brand); box-shadow:0 0 0 1px var(--brand) inset; }
+  .meta { margin:2px 0; color:var(--muted); font-size:13px; }
+  .dl { margin:12px 0 0; font-size:13px; } .dl a { color:var(--brand); }
+  .btn { display:inline-block; background:var(--brand); color:#fff !important; text-decoration:none; padding:5px 12px; border-radius:999px; margin-right:6px; }
+  footer { max-width:960px; margin:0 auto; padding:0 16px 40px; color:var(--muted); font-size:13px; }
+</style></head>
+<body>
+<header><div class="wrap"><small>스마트도시계획(캡스톤디자인) · 6주차 · 444팀</small><h1>대상지 적합도 보고서</h1>
+<p>주거·상업·공업 적합도와 지표 ①~⑥ · 보고서를 열어 지도·매트릭스·역전점을 확인하고 의견은 PR에 남겨 주세요.</p></div></header>
+<main class="wrap"><article class="card">
+    <div class="top"><h2><a href="4413310800_%EB%B6%88%EB%8B%B9%EB%8F%99/report.html">충청남도 천안시 서북구 불당동</a></h2><span class="code">4413310800</span></div>
+    <div class="ranks"><div class="r first"><span>1위 주거</span><b>3.87</b></div><div class="r "><span>2위 상업</span><b>3.22</b></div><div class="r "><span>3위 공업</span><b>2.49</b></div></div>
+    <p class="meta">개발가능지 197.13ha · 필지 1,547개 · 검색 주소 충청남도 천안시 서북구 번영로 156</p>
+    <p class="meta">가중치 승인 전 시험 계산 · 계산 2026-10-12 17:45</p>
+    <p class="dl"><a class="btn" href="4413310800_%EB%B6%88%EB%8B%B9%EB%8F%99/report.html">보고서 열기</a>
+      <a href="4413310800_%EB%B6%88%EB%8B%B9%EB%8F%99/matrix.csv" download>matrix.csv</a> · <a href="4413310800_%EB%B6%88%EB%8B%B9%EB%8F%99/reversal.csv" download>reversal.csv</a> · <a href="4413310800_%EB%B6%88%EB%8B%B9%EB%8F%99/indicators.csv" download>indicators.csv</a> · <a href="4413310800_%EB%B6%88%EB%8B%B9%EB%8F%99/parcels.csv" download>parcels.csv</a></p>
+  </article>
+<article class="card">
+    <div class="top"><h2><a href="4413125021_%EC%84%9C%EB%A6%AC/report.html">충청남도 천안시 동남구 목천읍 서리</a></h2><span class="code">4413125021</span></div>
+    <div class="ranks"><div class="r first"><span>1위 주거</span><b>3.56</b></div><div class="r "><span>2위 상업</span><b>3.42</b></div><div class="r "><span>3위 공업</span><b>2.73</b></div></div>
+    <p class="meta">개발가능지 35.34ha · 필지 956개 · 검색 주소 충청남도 천안시 동남구 목천읍 서리 93-1</p>
+    <p class="meta">가중치 승인 전 시험 계산 · 계산 2026-10-12 17:45</p>
+    <p class="dl"><a class="btn" href="4413125021_%EC%84%9C%EB%A6%AC/report.html">보고서 열기</a>
+      <a href="4413125021_%EC%84%9C%EB%A6%AC/matrix.csv" download>matrix.csv</a> · <a href="4413125021_%EC%84%9C%EB%A6%AC/reversal.csv" download>reversal.csv</a> · <a href="4413125021_%EC%84%9C%EB%A6%AC/indicators.csv" download>indicators.csv</a> · <a href="4413125021_%EC%84%9C%EB%A6%AC/parcels.csv" download>parcels.csv</a></p>
+  </article>
+<article class="card">
+    <div class="top"><h2><a href="4413111900_%EC%95%88%EC%84%9C%EB%8F%99/report.html">충청남도 천안시 동남구 안서동</a></h2><span class="code">4413111900</span></div>
+    <div class="ranks"><div class="r first"><span>1위 주거</span><b>3.49</b></div><div class="r "><span>2위 상업</span><b>3.14</b></div><div class="r "><span>3위 공업</span><b>2.79</b></div></div>
+    <p class="meta">개발가능지 124.5ha · 필지 3,503개 · 검색 주소 충청남도 천안시 동남구 안서동 300</p>
+    <p class="meta">가중치 승인 전 시험 계산 · 계산 2026-10-12 17:45</p>
+    <p class="dl"><a class="btn" href="4413111900_%EC%95%88%EC%84%9C%EB%8F%99/report.html">보고서 열기</a>
+      <a href="4413111900_%EC%95%88%EC%84%9C%EB%8F%99/matrix.csv" download>matrix.csv</a> · <a href="4413111900_%EC%95%88%EC%84%9C%EB%8F%99/reversal.csv" download>reversal.csv</a> · <a href="4413111900_%EC%95%88%EC%84%9C%EB%8F%99/indicators.csv" download>indicators.csv</a> · <a href="4413111900_%EC%95%88%EC%84%9C%EB%8F%99/parcels.csv" download>parcels.csv</a></p>
+  </article></main>
+<footer>새 주소 분석은 각자 PC에서 <code>node --env-file=.env server.mjs</code>로 실행 → <code>node publish.mjs</code> → 커밋·푸시하면 여기에 추가됩니다. 사용법: vworld/README.md</footer>
+</body></html>
