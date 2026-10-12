@@ -1,0 +1,4 @@
+# 인증키·받은 자료·비교용 파일은 올리지 않음
+.env
+out/
+dem_openmeteo_*.json
