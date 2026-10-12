@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>용도지역 개선안 대시보드</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+/* 배치: 탭 두 개. ① 지역·현재 용도지역 = 큰 위성지도 + 구성 막대, ② 솔루션 = 분석기법 선택 + 개선안 두 개 나란히 */
+:root {
+  --bg: #f4f6f8; --panel: #ffffff; --ink: #17222e; --muted: #5b6b7b; --line: #d5dce3;
+  --accent: #0d4c97; --accent-ink: #ffffff; --accent-soft: #e3ecf7; --warn: #a8432c; --track: #e6eaee;
+  /* 용도지역 분류색: 위성사진 위에서도 구분되게 채도를 높였다 */
+  --res: #f5d33b; --com: #ee4f72; --ind: #8a6fe0; --green: #3fb562; --manage: #f0953a; --agri: #b9d34a; --nature: #1fa3a3; --etc: #a9b3bd; --none: #6b7682;
+  /* 대안 전환 칸과 경사 구간(완만→급함) */
+  --cand: #ff6d00; --to-green: #00e676; --cand-ind: #e040fb; --t10: #e9c75f; --t15: #dd8b3f; --t25: #a8432c; --b0: #dfe7d9; --b1: #c9d48e; --b2: #e9c75f; --b3: #dd8b3f; --b4: #a8432c;
+  --sans: "IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #10161d; --panel: #182029; --ink: #e6ecf2; --muted: #93a2b1; --line: #2c3845; --accent: #6fa8ec; --accent-ink: #0b1622; --accent-soft: #1d2f45; --warn: #e58a6f; --track: #26313c; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #10161d; --panel: #182029; --ink: #e6ecf2; --muted: #93a2b1; --line: #2c3845; --accent: #6fa8ec; --accent-ink: #0b1622; --accent-soft: #1d2f45; --warn: #e58a6f; --track: #26313c; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.5; }
+.wrap { max-width: 1440px; margin: 0 auto; padding-inline: 20px; padding-block: 16px 40px; display: flex; flex-direction: column; gap: 14px; }
+h1 { font-size: 20px; font-weight: 700; margin: 0; }
+h2 { font-size: 15px; font-weight: 600; margin: 0; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 16px; min-width: 0; }
+.label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; }
+.note { color: var(--muted); font-size: 12.5px; margin: 8px 0 0; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+[hidden] { display: none !important; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.bar-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.tabs { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.tabs button { font: inherit; padding: 8px 18px; border: 0; background: var(--panel); color: var(--ink); cursor: pointer; }
+.tabs button + button { border-left: 1px solid var(--line); }
+.tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.tabs button:disabled { color: var(--muted); cursor: default; }
+.searchbox { position: relative; flex: 1 1 320px; max-width: 560px; }
+.searchbox input { width: 100%; font: inherit; font-size: 15px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); }
+#hits { position: absolute; z-index: 1000; left: 0; right: 0; top: calc(100% + 4px); display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18); }
+#hits:empty { display: none; }
+.hit { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 12px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hit:hover, .hit:focus-visible { background: var(--accent-soft); }
+.hit small { color: var(--muted); font-size: 12px; white-space: nowrap; }
+#hits .note { margin: 0; padding: 10px 12px; }
+
+.main { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 5fr); gap: 14px; align-items: start; }
+.mapbox { position: relative; }
+#map, #map2 { width: 100%; height: min(80vh, 780px); min-height: 420px; border: 1px solid var(--line); border-radius: 6px; background: #1b222b; }
+.mapctl { position: absolute; z-index: 500; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--panel); }
+.seg button { font: inherit; font-size: 13px; padding: 5px 11px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.opacity { display: flex; align-items: center; gap: 8px; padding: 5px 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; font-size: 12px; color: var(--muted); }
+.opacity input { width: 110px; accent-color: var(--accent); }
+.legend2 { display: flex; flex-direction: column; gap: 4px; padding: 7px 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; font-size: 12px; color: var(--ink); }
+.legend2 .dim { color: var(--muted); }
+.cells { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.cell { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cell b { font-size: 17px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cell small { color: var(--muted); font-size: 12px; }
+.cell.wait b { color: var(--warn); font-size: 15px; }
+.catrow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.catrow div { flex: 1 1 auto; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; min-width: 0; }
+.catrow b { display: block; font-size: 12.5px; font-weight: 500; font-family: var(--mono); overflow-wrap: anywhere; }
+.legend2.inline { flex-direction: row; flex-wrap: wrap; gap: 4px 12px; padding: 0; border: 0; margin-top: 10px; color: var(--muted); }
+.legend2 i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.track.stack { display: flex; }
+tr.on td { background: var(--accent-soft); }
+#methodBody { display: flex; flex-direction: column; gap: 16px; margin-top: 12px; }
+#methodBody table { min-width: 640px; }
+#methodBody .tablebox { max-height: none; margin-top: 0; }
+#methodBody td.blank, #methodBody tr.blank td { color: var(--muted); }
+#methodBody input[type=number] { width: 5.5em; font: inherit; font-family: var(--mono); padding: 4px 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--ink); text-align: right; }
+.plus { color: #1f8a4c; } .minus { color: var(--warn); }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.cards.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.card { border: 1px solid var(--line); border-radius: 6px; padding: 14px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.card h3 { margin: 0; font-size: 15px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.card h3 span { font-family: var(--mono); font-weight: 500; }
+.sw { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.sw b { display: block; font-size: 12px; letter-spacing: 0.04em; margin-bottom: 4px; }
+.sw ul { margin: 0; padding-left: 1.1em; }
+.sw li { margin-bottom: 3px; }
+.rowline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+@media (max-width: 900px) { .cells { grid-template-columns: repeat(2, minmax(0, 1fr)); } .catrow { grid-template-columns: minmax(0, 1fr); } .cards, .cards.three, .sw { grid-template-columns: minmax(0, 1fr); } }
+.link { font: inherit; border: 0; background: transparent; color: var(--accent); cursor: pointer; padding: 0; font-weight: 600; }
+.side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+#status { color: var(--accent); min-height: 1.4em; font-size: 13px; }
+#status.err { color: var(--warn); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip { font: inherit; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+.chip i { width: 11px; height: 11px; border-radius: 2px; }
+.chip[aria-pressed="false"] { color: var(--muted); text-decoration: line-through; }
+.chip[aria-pressed="false"] i { opacity: 0.25; }
+.bars { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.bar { display: grid; grid-template-columns: 7.5em minmax(0, 1fr) 4.2em 5.6em; gap: 10px; align-items: center; }
+.bar .k { display: flex; align-items: center; gap: 7px; }
+.bar .k i { width: 11px; height: 11px; border-radius: 2px; flex: none; }
+.track { height: 18px; background: var(--track); border-radius: 2px; overflow: hidden; }
+.track i { display: block; height: 100%; }
+.tablebox { overflow: auto; margin-top: 10px; max-height: 280px; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; position: sticky; top: 0; background: var(--panel); }
+th.num { text-align: right; }
+.btn { font: inherit; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 15px; }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.empty { color: var(--muted); padding: 6px 0; }
+
+.methods { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.method { font: inherit; text-align: left; padding: 16px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+.method b { font-size: 16px; }
+.method span { color: var(--muted); font-size: 13px; }
+.method[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.leaflet-container { font-family: var(--sans); }
+@media (max-width: 900px) { .main, .methods { grid-template-columns: minmax(0, 1fr); } #map { height: 58vh; } .bar { grid-template-columns: 6.5em minmax(0, 1fr) 4em; } .bar .km { display: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar-top">
+    <h1>용도지역 개선안 대시보드</h1>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tabRegion" aria-selected="true">① 지역 · 현재 용도지역</button>
+      <button type="button" role="tab" id="tabSolution" aria-selected="false" disabled>② 솔루션</button>
+    </div>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="지역 입력 — 시군구, 읍면동, 주소, 장소" autocomplete="off" aria-label="지역 입력">
+      <div id="hits" role="listbox" aria-label="검색 결과"></div>
+    </div>
+  </div>
+
+  <section id="viewRegion" class="main" role="tabpanel" aria-labelledby="tabRegion">
+    <div class="mapbox">
+      <div id="map" role="application" aria-label="위성지도와 현재 용도지역"></div>
+      <div class="mapctl">
+        <div class="seg" id="baseSeg"></div>
+        <label class="opacity" for="opacity">용도지역 농도 <input type="range" id="opacity" min="0" max="100" step="5" value="55"></label>
+      </div>
+    </div>
+    <div class="side">
+      <div class="panel">
+        <h2 id="regionTitle">지역을 입력하세요</h2>
+        <div id="status" role="status" aria-live="polite"></div>
+        <div class="bars" id="bars"></div>
+        <div class="chips" id="chips" hidden></div>
+        <p class="note" id="regionNote"></p>
+      </div>
+      <div class="panel" id="detailPanel" hidden>
+        <h2>세부 용도지역</h2>
+        <div class="tablebox">
+          <table>
+            <thead><tr><th>용도지역</th><th>분류</th><th class="num">면적(km²)</th><th class="num">비율(%)</th></tr></thead>
+            <tbody id="detailBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <button class="btn primary" id="toSolution" type="button" disabled>솔루션 찾기 →</button>
+    </div>
+  </section>
+
+  <section id="viewSolution" role="tabpanel" aria-labelledby="tabSolution" hidden>
+    <div class="cells" id="cells"></div>
+    <div class="methods" id="methods" style="margin-top: 14px"></div>
+    <div id="solStatus" class="panel" style="margin-top: 14px" hidden></div>
+    <div class="main" id="solMain" style="margin-top: 14px" hidden>
+      <div class="mapbox">
+        <div id="map2" role="application" aria-label="대안별 전환 지도"></div>
+        <div class="mapctl">
+          <div class="seg" id="altSeg"></div>
+          <div class="legend2" id="altLegend"></div>
+        </div>
+      </div>
+      <div class="side">
+        <div class="panel">
+          <h2>현재 용도 × 경사</h2>
+          <div class="bars" id="bandBars"></div>
+          <div class="legend2 inline" id="bandLegend"></div>
+        </div>
+        <div class="panel">
+          <h2>지표 ⑥ 경사 적합면적 비율</h2>
+          <div class="bars" id="suitBars"></div>
+          <div class="catrow" id="catRow"></div>
+        </div>
+        <div class="panel">
+          <h2>대안별 전환 면적 (km²)</h2>
+          <div class="tablebox">
+            <table>
+              <thead><tr><th>대안</th><th class="num">녹지로 전환</th><th class="num">개발 후보·공업 가능</th><th class="num">개발 후보</th></tr></thead>
+              <tbody id="altBody"></tbody>
+            </table>
+          </div>
+          <p class="note" id="altRule"></p>
+        </div>
+        <p class="note" id="solSource"></p>
+      </div>
+    </div>
+    <div class="panel" id="methodPanel" style="margin-top: 14px" hidden>
+      <h2 id="methodTitle"></h2>
+      <div id="methodBody"></div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const CATS = [
+  ['res', '주거'], ['com', '상업'], ['ind', '공업'], ['green', '녹지'],
+  ['manage', '관리'], ['agri', '농림'], ['nature', '자연환경보전'], ['etc', '기타·미세분'],
+];
+// 대안 평가 세 기법과 기준 단위 (강의자료 6주차 슬라이드 54)
+const METHODS = [
+  ['cba', '사회적 비용-편익 분석', '기준 단위: 화폐'],
+  ['pbs', '계획 대차대조표 분석', '기준 단위: 피영향 집단'],
+  ['gam', '목표-성취 분석', '기준 단위: 계획 목표'],
+];
+const $ = (id) => document.getElementById(id);
+const el = (tag, attrs = {}, text) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text !== undefined) e.textContent = text;
+  return e;
+};
+const colorOf = (cat) => getComputedStyle(document.documentElement).getPropertyValue(`--${cat}`).trim();
+
+const state = { tab: 'region', base: 'sat', opacity: 0.55, shown: new Set(CATS.map(([k]) => k)), region: null, method: null, solution: undefined, alt: 'A', weights: { jobs: '', green: '', gentle: '' }, price: undefined, pop: undefined };
+
+// 지도: 위성영상(+지명) 위에 현재 용도지역 도형을 쌓는다
+const map = L.map('map', { preferCanvas: true, minZoom: 6, maxZoom: 19 }).setView([36.4, 127.8], 7);
+map.zoomControl.setPosition('bottomright');
+const attribution = '배경지도·용도지역: 브이월드';
+const satellite = L.tileLayer('/tiles/Satellite/{z}/{y}/{x}', { maxZoom: 19, attribution });
+const hybrid = L.tileLayer('/tiles/Hybrid/{z}/{y}/{x}', { maxZoom: 19 });
+const base = L.tileLayer('/tiles/Base/{z}/{y}/{x}', { maxZoom: 19, attribution });
+const zoneGroups = Object.fromEntries(CATS.map(([k]) => [k, L.layerGroup()]));
+const boundary = L.layerGroup().addTo(map);
+const marker = L.layerGroup().addTo(map);
+
+const BASES = [['sat', '위성'], ['hybrid', '위성+지명'], ['base', '일반']];
+function renderBase() {
+  $('baseSeg').replaceChildren(...BASES.map(([id, text]) => {
+    const b = el('button', { type: 'button', 'aria-pressed': String(id === state.base) }, text);
+    b.onclick = () => { state.base = id; renderBase(); };
+    return b;
+  }));
+  for (const layer of [satellite, hybrid, base]) map.removeLayer(layer);
+  if (state.base === 'base') base.addTo(map).bringToBack();
+  else { satellite.addTo(map).bringToBack(); if (state.base === 'hybrid') hybrid.addTo(map); }
+}
+
+function renderChips() {
+  const present = new Set((state.region ? state.region.zones : []).map((z) => z.cat));
+  $('chips').hidden = !state.region;
+  $('chips').replaceChildren(...CATS.filter(([key]) => present.has(key)).map(([key, text]) => {
+    const b = el('button', { type: 'button', class: 'chip', 'aria-pressed': String(state.shown.has(key)) });
+    const i = el('i'); i.style.background = colorOf(key);
+    b.append(i, text);
+    b.onclick = () => { state.shown.has(key) ? state.shown.delete(key) : state.shown.add(key); renderChips(); syncZones(); };
+    return b;
+  }));
+}
+function syncZones() {
+  for (const [key, group] of Object.entries(zoneGroups)) {
+    if (state.region && state.shown.has(key)) group.addTo(map); else map.removeLayer(group);
+  }
+}
+
+function setStatus(text, isError) { $('status').textContent = text; $('status').classList.toggle('err', !!isError); }
+
+function drawRegion(r) {
+  for (const group of Object.values(zoneGroups)) group.clearLayers();
+  boundary.clearLayers();
+  for (const z of r.zones) {
+    const color = colorOf(z.cat);
+    L.polygon(z.rings, { color, weight: 0.6, fillColor: color, fillOpacity: state.opacity, fillRule: 'evenodd' })
+      .bindTooltip(z.uname, { sticky: true })
+      .addTo(zoneGroups[z.cat]);
+  }
+  const outline = L.polygon(r.boundary, { color: '#ffffff', weight: 3, fill: false, interactive: false }).addTo(boundary);
+  L.polygon(r.boundary, { color: '#101820', weight: 1, fill: false, dashArray: '6 4', interactive: false }).addTo(boundary);
+  map.fitBounds(outline.getBounds(), { padding: [24, 24] });
+  syncZones();
+}
+
+function renderRegion() {
+  const r = state.region;
+  $('toSolution').disabled = $('tabSolution').disabled = !r;
+  $('detailPanel').hidden = !r;
+  renderChips();
+  if (!r) return;
+  $('regionTitle').textContent = r.name;
+  const rows = r.categories.filter((c) => c.km2 > 0).sort((a, b) => b.km2 - a.km2);
+  $('bars').replaceChildren(...rows.map((c) => {
+    const row = el('div', { class: 'bar' });
+    const k = el('span', { class: 'k' });
+    const sw = el('i'); sw.style.background = colorOf(c.key);
+    k.append(sw, c.label);
+    const track = el('span', { class: 'track' });
+    const fill = el('i'); fill.style.width = `${c.share}%`; fill.style.background = colorOf(c.key);
+    track.append(fill);
+    row.append(k, track, el('span', { class: 'num' }, `${c.share.toFixed(1)}%`), el('span', { class: 'num km' }, `${c.km2.toFixed(2)} km²`));
+    return row;
+  }));
+  $('regionNote').textContent = `${r.areaKm2.toFixed(2)} km² · 브이월드 ${r.services} · 조회일 ${r.date}`;
+  const labelOf = Object.fromEntries(CATS);
+  $('detailBody').replaceChildren(...r.detail.map((d) => {
+    const tr = el('tr');
+    tr.append(el('td', {}, d.uname), el('td', {}, labelOf[d.cat]), el('td', { class: 'num' }, d.km2.toFixed(3)), el('td', { class: 'num' }, d.share.toFixed(1)));
+    return tr;
+  }));
+}
+
+function renderTabs() {
+  $('tabRegion').setAttribute('aria-selected', String(state.tab === 'region'));
+  $('tabSolution').setAttribute('aria-selected', String(state.tab === 'solution'));
+  $('viewRegion').hidden = state.tab !== 'region';
+  $('viewSolution').hidden = state.tab !== 'solution';
+  if (state.tab === 'region') setTimeout(() => map.invalidateSize(), 0);
+  else if (state.solution === undefined) loadSolution();
+  else renderSolution();
+}
+
+// 솔루션 탭 지도: 위성영상 위에 고른 대안의 전환 칸을 올린다
+const map2 = L.map('map2', { preferCanvas: true, minZoom: 6, maxZoom: 19 }).setView([36.4, 127.8], 7);
+map2.zoomControl.setPosition('bottomright');
+L.tileLayer('/tiles/Satellite/{z}/{y}/{x}', { maxZoom: 19, attribution }).addTo(map2);
+const altLayer = L.layerGroup().addTo(map2);
+const boundary2 = L.layerGroup().addTo(map2);
+const zoneLayer2 = L.layerGroup().addTo(map2); // 바탕: 현재 용도지역
+// 전환 칸은 바탕의 용도지역 색과 겹치지 않는 색으로 진하게 올린다
+const CHANGES = [[1, '녹지로 전환', '--to-green'], [2, '개발 후보 · 공업 가능(경사 5% 이하)', '--cand-ind'], [3, '개발 후보', '--cand']];
+const SUIT_LIMITS = [[10, '하한', '--t10'], [15, '기준안', '--t15'], [25, '상한', '--t25']];
+
+// 지표 여섯 칸 (강의자료 슬라이드 38). 자료가 없는 칸은 조회 대기로 둔다.
+function renderCells() {
+  const r = state.region;
+  const s = state.solution;
+  const top = [...r.categories].filter((c) => c.km2 > 0).sort((a, b) => b.km2 - a.km2)[0];
+  const years = (r.notices || []).map((n) => n.year);
+  const suit = s && !s.error && !s.missing.length ? suitability(s) : null;
+  const pop = state.pop;
+  const cells = [
+    ['① 기온·강수', null, '자료 출처 미정'],
+    ['② 인구밀도', pop && pop.density !== null && pop.pop !== undefined ? `${pop.density.toLocaleString()}명/km²` : null, pop && pop.pop !== undefined ? `${pop.pop.toLocaleString()}명 · ${pop.unitName} ${pop.units}개 · ${pop.year} 인구총조사(SGIS)` : pop && (pop.missing || pop.error) ? pop.missing || pop.error : '조회 중'],
+    ['③ 용도지역 구성비', top ? `${top.label} ${top.share.toFixed(1)}%` : null, `${r.categories.filter((c) => c.km2 > 0 && c.key !== 'none').length}개 분류 · ${r.date}`],
+    ['④ 고시 이력', years.length ? `${years[0]}~${years[years.length - 1]}년` : null, years.length ? `용도지역 도형 ${r.notices.reduce((x, n) => x + n.count, 0)}건의 고시연도` : '고시연도 속성 없음'],
+    ['⑤ 용도별 소요면적', null, '인구 자료 필요'],
+    ['⑥ 경사 적합', suit ? `${suit[1].share.toFixed(1)}%` : null, suit ? '경사 15% 이하 · 10·15·25% 저장' : s && s.missing && s.missing.length ? `도엽 ${s.missing.join(', ')} 필요` : '계산 중'],
+  ];
+  $('cells').replaceChildren(...cells.map(([name, value, sub]) => {
+    const c = el('div', { class: `cell${value ? '' : ' wait'}` });
+    c.append(el('span', { class: 'label' }, name), el('b', {}, value || '조회 대기'), el('small', {}, sub));
+    return c;
+  }));
+}
+// 경사가 임계값 이하인 면적 비율(%) — 분모는 경사 값이 있는 구역 면적
+function suitability(s) {
+  const sums = s.bandEdges.map((_, n) => s.current.reduce((x, c) => x + c.bands[n], 0));
+  const total = sums.reduce((x, y) => x + y, 0);
+  const upTo = { 10: sums[0] + sums[1], 15: sums[0] + sums[1] + sums[2], 25: sums[0] + sums[1] + sums[2] + sums[3] };
+  return SUIT_LIMITS.map(([limit, name, token]) => ({ limit, name, token, km2: upTo[limit], share: total ? (100 * upTo[limit]) / total : 0 }));
+}
+const BAND_TOKENS = ['--b0', '--b1', '--b2', '--b3', '--b4'];
+const swatch = (token, text) => { const s = el('span'); const i = el('i'); i.style.background = `var(${token})`; s.append(i, text); return s; };
+
+function renderMethods() {
+  $('methods').replaceChildren(...METHODS.map(([id, name, unit]) => {
+    const b = el('button', { type: 'button', class: 'method', 'aria-pressed': String(id === state.method) });
+    b.append(el('b', {}, name), el('span', {}, unit));
+    b.onclick = () => { state.method = id; renderMethods(); renderMethod(); };
+    return b;
+  }));
+}
+
+function drawAlternative() {
+  const s = state.solution;
+  altLayer.clearLayers();
+  const a = s.alternatives.find((x) => x.id === state.alt);
+  for (const [codeNo, , token] of CHANGES) {
+    const color = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+    for (const quad of a.quads[codeNo]) L.polygon(quad, { stroke: false, fillColor: color, fillOpacity: 0.85, interactive: false }).addTo(altLayer);
+  }
+  $('altSeg').replaceChildren(...s.alternatives.map((x) => {
+    const b = el('button', { type: 'button', 'aria-pressed': String(x.id === state.alt) }, `${x.id} ${x.name}`);
+    b.onclick = () => { state.alt = x.id; drawAlternative(); };
+    return b;
+  }));
+  $('altLegend').replaceChildren(...CHANGES.filter(([codeNo]) => a.quads[codeNo].length).map(([, text, token]) => swatch(token, text)));
+  if (!$('altLegend').children.length) $('altLegend').append(el('span', {}, '전환되는 칸 없음'));
+  $('altLegend').append(el('span', { class: 'dim' }, '바탕: 현재 용도지역'));
+  $('altRule').textContent = `${a.id} ${a.name}: ${a.rule}`;
+  for (const tr of $('altBody').children) tr.classList.toggle('on', tr.dataset.id === state.alt);
+}
+
+function renderSolution() {
+  renderMethods();
+  renderCells();
+  const s = state.solution;
+  const picked = METHODS.find(([id]) => id === state.method);
+  $('solMain').hidden = !(s && !s.error && !s.missing.length);
+  $('methodPanel').hidden = $('solMain').hidden;
+  $('solStatus').hidden = !$('solMain').hidden;
+  if (!s) { $('solStatus').textContent = '경사와 대안을 계산하는 중'; return; }
+  if (s.error) { $('solStatus').textContent = `계산하지 못했습니다: ${s.error}`; return; }
+  if (s.missing.length) {
+    $('solStatus').textContent = `이 지역은 ${s.dem} 도엽이 아직 없습니다. 필요한 도엽: ${s.missing.join(', ')}`;
+    return;
+  }
+  const labelOf = { ...Object.fromEntries(CATS), none: '지정 자료 없음' };
+  // 현재 용도 × 경사 구간: 용도마다 100% 막대를 경사 구간으로 나눈다
+  const edges = s.bandEdges;
+  $('bandBars').replaceChildren(...s.current.map((c) => {
+    const row = el('div', { class: 'bar' });
+    const k = el('span', { class: 'k' });
+    const sw = el('i'); sw.style.background = colorOf(c.key);
+    k.append(sw, labelOf[c.key]);
+    const track = el('span', { class: 'track stack' });
+    const total = c.bands.reduce((x, y) => x + y, 0);
+    c.bands.forEach((v, n) => {
+      const seg = el('i', { title: `${edges[n]}${edges[n + 1] !== undefined ? `~${edges[n + 1]}` : ' 초과'}% · ${v.toFixed(2)} km²` });
+      seg.style.width = `${total ? (100 * v) / total : 0}%`; seg.style.background = `var(${BAND_TOKENS[n]})`;
+      track.append(seg);
+    });
+    const steep = total ? (100 * c.bands[4]) / total : 0;
+    row.append(k, track, el('span', { class: 'num' }, `${steep.toFixed(1)}%`), el('span', { class: 'num km' }, `${c.km2.toFixed(2)} km²`));
+    return row;
+  }));
+  $('bandLegend').replaceChildren(...edges.map((e, n) => swatch(BAND_TOKENS[n], edges[n + 1] !== undefined ? `${e}~${edges[n + 1]}%` : `${e}% 초과`)), el('span', {}, '오른쪽 숫자: 25% 초과 비율'));
+  // 지표 ⑥: 임계값 세 개의 값을 막대 3개로, 그리고 카탈로그 한 행(다섯 칸)
+  const suit = suitability(s);
+  $('suitBars').replaceChildren(...suit.map((x) => {
+    const row = el('div', { class: 'bar' });
+    const track = el('span', { class: 'track' });
+    const fill = el('i'); fill.style.width = `${x.share}%`; fill.style.background = `var(${x.token})`;
+    track.append(fill);
+    row.append(el('span', { class: 'k' }, `${x.limit}% 이하 · ${x.name}`), track, el('span', { class: 'num' }, `${x.share.toFixed(1)}%`), el('span', { class: 'num km' }, `${x.km2.toFixed(2)} km²`));
+    return row;
+  }));
+  $('catRow').replaceChildren(...[
+    ['값(%)', suit.map((x) => x.share.toFixed(1)).join(' · ')],
+    ['임계값', '10 · 15 · 25%'],
+    ['DEM', `90m · 도엽 ${s.sheets.join(', ')}`],
+    ['브이월드 레이어', state.region.services],
+    ['조회일', s.date],
+  ].map(([k, v]) => { const d = el('div'); d.append(el('span', { class: 'label' }, k), el('b', {}, v)); return d; }));
+  $('altBody').replaceChildren(...s.alternatives.map((a) => {
+    const tr = el('tr', { 'data-id': a.id });
+    const name = el('td'); const b = el('button', { type: 'button', class: 'link' }, `${a.id} ${a.name}`);
+    b.onclick = () => { state.alt = a.id; drawAlternative(); };
+    name.append(b);
+    tr.append(name, el('td', { class: 'num' }, a.toGreenKm2.toFixed(2)), el('td', { class: 'num' }, a.candIndKm2.toFixed(2)), el('td', { class: 'num' }, a.candDevKm2.toFixed(2)));
+    return tr;
+  }));
+  renderMethod();
+  $('solSource').textContent = `${s.name} · ${s.areaKm2.toFixed(2)} km² · ${s.dem} 도엽 ${s.sheets.join(', ')} · 용도 격자 ${s.cellM}m · 조회일 ${s.date}` + (s.noSlopeKm2 > 0 ? ` · 경사 값 없는 면적 ${s.noSlopeKm2.toFixed(2)} km²(전환 제외)` : '');
+  setTimeout(() => {
+    map2.invalidateSize();
+    boundary2.clearLayers();
+    const outline = L.polygon(state.region.boundary, { color: '#ffffff', weight: 2.5, fill: false, interactive: false }).addTo(boundary2);
+    map2.fitBounds(outline.getBounds(), { padding: [24, 24] });
+    zoneLayer2.clearLayers();
+    for (const z of state.region.zones) {
+      const color = colorOf(z.cat);
+      L.polygon(z.rings, { color, weight: 0.5, fillColor: color, fillOpacity: 0.4, fillRule: 'evenodd' }).bindTooltip(z.uname, { sticky: true }).addTo(zoneLayer2);
+    }
+    drawAlternative();
+  }, 0);
+}
+
+// ── 대안 평가 세 기법 ─────────────────────────────────────────────
+// 목표-성취 지표: 국토계획평가 6개 기준(강의자료 슬라이드 59) 중 자료로 계산되는 셋. 나머지 셋은 공란.
+const INDICATORS = [
+  ['jobs', '① 지역경쟁력', '일자리 공간 비율 = (상업+공업+공업 가능 후보) ÷ 구역'],
+  ['green', '④ 자원 지속가능 관리', '녹지지역 ÷ 구역'],
+  ['gentle', '⑤ 저탄소 친환경', '시가화 용지 중 경사 15% 이하'],
+];
+const BLANK_GOALS = ['② 지역 간 균형발전', '③ 기간시설 효율성', '⑥ 종합계획 정합성'];
+const GROUPS = [['res', '주거 이용 집단'], ['com', '상업·업무 이용 집단'], ['ind', '공업 이용 집단'], ['green', '녹지 이용 집단']];
+// 5점 척도: 20%p 구간 절대 환산 (0~20% 1점 … 80~100% 5점)
+const scoreOf = (v) => (v === null ? null : Math.min(5, Math.floor(v / 20) + 1));
+const signed = (v, digits = 2) => `${v > 0 ? '+' : ''}${v.toFixed(digits)}`;
+const td = (text, cls) => el('td', cls ? { class: cls } : {}, text);
+const th = (text, cls) => el('th', cls ? { class: cls } : {}, text);
+function table(head, rows) {
+  const box = el('div', { class: 'tablebox' });
+  const t = el('table');
+  const h = el('tr'); h.append(...head);
+  const thead = el('thead'); thead.append(h);
+  const tbody = el('tbody'); tbody.append(...rows);
+  t.append(thead, tbody); box.append(t);
+  return box;
+}
+function card(alt, value, strengths, weaknesses) {
+  const c = el('div', { class: 'card' });
+  const h = el('h3'); h.append(`${alt.id} ${alt.name}`, el('span', {}, value));
+  const list = (title, cls, items) => {
+    const d = el('div'); const b = el('b', { class: cls }, title); const ul = el('ul');
+    ul.append(...(items.length ? items : ['없음']).map((x) => el('li', {}, x)));
+    d.append(b, ul); return d;
+  };
+  const sw = el('div', { class: 'sw' });
+  sw.append(list('강점', 'plus', strengths), list('단점', 'minus', weaknesses));
+  c.append(h, el('p', { class: 'note', style: 'margin:0' }, alt.rule), sw);
+  return c;
+}
+
+function renderGoals(s) {
+  const alts = s.alternatives;
+  const w = Object.fromEntries(INDICATORS.map(([k]) => [k, parseFloat(state.weights[k])]));
+  const sum = INDICATORS.reduce((x, [k]) => x + (Number.isFinite(w[k]) ? w[k] : 0), 0);
+  const ready = INDICATORS.every(([k]) => Number.isFinite(w[k]) && w[k] >= 0) && Math.abs(sum - 1) < 0.005;
+  const total = (a) => INDICATORS.reduce((x, [k]) => x + w[k] * (scoreOf(a.indicators[k]) || 0), 0);
+
+  const rows = INDICATORS.map(([k, name, formula]) => {
+    const tr = el('tr');
+    const input = el('input', { type: 'number', min: '0', max: '1', step: '0.05', id: `w_${k}`, value: state.weights[k], 'aria-label': `${name} 가중치` });
+    input.onchange = () => { state.weights[k] = input.value; renderMethod(); };
+    const wc = el('td', { class: 'num' }); wc.append(input);
+    const nameCell = el('td'); nameCell.append(name, el('div', { class: 'note', style: 'margin:0' }, formula));
+    tr.append(nameCell, wc, ...alts.flatMap((a) => {
+      const v = a.indicators[k];
+      return [td(v === null ? '—' : `${v.toFixed(1)}%`, 'num'), td(v === null ? '—' : `${scoreOf(v)}점`, 'num')];
+    }));
+    return tr;
+  });
+  for (const name of BLANK_GOALS) {
+    const tr = el('tr', { class: 'blank' });
+    tr.append(td(name), td('—', 'num'), ...alts.flatMap(() => [td('자료 없음', 'num'), td('—', 'num')]));
+    rows.push(tr);
+  }
+  const foot = el('tr');
+  foot.append(td('총점 (가중치 × 득점의 합)'), td(sum ? sum.toFixed(2) : '', 'num'), ...alts.flatMap((a) => [td(''), td(ready ? total(a).toFixed(2) : '—', 'num')]));
+  rows.push(foot);
+
+  const equal = el('button', { type: 'button', class: 'btn' }, '균등 배분');
+  equal.onclick = () => { state.weights = { jobs: '0.34', green: '0.33', gentle: '0.33' }; renderMethod(); };
+  const line = el('div', { class: 'rowline' });
+  line.append(equal, el('span', { class: 'note', style: 'margin:0' }, ready ? '가중치 합 1.00' : `가중치를 합이 1.00이 되게 넣으세요 (지금 ${sum.toFixed(2)})`));
+  const out = [line, table([th('목표 (국토계획평가 기준)'), th('가중치', 'num'), ...alts.flatMap((a) => [th(`${a.id} 값`, 'num'), th(`${a.id} 득점`, 'num')])], rows)];
+  if (!ready) return out;
+
+  const ranked = [...alts].sort((a, b) => total(b) - total(a));
+  const [first, second] = ranked;
+  const compare = (me, other) => {
+    const good = [], bad = [];
+    for (const [k, name] of INDICATORS) {
+      const a = me.indicators[k], b = other.indicators[k];
+      if (a === null || b === null || a === b) continue;
+      (a > b ? good : bad).push(`${name} ${a.toFixed(1)}% (상대 ${b.toFixed(1)}%)`);
+    }
+    return [good, bad];
+  };
+  const cards = el('div', { class: 'cards' });
+  cards.append(card(first, `${total(first).toFixed(2)}점`, ...compare(first, second)), card(second, `${total(second).toFixed(2)}점`, ...compare(second, first)));
+  // 역전점: 한 목표의 가중치만 바꾸고 나머지는 지금 비율대로 나눌 때 1·2위가 바뀌는 값
+  const flips = INDICATORS.map(([k, name]) => {
+    const rest = (a) => (1 - w[k] ? INDICATORS.reduce((x, [j]) => x + (j === k ? 0 : w[j] * (scoreOf(a.indicators[j]) || 0)), 0) / (1 - w[k]) : 0);
+    const dRest = rest(second) - rest(first);
+    const denom = (scoreOf(first.indicators[k]) || 0) - (scoreOf(second.indicators[k]) || 0) + dRest;
+    const x = denom ? dRest / denom : NaN;
+    return `${name}: ${x > 0.005 && x < 0.995 ? `가중치 ${x.toFixed(2)}에서 역전` : '역전 없음'}`;
+  });
+  out.push(el('p', { class: 'note', style: 'margin:0' }, total(first) === total(second) ? '1·2위 총점이 같습니다. 대안 순서(A→B→C)대로 보였습니다.' : `상위 2개: ${first.id}, ${second.id}`), cards, el('p', { class: 'note', style: 'margin:0' }, `가중치 역전점 — ${flips.join(' · ')}`));
+  return out;
+}
+
+function renderBalance(s) {
+  const alts = s.alternatives;
+  const rows = GROUPS.map(([k, name]) => {
+    const tr = el('tr');
+    tr.append(td(name), ...alts.map((a) => {
+      const d = a.groups.find((g) => g.key === k).delta;
+      return td(d ? signed(d) : '0', `num ${d > 0 ? 'plus' : d < 0 ? 'minus' : 'blank'}`);
+    }));
+    return tr;
+  });
+  const und = el('tr');
+  und.append(td('용도 미정 (개발 후보)'), ...alts.map((a) => td(a.undecidedKm2 ? signed(a.undecidedKm2) : '0', 'num')));
+  rows.push(und);
+  const cards = el('div', { class: 'cards three' });
+  cards.append(...alts.map((a) => {
+    const gain = [], loss = [];
+    for (const [k, name] of GROUPS) {
+      const d = a.groups.find((g) => g.key === k).delta;
+      if (d > 0) gain.push(`${name} ${signed(d)} km²`);
+      if (d < 0) loss.push(`${name} ${signed(d)} km²`);
+    }
+    return card(a, `미정 ${a.undecidedKm2.toFixed(2)} km²`, gain, loss);
+  }));
+  return [table([th('피영향 집단 — 용도 면적 증감 (km²)'), ...alts.map((a) => th(`${a.id} ${a.name}`, 'num'))], rows), cards];
+}
+
+function benefitOf(a, price) {
+  let won = 0, blank = 0;
+  const add = (km2, from, to) => {
+    if (!km2) return;
+    if (price[from] === undefined || price[to] === undefined) { blank += km2; return; }
+    won += km2 * 1e6 * (price[to] - price[from]);
+  };
+  for (const f of a.from) { add(f.toGreen, f.key, 'green'); add(f.candInd, f.key, 'ind'); add(f.candDev, f.key, 'res'); }
+  return { won, blank };
+}
+function renderCost(s) {
+  const p = state.price;
+  if (p === undefined) { loadPrice(); return [el('p', { class: 'note' }, '필지 공시지가를 조회하는 중 (필지가 많으면 몇 분 걸림)')]; }
+  if (p.error) return [el('p', { class: 'note' }, `공시지가를 조회하지 못했습니다: ${p.error}`)];
+  if (p.emdOnly) return [el('p', { class: 'note' }, '비용-편익 분석은 읍면동에서만 계산합니다. 시군구는 필지가 너무 많습니다.')];
+  if (p.tooMany) return [el('p', { class: 'note' }, `필지가 ${p.limit.toLocaleString()}건을 넘어 계산하지 않았습니다.`)];
+  const price = Object.fromEntries(p.prices.map((x) => [x.key, x.wonPerM2]));
+  const labelOf = { ...Object.fromEntries(CATS), none: '지정 자료 없음' };
+  const priceRows = p.prices.sort((a, b) => b.wonPerM2 - a.wonPerM2).map((x) => {
+    const tr = el('tr'); tr.append(td(labelOf[x.key]), td(x.wonPerM2.toLocaleString(), 'num'), td(x.parcels.toLocaleString(), 'num')); return tr;
+  });
+  const eok = (won) => `${signed(won / 1e8, 1)}억원`;
+  const results = s.alternatives.map((a) => ({ a, ...benefitOf(a, price) }));
+  const rows = results.map(({ a, won, blank }) => {
+    const tr = el('tr');
+    tr.append(td(`${a.id} ${a.name}`), td(eok(won), `num ${won > 0 ? 'plus' : won < 0 ? 'minus' : ''}`), td(blank ? `${blank.toFixed(2)} km²` : '없음', 'num'), td('자료 없음', 'num blank'), td('—', 'num blank'), td('—', 'num blank'));
+    return tr;
+  });
+  const [first, second] = [...results].sort((x, y) => y.won - x.won);
+  const compare = (me, other) => {
+    const good = [], bad = [];
+    (me.won >= other.won ? good : bad).push(`지가 변화 ${eok(me.won)} (상대 ${eok(other.won)})`);
+    const g = me.a.groups.find((x) => x.key === 'green').delta, og = other.a.groups.find((x) => x.key === 'green').delta;
+    if (g !== og) (g > og ? good : bad).push(`비화폐: 녹지지역 ${signed(g)} km² (상대 ${signed(og)})`);
+    if (me.blank) bad.push(`지가 근거 없는 전환 ${me.blank.toFixed(2)} km²`);
+    return [good, bad];
+  };
+  const cards = el('div', { class: 'cards' });
+  cards.append(card(first.a, eok(first.won), ...compare(first, second)), card(second.a, eok(second.won), ...compare(second, first)));
+  return [
+    table([th('현재 용도'), th('평균 개별공시지가 (원/㎡)', 'num'), th('필지 수', 'num')], priceRows),
+    table([th('대안'), th('편익: 지가 변화', 'num'), th('지가 근거 없는 면적', 'num'), th('비용', 'num'), th('순편익', 'num'), th('편익비용비', 'num')], rows),
+    el('p', { class: 'note', style: 'margin:0' }, `상위 2개: ${first.a.id}, ${second.a.id} (지가 변화 기준). 전환 뒤 지가는 녹지 전환은 현 녹지 평균, 공업 가능 후보는 현 공업 평균, 그 외 후보는 현 주거 평균으로 봄.`),
+    cards,
+    el('p', { class: 'note', style: 'margin:0' }, `브이월드 ${p.service} · 필지 ${p.parcels.toLocaleString()}건 · 공시 기준연도 ${p.years.join(', ')} · 조회일 ${p.date}. 비용 자료가 없어 순편익·편익비용비는 공란. 녹지·경관 같은 비화폐 영향은 금액에 들어 있지 않음.`),
+  ];
+}
+async function loadPrice() {
+  const r = state.region;
+  state.price = null; // 조회 중
+  let body;
+  try { body = await fetch(`/api/landprice?level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`).then((x) => x.json()); }
+  catch (e) { body = { error: e.message }; }
+  if (state.region !== r) return;
+  state.price = body;
+  if (state.tab === 'solution' && state.method === 'cba') renderMethod();
+}
+
+function renderMethod() {
+  const s = state.solution;
+  if (!s || s.error || s.missing.length) return;
+  const picked = METHODS.find(([id]) => id === state.method);
+  $('methodTitle').textContent = picked ? `${picked[1]} — ${picked[2]}` : '위에서 분석기법을 고르세요';
+  let parts = [];
+  if (state.method === 'gam') parts = renderGoals(s);
+  else if (state.method === 'pbs') parts = renderBalance(s);
+  else if (state.method === 'cba') parts = state.price === null ? [el('p', { class: 'note' }, '필지 공시지가를 조회하는 중 (필지가 많으면 몇 분 걸림)')] : renderCost(s);
+  $('methodBody').replaceChildren(...parts);
+}
+
+async function loadPopulation() {
+  const r = state.region;
+  state.pop = null; // 조회 중
+  let body;
+  try { body = await fetch(`/api/population?level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`).then((x) => x.json()); }
+  catch (e) { body = { error: e.message }; }
+  if (state.region !== r) return;
+  state.pop = body;
+  if (state.tab === 'solution') renderCells();
+}
+
+async function loadSolution() {
+  const r = state.region;
+  if (state.pop === undefined) loadPopulation();
+  state.solution = null; state.alt = 'A';
+  renderSolution();
+  try {
+    const res = await fetch(`/api/solution?level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`);
+    const body = await res.json();
+    if (state.region !== r) return; // 그 사이 다른 지역을 고름
+    state.solution = res.ok ? body : { error: body.error || '서버 오류', missing: [] };
+  } catch (e) {
+    state.solution = { error: e.message, missing: [] };
+  }
+  if (state.tab === 'solution') renderSolution();
+}
+
+let analyzing = 0;
+async function analyze(hit) {
+  const ticket = ++analyzing;
+  setStatus(hit.kind === 'sgg' ? '분석 중 (시군구는 1~2분 걸릴 수 있음)' : '분석 중');
+  $('regionTitle').textContent = hit.title;
+  try {
+    const res = await fetch(`/api/analyze?level=${hit.kind}&code=${encodeURIComponent(hit.code)}&title=${encodeURIComponent(hit.title)}`);
+    const body = await res.json();
+    if (ticket !== analyzing) return; // 그 사이 다른 지역을 고름
+    if (!res.ok) throw new Error(body.error || '분석에 실패했습니다.');
+    state.region = body;
+    state.solution = undefined; state.price = undefined; state.pop = undefined; // 지역이 바뀌면 솔루션은 다시 계산한다
+    setStatus('');
+    drawRegion(body); renderRegion();
+  } catch (e) {
+    if (ticket === analyzing) setStatus(`분석하지 못했습니다: ${e.message}`, true);
+  }
+}
+
+async function pick(hit) {
+  $('hits').replaceChildren();
+  $('q').value = hit.title;
+  marker.clearLayers();
+  state.tab = 'region'; renderTabs();
+  if (hit.kind === 'sido') {
+    map.setView([hit.y, hit.x], 9);
+    setStatus('시도 전체는 분석하지 않습니다. 시군구나 읍면동을 입력하세요.', true);
+    return;
+  }
+  if (hit.kind === 'point') {
+    L.circleMarker([hit.y, hit.x], { radius: 7, color: '#ffffff', weight: 2, fillColor: '#e5383b', fillOpacity: 1 }).bindTooltip(hit.title).addTo(marker);
+    map.setView([hit.y, hit.x], 15);
+    setStatus('이 지점이 속한 읍면동을 찾는 중');
+    const emd = await fetch(`/api/locate?x=${hit.x}&y=${hit.y}`).then((r) => r.json()).catch(() => null);
+    if (!emd) { setStatus('이 지점의 읍면동을 찾지 못했습니다.', true); return; }
+    return analyze(emd);
+  }
+  return analyze(hit);
+}
+
+let searchTimer = null;
+let lastHits = [];
+async function runSearch() {
+  const text = $('q').value.trim();
+  if (text.length < 2) { $('hits').replaceChildren(); lastHits = []; return; }
+  const hits = await fetch(`/api/search?q=${encodeURIComponent(text)}`).then((r) => r.json()).catch(() => []);
+  if ($('q').value.trim() !== text) return; // 그 사이 글자가 바뀜
+  lastHits = hits;
+  if (!hits.length) { $('hits').replaceChildren(el('p', { class: 'note' }, `"${text}"에 맞는 지역·주소·장소가 없습니다.`)); return; }
+  $('hits').replaceChildren(...hits.map((h) => {
+    const b = el('button', { type: 'button', class: 'hit', role: 'option' });
+    b.append(el('span', {}, h.title), el('small', {}, h.label));
+    b.onclick = () => pick(h);
+    return b;
+  }));
+}
+$('q').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 300); });
+$('q').addEventListener('keydown', async (e) => {
+  if (e.key !== 'Enter') return;
+  clearTimeout(searchTimer);
+  await runSearch();
+  if (lastHits.length) pick(lastHits[0]);
+});
+$('opacity').addEventListener('input', (e) => {
+  state.opacity = e.target.value / 100;
+  for (const group of Object.values(zoneGroups)) group.eachLayer((l) => l.setStyle({ fillOpacity: state.opacity }));
+});
+$('tabRegion').onclick = () => { state.tab = 'region'; renderTabs(); };
+$('tabSolution').onclick = $('toSolution').onclick = () => { state.tab = 'solution'; renderTabs(); };
+
+renderBase(); renderRegion(); renderTabs();
+</script>
+</body>
+</html>
