@@ -237,9 +237,9 @@ const state = { tab: 'region', base: 'sat', opacity: 0.55, shown: new Set(CATS.m
 const map = L.map('map', { preferCanvas: true, minZoom: 6, maxZoom: 19 }).setView([36.4, 127.8], 7);
 map.zoomControl.setPosition('bottomright');
 const attribution = '배경지도·용도지역: 브이월드';
-const satellite = L.tileLayer('/tiles/Satellite/{z}/{y}/{x}', { maxZoom: 19, attribution });
-const hybrid = L.tileLayer('/tiles/Hybrid/{z}/{y}/{x}', { maxZoom: 19 });
-const base = L.tileLayer('/tiles/Base/{z}/{y}/{x}', { maxZoom: 19, attribution });
+const satellite = L.tileLayer('/api/zoning?r=tile&layer=Satellite&z={z}&y={y}&x={x}', { maxZoom: 19, attribution });
+const hybrid = L.tileLayer('/api/zoning?r=tile&layer=Hybrid&z={z}&y={y}&x={x}', { maxZoom: 19 });
+const base = L.tileLayer('/api/zoning?r=tile&layer=Base&z={z}&y={y}&x={x}', { maxZoom: 19, attribution });
 const zoneGroups = Object.fromEntries(CATS.map(([k]) => [k, L.layerGroup()]));
 const boundary = L.layerGroup().addTo(map);
 const marker = L.layerGroup().addTo(map);
@@ -331,7 +331,7 @@ function renderTabs() {
 // 솔루션 탭 지도: 위성영상 위에 고른 대안의 전환 칸을 올린다
 const map2 = L.map('map2', { preferCanvas: true, minZoom: 6, maxZoom: 19 }).setView([36.4, 127.8], 7);
 map2.zoomControl.setPosition('bottomright');
-L.tileLayer('/tiles/Satellite/{z}/{y}/{x}', { maxZoom: 19, attribution }).addTo(map2);
+L.tileLayer('/api/zoning?r=tile&layer=Satellite&z={z}&y={y}&x={x}', { maxZoom: 19, attribution }).addTo(map2);
 const altLayer = L.layerGroup().addTo(map2);
 const boundary2 = L.layerGroup().addTo(map2);
 const zoneLayer2 = L.layerGroup().addTo(map2); // 바탕: 현재 용도지역
@@ -649,7 +649,7 @@ async function loadPrice() {
   const r = state.region;
   state.price = null; // 조회 중
   let body;
-  try { body = await fetch(`/api/landprice?level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`).then((x) => x.json()); }
+  try { body = await fetch(`/api/zoning?r=landprice&level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`).then((x) => x.json()); }
   catch (e) { body = { error: e.message }; }
   if (state.region !== r) return;
   state.price = body;
@@ -672,7 +672,7 @@ async function loadPopulation() {
   const r = state.region;
   state.pop = null; // 조회 중
   let body;
-  try { body = await fetch(`/api/population?level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`).then((x) => x.json()); }
+  try { body = await fetch(`/api/zoning?r=population&level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`).then((x) => x.json()); }
   catch (e) { body = { error: e.message }; }
   if (state.region !== r) return;
   state.pop = body;
@@ -685,7 +685,7 @@ async function loadSolution() {
   state.solution = null; state.alt = 'A';
   renderSolution();
   try {
-    const res = await fetch(`/api/solution?level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`);
+    const res = await fetch(`/api/zoning?r=solution&level=${r.level}&code=${encodeURIComponent(r.code)}&title=${encodeURIComponent(r.name)}`);
     const body = await res.json();
     if (state.region !== r) return; // 그 사이 다른 지역을 고름
     state.solution = res.ok ? body : { error: body.error || '서버 오류', missing: [] };
@@ -701,7 +701,7 @@ async function analyze(hit) {
   setStatus(hit.kind === 'sgg' ? '분석 중 (시군구는 1~2분 걸릴 수 있음)' : '분석 중');
   $('regionTitle').textContent = hit.title;
   try {
-    const res = await fetch(`/api/analyze?level=${hit.kind}&code=${encodeURIComponent(hit.code)}&title=${encodeURIComponent(hit.title)}`);
+    const res = await fetch(`/api/zoning?r=analyze&level=${hit.kind}&code=${encodeURIComponent(hit.code)}&title=${encodeURIComponent(hit.title)}`);
     const body = await res.json();
     if (ticket !== analyzing) return; // 그 사이 다른 지역을 고름
     if (!res.ok) throw new Error(body.error || '분석에 실패했습니다.');
@@ -728,7 +728,7 @@ async function pick(hit) {
     L.circleMarker([hit.y, hit.x], { radius: 7, color: '#ffffff', weight: 2, fillColor: '#e5383b', fillOpacity: 1 }).bindTooltip(hit.title).addTo(marker);
     map.setView([hit.y, hit.x], 15);
     setStatus('이 지점이 속한 읍면동을 찾는 중');
-    const emd = await fetch(`/api/locate?x=${hit.x}&y=${hit.y}`).then((r) => r.json()).catch(() => null);
+    const emd = await fetch(`/api/zoning?r=locate&x=${hit.x}&y=${hit.y}`).then((r) => r.json()).catch(() => null);
     if (!emd) { setStatus('이 지점의 읍면동을 찾지 못했습니다.', true); return; }
     return analyze(emd);
   }
@@ -740,7 +740,7 @@ let lastHits = [];
 async function runSearch() {
   const text = $('q').value.trim();
   if (text.length < 2) { $('hits').replaceChildren(); lastHits = []; return; }
-  const hits = await fetch(`/api/search?q=${encodeURIComponent(text)}`).then((r) => r.json()).catch(() => []);
+  const hits = await fetch(`/api/zoning?r=search&q=${encodeURIComponent(text)}`).then((r) => r.json()).catch(() => []);
   if ($('q').value.trim() !== text) return; // 그 사이 글자가 바뀜
   lastHits = hits;
   if (!hits.length) { $('hits').replaceChildren(el('p', { class: 'note' }, `"${text}"에 맞는 지역·주소·장소가 없습니다.`)); return; }

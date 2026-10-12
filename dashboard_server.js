@@ -27,7 +27,7 @@ const memo = new Map(); // 구역별 격자(용도 번호·구역 마스크) —
 const PORT = 5180;
 const KEY = process.env.VWORLD_KEY;
 const DOMAIN = process.env.VWORLD_DOMAIN;
-const CACHE_DIR = path.join(__dirname, 'vworld_out', 'zoning_cache');
+const CACHE_DIR = process.env.VERCEL ? path.join(require('os').tmpdir(), 'zoning_cache') : path.join(__dirname, 'vworld_out', 'zoning_cache');
 const ZONE_SERVICES = ['LT_C_UQ111', 'LT_C_UQ112', 'LT_C_UQ113', 'LT_C_UQ114'];
 const MAX_CELLS = 300000; // 구역 하나를 나누는 격자 칸 수 상한
 const SLOPE_THRESHOLDS = [10, 15, 25];
@@ -544,68 +544,65 @@ async function proxy(res, url, cacheSeconds) {
 const TILE_EXT = { Satellite: 'jpeg', Hybrid: 'png', Base: 'png' };
 const json = (res, status, body) => { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(body)); };
 
-const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
+// 모든 요청은 /api/zoning?r=<기능> 한 주소로 받는다. 로컬 서버와 Vercel 서버 함수가 같은 처리기를 쓴다.
+const regionOf = (q) => {
+  const level = q.get('level');
+  const code = q.get('code') || '';
+  return ['emd', 'sgg'].includes(level) && /^\d{4,10}$/.test(code) ? { level, code, title: q.get('title') } : null;
+};
+function cached(res, name, make, keep = () => true) {
+  const file = path.join(CACHE_DIR, `${name}_${new Date().toLocaleDateString('sv-SE')}.json`);
+  if (fs.existsSync(file)) { res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(fs.readFileSync(file)); return null; }
+  return make().then((result) => {
+    if (keep(result)) { try { fs.mkdirSync(CACHE_DIR, { recursive: true }); fs.writeFileSync(file, JSON.stringify(result)); } catch (e) { /* 저장 못 해도 응답은 한다 */ } }
+    json(res, 200, result);
+  });
+}
+async function handler(req, res) {
+  const url = new URL(req.url, 'http://localhost');
+  const q = url.searchParams;
   try {
-    const tile = url.pathname.match(/^\/tiles\/(Satellite|Hybrid|Base)\/(\d+)\/(\d+)\/(\d+)$/);
-    if (tile) {
-      const [, layer, z, y, x] = tile;
-      return await proxy(res, `https://api.vworld.kr/req/wmts/1.0.0/${KEY}/${layer}/${z}/${y}/${x}.${TILE_EXT[layer]}`, 86400);
+    if (!KEY) return json(res, 500, { error: '서버에 VWORLD_KEY 환경변수가 없습니다.' });
+    if (url.pathname === '/api/zoning') {
+      const route = q.get('r');
+      if (route === 'tile') {
+        const layer = q.get('layer');
+        const [z, y, x] = ['z', 'y', 'x'].map((k) => q.get(k) || '');
+        if (!TILE_EXT[layer] || ![z, y, x].every((v) => /^\d+$/.test(v))) return json(res, 400, { error: '타일 주소가 잘못됐습니다.' });
+        return await proxy(res, `https://api.vworld.kr/req/wmts/1.0.0/${KEY}/${layer}/${z}/${y}/${x}.${TILE_EXT[layer]}`, 86400);
+      }
+      if (route === 'search') return json(res, 200, await search(q.get('q') || ''));
+      if (route === 'locate') return json(res, 200, await locate(Number(q.get('x')), Number(q.get('y'))));
+      const region = regionOf(q);
+      if (['analyze', 'solution', 'population', 'landprice'].includes(route) && !region) return json(res, 400, { error: '읍면동이나 시군구를 골라 주세요.' });
+      if (route === 'analyze') return await cached(res, `${region.level}_${region.code}_v2`, () => analyze(region.level, region.code, region.title));
+      if (route === 'solution') return json(res, 200, await solve(region.level, region.code, region.title));
+      if (route === 'population') return json(res, 200, await population(region.level, region.code, region.title));
+      if (route === 'landprice') {
+        if (region.level !== 'emd') return json(res, 200, { emdOnly: true });
+        return await cached(res, `landprice_${region.code}`, () => landPrice('emd', region.code, region.title), (r) => !r.tooMany);
+      }
+      return json(res, 404, { error: '없는 기능입니다.' });
     }
-    if (url.pathname === '/api/wms') {
-      const params = new URLSearchParams(url.search);
-      params.set('KEY', KEY);
-      if (DOMAIN) params.set('DOMAIN', DOMAIN);
-      return await proxy(res, `https://api.vworld.kr/req/wms?${params}`, 3600);
-    }
-    if (url.pathname === '/api/search') return json(res, 200, await search(url.searchParams.get('q') || ''));
-    if (url.pathname === '/api/locate') return json(res, 200, await locate(Number(url.searchParams.get('x')), Number(url.searchParams.get('y'))));
-    if (url.pathname === '/api/analyze') {
-      const level = url.searchParams.get('level');
-      const code = url.searchParams.get('code') || '';
-      if (!['emd', 'sgg'].includes(level) || !/^\d{4,10}$/.test(code)) return json(res, 400, { error: '읍면동이나 시군구를 골라 주세요.' });
-      const file = path.join(CACHE_DIR, `${level}_${code}_v2_${new Date().toLocaleDateString('sv-SE')}.json`);
-      if (fs.existsSync(file)) { res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' }); return res.end(fs.readFileSync(file)); }
-      const result = await analyze(level, code, url.searchParams.get('title'));
-      fs.mkdirSync(CACHE_DIR, { recursive: true });
-      fs.writeFileSync(file, JSON.stringify(result));
-      return json(res, 200, result);
-    }
-    if (url.pathname === '/api/solution') {
-      const level = url.searchParams.get('level');
-      const code = url.searchParams.get('code') || '';
-      if (!['emd', 'sgg'].includes(level) || !/^\d{4,10}$/.test(code)) return json(res, 400, { error: '읍면동이나 시군구를 골라 주세요.' });
-      return json(res, 200, await solve(level, code, url.searchParams.get('title')));
-    }
-    if (url.pathname === '/api/population') {
-      const level = url.searchParams.get('level');
-      const code = url.searchParams.get('code') || '';
-      if (!['emd', 'sgg'].includes(level) || !/^\d{4,10}$/.test(code)) return json(res, 400, { error: '읍면동이나 시군구를 골라 주세요.' });
-      return json(res, 200, await population(level, code, url.searchParams.get('title')));
-    }
-    if (url.pathname === '/api/landprice') {
-      const code = url.searchParams.get('code') || '';
-      if (url.searchParams.get('level') !== 'emd' || !/^\d{8,10}$/.test(code)) return json(res, 200, { emdOnly: true });
-      const file = path.join(CACHE_DIR, `landprice_${code}_${new Date().toLocaleDateString('sv-SE')}.json`);
-      if (fs.existsSync(file)) { res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' }); return res.end(fs.readFileSync(file)); }
-      const result = await landPrice('emd', code, url.searchParams.get('title'));
-      if (!result.tooMany) { fs.mkdirSync(CACHE_DIR, { recursive: true }); fs.writeFileSync(file, JSON.stringify(result)); }
-      return json(res, 200, result);
-    }
-    if (url.pathname === '/') {
+    if (url.pathname === '/' || url.pathname === '/index.html') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      return res.end(fs.readFileSync(path.join(__dirname, 'dashboard.html')));
+      return res.end(fs.readFileSync(path.join(__dirname, 'index.html')));
     }
     json(res, 404, { error: '없는 주소입니다.' });
   } catch (e) {
-    console.error(url.pathname, e.message);
+    console.error(url.pathname, q.get('r') || '', e.message);
     if (!res.headersSent) json(res, 500, { error: e.message });
     else res.end();
   }
-});
-
-if (!KEY) {
-  console.error('환경변수 VWORLD_KEY 가 없습니다.');
-  process.exit(1);
 }
-server.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+
+module.exports = { handler };
+
+// 직접 실행하면 로컬 서버로 뜬다: node dashboard_server.js
+if (require.main === module) {
+  if (!KEY) {
+    console.error('환경변수 VWORLD_KEY 가 없습니다.');
+    process.exit(1);
+  }
+  http.createServer(handler).listen(PORT, () => console.log(`http://localhost:${PORT}`));
+}
